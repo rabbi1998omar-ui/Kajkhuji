@@ -25,11 +25,10 @@ function loadJSON(file, fallback) {
 
     const data = fs.readFileSync(file, "utf8");
 
-    if (!data.trim()) {
-      return fallback;
-    }
+    if (!data.trim()) return fallback;
 
     return JSON.parse(data);
+
   } catch (error) {
     console.error("Database read error:", error);
     return fallback;
@@ -42,7 +41,9 @@ function saveJSON(file, data) {
       file,
       JSON.stringify(data, null, 2)
     );
+
     return true;
+
   } catch (error) {
     console.error("Database save error:", error);
     return false;
@@ -59,6 +60,7 @@ let notifications = loadJSON(DB.notifications, []);
 ========================================= */
 
 function sendJSON(res, status, data) {
+
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
@@ -70,6 +72,7 @@ function sendJSON(res, status, data) {
 }
 
 function sendHTML(res, html) {
+
   res.writeHead(200, {
     "Content-Type": "text/html; charset=utf-8",
     "Access-Control-Allow-Origin": "*"
@@ -79,7 +82,9 @@ function sendHTML(res, html) {
 }
 
 function readBody(req) {
+
   return new Promise((resolve, reject) => {
+
     let body = "";
 
     req.on("data", chunk => {
@@ -87,6 +92,7 @@ function readBody(req) {
     });
 
     req.on("end", () => {
+
       if (!body) {
         resolve({});
         return;
@@ -97,13 +103,16 @@ function readBody(req) {
       } catch (error) {
         reject(error);
       }
+
     });
 
     req.on("error", reject);
+
   });
 }
 
 function createID(prefix = "id") {
+
   return (
     prefix +
     "_" +
@@ -114,6 +123,7 @@ function createID(prefix = "id") {
 }
 
 function hashPIN(pin) {
+
   return crypto
     .createHash("sha256")
     .update(String(pin))
@@ -125,12 +135,14 @@ function clean(value) {
 }
 
 function normalize(value) {
+
   return clean(value)
     .toLowerCase()
     .replace(/\s+/g, " ");
 }
 
 function getUserByPhone(phone) {
+
   return users.find(
     user => user.phone === clean(phone)
   );
@@ -141,10 +153,39 @@ function validPIN(pin) {
 }
 
 /* =========================================
+   PROFILE IMAGE
+========================================= */
+
+function validProfileImage(image) {
+
+  if (!image) return true;
+
+  if (typeof image !== "string") {
+    return false;
+  }
+
+  if (!image.startsWith("data:image/")) {
+    return false;
+  }
+
+  /*
+    Limit around 1.5 MB
+    Base64 data can be larger than actual image.
+  */
+
+  if (image.length > 2200000) {
+    return false;
+  }
+
+  return true;
+}
+
+/* =========================================
    LOCATION MATCH
 ========================================= */
 
 function locationMatch(jobLocation, searchLocation) {
+
   const job = normalize(jobLocation);
   const search = normalize(searchLocation);
 
@@ -169,6 +210,24 @@ function locationMatch(jobLocation, searchLocation) {
 }
 
 /* =========================================
+   PUBLIC USER
+========================================= */
+
+function publicUser(user) {
+
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    phone: user.phone,
+    name: user.name,
+    location: user.location,
+    photo: user.photo || "",
+    createdAt: user.createdAt
+  };
+}
+
+/* =========================================
    NOTIFICATION
 ========================================= */
 
@@ -179,22 +238,38 @@ function createNotification({
   text,
   from = ""
 }) {
+
   notifications.unshift({
+
     id: createID("notification"),
+
     phone: clean(phone),
+
     type: clean(type),
+
     title: clean(title),
+
     text: clean(text),
+
     from: clean(from),
+
     read: false,
+
     createdAt: new Date().toISOString()
+
   });
 
   if (notifications.length > 5000) {
-    notifications = notifications.slice(0, 5000);
+
+    notifications =
+      notifications.slice(0, 5000);
+
   }
 
-  saveJSON(DB.notifications, notifications);
+  saveJSON(
+    DB.notifications,
+    notifications
+  );
 }
 
 /* =========================================
@@ -202,6 +277,7 @@ function createNotification({
 ========================================= */
 
 const server = http.createServer(async (req, res) => {
+
   try {
 
     /* =====================================
@@ -209,13 +285,21 @@ const server = http.createServer(async (req, res) => {
     ===================================== */
 
     if (req.method === "OPTIONS") {
+
       res.writeHead(204, {
+
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+
+        "Access-Control-Allow-Headers":
+          "Content-Type",
+
+        "Access-Control-Allow-Methods":
+          "GET,POST,OPTIONS"
+
       });
 
       res.end();
+
       return;
     }
 
@@ -227,19 +311,27 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url === "/"
     ) {
+
       const indexFile =
         path.join(__dirname, "index.html");
 
       if (fs.existsSync(indexFile)) {
+
         const html =
-          fs.readFileSync(indexFile, "utf8");
+          fs.readFileSync(
+            indexFile,
+            "utf8"
+          );
 
         sendHTML(res, html);
+
       } else {
+
         sendHTML(
           res,
           "<h1>💼 কাজ খুঁজি</h1>"
         );
+
       }
 
       return;
@@ -253,15 +345,27 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url === "/health"
     ) {
+
       sendJSON(res, 200, {
+
         success: true,
+
         status: "ok",
+
         app: "কাজ খুঁজি",
+
         users: users.length,
+
         jobs: jobs.length,
+
         messages: messages.length,
-        notifications: notifications.length,
-        time: new Date().toISOString()
+
+        notifications:
+          notifications.length,
+
+        time:
+          new Date().toISOString()
+
       });
 
       return;
@@ -275,68 +379,137 @@ const server = http.createServer(async (req, res) => {
       req.method === "POST" &&
       req.url === "/api/register"
     ) {
-      const body = await readBody(req);
 
-      const name = clean(body.name);
-      const phone = clean(body.phone);
-      const location = clean(body.location);
-      const pin = clean(body.pin);
+      const body =
+        await readBody(req);
 
-      if (!name || !phone || !location || !pin) {
+      const name =
+        clean(body.name);
+
+      const phone =
+        clean(body.phone);
+
+      const location =
+        clean(body.location);
+
+      const pin =
+        clean(body.pin);
+
+      if (
+        !name ||
+        !phone ||
+        !location ||
+        !pin
+      ) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "সব তথ্য পূরণ করুন"
+
+          message:
+            "সব তথ্য পূরণ করুন"
+
         });
+
+        return;
+      }
+
+      if (!/^01\d{9}$/.test(phone)) {
+
+        sendJSON(res, 400, {
+
+          success: false,
+
+          message:
+            "সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন"
+
+        });
+
         return;
       }
 
       if (!validPIN(pin)) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
+          message:
+            "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
         });
+
         return;
       }
 
-      const existing = getUserByPhone(phone);
+      const existing =
+        getUserByPhone(phone);
 
       if (existing) {
+
         sendJSON(res, 409, {
+
           success: false,
+
           message:
             "এই মোবাইল নম্বর দিয়ে আগে থেকেই অ্যাকাউন্ট আছে"
+
         });
+
         return;
       }
 
       const user = {
+
         id: createID("user"),
+
         phone,
+
         name,
+
         location,
-        pinHash: hashPIN(pin),
-        createdAt: new Date().toISOString()
+
+        photo: "",
+
+        pinHash:
+          hashPIN(pin),
+
+        createdAt:
+          new Date().toISOString()
+
       };
 
       users.push(user);
 
-      if (!saveJSON(DB.users, users)) {
+      if (
+        !saveJSON(
+          DB.users,
+          users
+        )
+      ) {
+
         sendJSON(res, 500, {
+
           success: false,
-          message: "অ্যাকাউন্ট সংরক্ষণ করা যায়নি"
+
+          message:
+            "অ্যাকাউন্ট সংরক্ষণ করা যায়নি"
+
         });
+
         return;
       }
 
       sendJSON(res, 200, {
+
         success: true,
-        message: "অ্যাকাউন্ট তৈরি হয়েছে",
-        user: {
-          id: user.id,
-          phone: user.phone,
-          name: user.name,
-          location: user.location
-        }
+
+        message:
+          "অ্যাকাউন্ট তৈরি হয়েছে",
+
+        user:
+          publicUser(user)
+
       });
 
       return;
@@ -350,98 +523,277 @@ const server = http.createServer(async (req, res) => {
       req.method === "POST" &&
       req.url === "/api/login"
     ) {
-      const body = await readBody(req);
 
-      const phone = clean(body.phone);
-      const pin = clean(body.pin);
+      const body =
+        await readBody(req);
+
+      const phone =
+        clean(body.phone);
+
+      const pin =
+        clean(body.pin);
 
       if (!phone || !pin) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "মোবাইল নম্বর ও PIN দিন"
+
+          message:
+            "মোবাইল নম্বর ও PIN দিন"
+
         });
+
         return;
       }
 
       if (!validPIN(pin)) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
+          message:
+            "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
         });
+
         return;
       }
 
-      const user = getUserByPhone(phone);
+      const user =
+        getUserByPhone(phone);
 
       if (!user) {
+
         sendJSON(res, 401, {
+
           success: false,
+
           message:
             "এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি"
+
         });
+
         return;
       }
 
-      if (user.pinHash !== hashPIN(pin)) {
+      if (
+        user.pinHash !==
+        hashPIN(pin)
+      ) {
+
         sendJSON(res, 401, {
+
           success: false,
-          message: "ভুল PIN"
+
+          message:
+            "ভুল PIN"
+
         });
+
         return;
       }
 
       sendJSON(res, 200, {
+
         success: true,
-        message: "লগইন সফল",
-        user: {
-          id: user.id,
-          phone: user.phone,
-          name: user.name,
-          location: user.location
-        }
+
+        message:
+          "লগইন সফল",
+
+        user:
+          publicUser(user)
+
       });
 
       return;
     }
 
     /* =====================================
-       PROFILE
+       GET PROFILE
+    ===================================== */
+
+    if (
+      req.method === "GET" &&
+      req.url.startsWith("/api/profile")
+    ) {
+
+      const url =
+        new URL(
+          req.url,
+          `http://${req.headers.host || "localhost"}`
+        );
+
+      const phone =
+        clean(
+          url.searchParams.get("phone")
+        );
+
+      const user =
+        getUserByPhone(phone);
+
+      if (!user) {
+
+        sendJSON(res, 404, {
+
+          success: false,
+
+          message:
+            "ব্যবহারকারী পাওয়া যায়নি"
+
+        });
+
+        return;
+      }
+
+      sendJSON(res, 200, {
+
+        success: true,
+
+        user:
+          publicUser(user)
+
+      });
+
+      return;
+    }
+
+    /* =====================================
+       UPDATE PROFILE
     ===================================== */
 
     if (
       req.method === "POST" &&
       req.url === "/api/profile"
     ) {
-      const body = await readBody(req);
 
-      const phone = clean(body.phone);
-      const name = clean(body.name);
-      const location = clean(body.location);
+      const body =
+        await readBody(req);
 
-      const user = getUserByPhone(phone);
+      const phone =
+        clean(body.phone);
+
+      const name =
+        clean(body.name);
+
+      const location =
+        clean(body.location);
+
+      const pin =
+        clean(body.pin);
+
+      const photo =
+        body.photo || "";
+
+      const user =
+        getUserByPhone(phone);
 
       if (!user) {
+
         sendJSON(res, 404, {
+
           success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
+
+          message:
+            "ব্যবহারকারী পাওয়া যায়নি"
+
         });
+
         return;
       }
 
-      if (name) user.name = name;
-      if (location) user.location = location;
+      /*
+        PIN দিলে যাচাই করবে।
+        পুরনো profile edit-ও কাজ করবে
+        যদি PIN না পাঠানো হয়।
+      */
 
-      saveJSON(DB.users, users);
+      if (pin) {
+
+        if (!validPIN(pin)) {
+
+          sendJSON(res, 400, {
+
+            success: false,
+
+            message:
+              "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
+          });
+
+          return;
+        }
+
+        if (
+          user.pinHash !==
+          hashPIN(pin)
+        ) {
+
+          sendJSON(res, 401, {
+
+            success: false,
+
+            message:
+              "ভুল PIN"
+
+          });
+
+          return;
+        }
+      }
+
+      if (name) {
+        user.name = name;
+      }
+
+      if (location) {
+        user.location = location;
+      }
+
+      if (photo !== undefined) {
+
+        if (!validProfileImage(photo)) {
+
+          sendJSON(res, 400, {
+
+            success: false,
+
+            message:
+              "Profile picture-এর ফাইল খুব বড় বা সঠিক নয়"
+
+          });
+
+          return;
+        }
+
+        user.photo = photo;
+      }
+
+      if (!saveJSON(DB.users, users)) {
+
+        sendJSON(res, 500, {
+
+          success: false,
+
+          message:
+            "Profile সংরক্ষণ করা যায়নি"
+
+        });
+
+        return;
+      }
 
       sendJSON(res, 200, {
+
         success: true,
-        message: "প্রোফাইল আপডেট হয়েছে",
-        user: {
-          id: user.id,
-          phone: user.phone,
-          name: user.name,
-          location: user.location
-        }
+
+        message:
+          "Profile আপডেট হয়েছে",
+
+        user:
+          publicUser(user)
+
       });
 
       return;
@@ -455,52 +807,77 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url.startsWith("/api/jobs")
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
+
+      const url =
+        new URL(
+          req.url,
+          `http://${req.headers.host || "localhost"}`
+        );
 
       const location =
-        clean(url.searchParams.get("location"));
+        clean(
+          url.searchParams.get("location")
+        );
 
       const category =
-        clean(url.searchParams.get("category"));
+        clean(
+          url.searchParams.get("category")
+        );
 
       const q =
-        clean(url.searchParams.get("q"));
+        clean(
+          url.searchParams.get("q")
+        );
 
-      let result = [...jobs];
+      let result =
+        [...jobs];
 
       if (location) {
-        result = result.filter(job =>
-          locationMatch(
-            job.location,
-            location
-          )
-        );
+
+        result =
+          result.filter(job =>
+            locationMatch(
+              job.location,
+              location
+            )
+          );
+
       }
 
-      if (category && category !== "সব") {
-        result = result.filter(job =>
-          normalize(job.category) ===
-          normalize(category)
-        );
+      if (
+        category &&
+        category !== "সব"
+      ) {
+
+        result =
+          result.filter(job =>
+            normalize(job.category) ===
+            normalize(category)
+          );
+
       }
 
       if (q) {
-        const search = normalize(q);
 
-        result = result.filter(job => {
-          const text = normalize([
-            job.title,
-            job.location,
-            job.category,
-            job.description,
-            job.ownerName
-          ].join(" "));
+        const search =
+          normalize(q);
 
-          return text.includes(search);
-        });
+        result =
+          result.filter(job => {
+
+            const text =
+              normalize([
+                job.title,
+                job.location,
+                job.category,
+                job.description,
+                job.ownerName
+              ].join(" "));
+
+            return text.includes(search);
+
+          });
+
       }
 
       result.sort(
@@ -510,12 +887,15 @@ const server = http.createServer(async (req, res) => {
       );
 
       sendJSON(res, 200, {
+
         success: true,
-        count: result.length,
-        location: location || null,
-        category: category || null,
-        query: q || null,
-        jobs: result
+
+        count:
+          result.length,
+
+        jobs:
+          result
+
       });
 
       return;
@@ -529,15 +909,30 @@ const server = http.createServer(async (req, res) => {
       req.method === "POST" &&
       req.url === "/api/jobs"
     ) {
-      const body = await readBody(req);
 
-      const title = clean(body.title);
-      const location = clean(body.location);
-      const salary = clean(body.salary);
-      const category = clean(body.category);
-      const description = clean(body.description);
-      const phone = clean(body.phone);
-      const pin = clean(body.pin);
+      const body =
+        await readBody(req);
+
+      const title =
+        clean(body.title);
+
+      const location =
+        clean(body.location);
+
+      const salary =
+        clean(body.salary);
+
+      const category =
+        clean(body.category);
+
+      const description =
+        clean(body.description);
+
+      const phone =
+        clean(body.phone);
+
+      const pin =
+        clean(body.pin);
 
       if (
         !title ||
@@ -548,65 +943,122 @@ const server = http.createServer(async (req, res) => {
         !phone ||
         !pin
       ) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "সব প্রয়োজনীয় তথ্য পূরণ করুন"
+
+          message:
+            "সব প্রয়োজনীয় তথ্য পূরণ করুন"
+
         });
+
         return;
       }
 
       if (!validPIN(pin)) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
+          message:
+            "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
         });
+
         return;
       }
 
-      const user = getUserByPhone(phone);
+      const user =
+        getUserByPhone(phone);
 
       if (!user) {
+
         sendJSON(res, 401, {
+
           success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
+
+          message:
+            "ব্যবহারকারী পাওয়া যায়নি"
+
         });
+
         return;
       }
 
-      if (user.pinHash !== hashPIN(pin)) {
+      if (
+        user.pinHash !==
+        hashPIN(pin)
+      ) {
+
         sendJSON(res, 401, {
+
           success: false,
-          message: "ভুল PIN"
+
+          message:
+            "ভুল PIN"
+
         });
+
         return;
       }
 
       const job = {
-        id: createID("job"),
+
+        id:
+          createID("job"),
+
         title,
+
         location,
+
         salary,
+
         category,
+
         description,
+
         phone,
-        ownerName: user.name,
-        createdAt: new Date().toISOString()
+
+        ownerName:
+          user.name,
+
+        createdAt:
+          new Date().toISOString()
+
       };
 
       jobs.unshift(job);
 
-      if (!saveJSON(DB.jobs, jobs)) {
+      if (
+        !saveJSON(
+          DB.jobs,
+          jobs
+        )
+      ) {
+
         sendJSON(res, 500, {
+
           success: false,
-          message: "কাজ সংরক্ষণ করা যায়নি"
+
+          message:
+            "কাজ সংরক্ষণ করা যায়নি"
+
         });
+
         return;
       }
 
       sendJSON(res, 200, {
+
         success: true,
-        message: "কাজ পোস্ট হয়েছে",
+
+        message:
+          "কাজ পোস্ট হয়েছে",
+
         job
+
       });
 
       return;
@@ -620,17 +1072,21 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url.startsWith("/api/my-jobs")
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
+
+      const url =
+        new URL(
+          req.url,
+          `http://${req.headers.host || "localhost"}`
+        );
 
       const phone =
-        clean(url.searchParams.get("phone"));
+        clean(
+          url.searchParams.get("phone")
+        );
 
       const result =
-        jobs.filter(job =>
-          job.phone === phone
+        jobs.filter(
+          job => job.phone === phone
         );
 
       result.sort(
@@ -640,8 +1096,12 @@ const server = http.createServer(async (req, res) => {
       );
 
       sendJSON(res, 200, {
+
         success: true,
-        jobs: result
+
+        jobs:
+          result
+
       });
 
       return;
@@ -649,17 +1109,21 @@ const server = http.createServer(async (req, res) => {
 
     /* =====================================
        DELETE JOB
-       FIXED: id / jobId
     ===================================== */
 
     if (
       req.method === "POST" &&
       req.url === "/api/jobs/delete"
     ) {
-      const body = await readBody(req);
+
+      const body =
+        await readBody(req);
 
       const id =
-        clean(body.id || body.jobId);
+        clean(
+          body.id ||
+          body.jobId
+        );
 
       const phone =
         clean(body.phone);
@@ -667,69 +1131,124 @@ const server = http.createServer(async (req, res) => {
       const pin =
         clean(body.pin);
 
-      if (!id || !phone || !pin) {
+      if (
+        !id ||
+        !phone ||
+        !pin
+      ) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "তথ্য অসম্পূর্ণ"
+
+          message:
+            "তথ্য অসম্পূর্ণ"
+
         });
+
         return;
       }
 
       if (!validPIN(pin)) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
+          message:
+            "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+
         });
+
         return;
       }
 
-      const user = getUserByPhone(phone);
+      const user =
+        getUserByPhone(phone);
 
       if (!user) {
+
         sendJSON(res, 401, {
+
           success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
+
+          message:
+            "ব্যবহারকারী পাওয়া যায়নি"
+
         });
+
         return;
       }
 
-      if (user.pinHash !== hashPIN(pin)) {
+      if (
+        user.pinHash !==
+        hashPIN(pin)
+      ) {
+
         sendJSON(res, 401, {
+
           success: false,
-          message: "ভুল PIN"
+
+          message:
+            "ভুল PIN"
+
         });
+
         return;
       }
 
       const job =
-        jobs.find(item => item.id === id);
+        jobs.find(
+          item => item.id === id
+        );
 
       if (!job) {
+
         sendJSON(res, 404, {
+
           success: false,
-          message: "কাজ পাওয়া যায়নি"
+
+          message:
+            "কাজ পাওয়া যায়নি"
+
         });
+
         return;
       }
 
-      if (job.phone !== phone) {
+      if (
+        job.phone !== phone
+      ) {
+
         sendJSON(res, 403, {
+
           success: false,
+
           message:
             "এই কাজ মুছে ফেলার অনুমতি নেই"
+
         });
+
         return;
       }
 
-      jobs = jobs.filter(
-        item => item.id !== id
+      jobs =
+        jobs.filter(
+          item => item.id !== id
+        );
+
+      saveJSON(
+        DB.jobs,
+        jobs
       );
 
-      saveJSON(DB.jobs, jobs);
-
       sendJSON(res, 200, {
+
         success: true,
-        message: "কাজ মুছে ফেলা হয়েছে"
+
+        message:
+          "কাজ মুছে ফেলা হয়েছে"
+
       });
 
       return;
@@ -743,60 +1262,114 @@ const server = http.createServer(async (req, res) => {
       req.method === "POST" &&
       req.url === "/api/messages/send"
     ) {
-      const body = await readBody(req);
 
-      const from = clean(body.from);
-      const to = clean(body.to);
-      const text = clean(body.text);
+      const body =
+        await readBody(req);
 
-      if (!from || !to || !text) {
+      const from =
+        clean(body.from);
+
+      const to =
+        clean(body.to);
+
+      const text =
+        clean(body.text);
+
+      if (
+        !from ||
+        !to ||
+        !text
+      ) {
+
         sendJSON(res, 400, {
+
           success: false,
-          message: "মেসেজ লিখুন"
+
+          message:
+            "মেসেজ লিখুন"
+
         });
+
         return;
       }
 
-      const sender = getUserByPhone(from);
-      const receiver = getUserByPhone(to);
+      const sender =
+        getUserByPhone(from);
 
-      if (!sender || !receiver) {
+      const receiver =
+        getUserByPhone(to);
+
+      if (
+        !sender ||
+        !receiver
+      ) {
+
         sendJSON(res, 404, {
+
           success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
+
+          message:
+            "ব্যবহারকারী পাওয়া যায়নি"
+
         });
+
         return;
       }
 
       const message = {
-        id: createID("message"),
+
+        id:
+          createID("message"),
+
         from,
+
         to,
+
         text,
-        createdAt: new Date().toISOString()
+
+        createdAt:
+          new Date().toISOString()
+
       };
 
       messages.push(message);
 
-      if (messages.length > 10000) {
-        messages = messages.slice(-10000);
+      if (
+        messages.length > 10000
+      ) {
+
+        messages =
+          messages.slice(-10000);
+
       }
 
-      saveJSON(DB.messages, messages);
+      saveJSON(
+        DB.messages,
+        messages
+      );
 
       createNotification({
+
         phone: to,
+
         type: "message",
-        title: "নতুন মেসেজ 💬",
+
+        title:
+          "নতুন মেসেজ 💬",
+
         text:
           `${sender.name} আপনাকে একটি মেসেজ পাঠিয়েছে`,
+
         from
+
       });
 
       sendJSON(res, 200, {
+
         success: true,
-        message,
-        notification: true
+
+        message
+
       });
 
       return;
@@ -810,27 +1383,40 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url.startsWith("/api/messages")
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
+
+      const url =
+        new URL(
+          req.url,
+          `http://${req.headers.host || "localhost"}`
+        );
 
       const me =
-        clean(url.searchParams.get("me"));
+        clean(
+          url.searchParams.get("me") ||
+          url.searchParams.get("phone")
+        );
 
       const other =
-        clean(url.searchParams.get("other"));
+        clean(
+          url.searchParams.get("other") ||
+          url.searchParams.get("with")
+        );
 
       const result =
         messages.filter(message =>
+
           (
             message.from === me &&
             message.to === other
-          ) ||
+          )
+
+          ||
+
           (
             message.from === other &&
             message.to === me
           )
+
         );
 
       result.sort(
@@ -840,8 +1426,12 @@ const server = http.createServer(async (req, res) => {
       );
 
       sendJSON(res, 200, {
+
         success: true,
-        messages: result
+
+        messages:
+          result
+
       });
 
       return;
@@ -855,17 +1445,22 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       req.url.startsWith("/api/notifications")
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
+
+      const url =
+        new URL(
+          req.url,
+          `http://${req.headers.host || "localhost"}`
+        );
 
       const phone =
-        clean(url.searchParams.get("phone"));
+        clean(
+          url.searchParams.get("phone")
+        );
 
       const result =
         notifications.filter(
-          item => item.phone === phone
+          item =>
+            item.phone === phone
         );
 
       result.sort(
@@ -880,9 +1475,14 @@ const server = http.createServer(async (req, res) => {
         ).length;
 
       sendJSON(res, 200, {
+
         success: true,
+
         unreadCount,
-        notifications: result.slice(0, 100)
+
+        notifications:
+          result.slice(0, 100)
+
       });
 
       return;
@@ -896,7 +1496,9 @@ const server = http.createServer(async (req, res) => {
       req.method === "POST" &&
       req.url === "/api/notifications/read"
     ) {
-      const body = await readBody(req);
+
+      const body =
+        await readBody(req);
 
       const phone =
         clean(body.phone);
@@ -905,31 +1507,41 @@ const server = http.createServer(async (req, res) => {
 
       notifications =
         notifications.map(item => {
+
           if (
             item.phone === phone &&
             !item.read
           ) {
+
             changed = true;
 
             return {
               ...item,
               read: true
             };
+
           }
 
           return item;
+
         });
 
       if (changed) {
+
         saveJSON(
           DB.notifications,
           notifications
         );
+
       }
 
       sendJSON(res, 200, {
+
         success: true,
-        message: "নোটিফিকেশন পড়া হয়েছে"
+
+        message:
+          "নোটিফিকেশন পড়া হয়েছে"
+
       });
 
       return;
@@ -940,8 +1552,12 @@ const server = http.createServer(async (req, res) => {
     ===================================== */
 
     sendJSON(res, 404, {
+
       success: false,
-      message: "Not Found"
+
+      message:
+        "Not Found"
+
     });
 
   } catch (error) {
@@ -952,11 +1568,19 @@ const server = http.createServer(async (req, res) => {
     );
 
     sendJSON(res, 500, {
+
       success: false,
-      message: "Server error",
-      error: error.message
+
+      message:
+        "Server error",
+
+      error:
+        error.message
+
     });
+
   }
+
 });
 
 /* =========================================
@@ -967,6 +1591,7 @@ server.listen(
   PORT,
   "0.0.0.0",
   () => {
+
     console.log(
       `কাজ খুঁজি server started on port ${PORT}`
     );
@@ -974,5 +1599,10 @@ server.listen(
     console.log(
       "Location based job search enabled"
     );
+
+    console.log(
+      "Future AI profile system enabled"
+    );
+
   }
 );
