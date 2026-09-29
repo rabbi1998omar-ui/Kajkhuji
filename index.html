@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+
+<title>কাজ খুঁজি</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+}
+
+body{
+  background:#0b1020;
+  color:#fff;
+  min-height:100vh;
+}
+
+.app{
+  max-width:600px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+/* HEADER */
+header{
+  padding:20px;
+  background:linear-gradient(135deg,#172554,#4c1d95);
+  border-radius:0 0 28px 28px;
+}
+
+.logo{
+  font-size:27px;
+  font-weight:bold;
+}
+
+.subtitle{
+  color:#cbd5e1;
+  margin-top:7px;
+  font-size:14px;
+}
+
+/* SEARCH */
+.search{
+  margin-top:20px;
+  display:flex;
+  background:#fff;
+  border-radius:14px;
+  padding:5px;
+}
+
+.search input{
+  flex:1;
+  border:0;
+  outline:none;
+  padding:12px;
+  font-size:15px;
+  border-radius:12px;
+}
+
+.search button{
+  border:0;
+  background:#7c3aed;
+  color:#fff;
+  padding:0 18px;
+  border-radius:11px;
+  font-size:20px;
+}
+
+/* CONTENT */
+.content{
+  padding:20px;
+}
+
+.title{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:14px;
+}
+
+/* CATEGORY */
+.categories{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.category{
+  background:#151c32;
+  border:1px solid #26304d;
+  border-radius:15px;
+  padding:14px 5px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.category:active{
+  transform:scale(.96);
+}
+
+.category .icon{
+  font-size:25px;
+}
+
+.category p{
+  margin-top:6px;
+  font-size:12px;
+  color:#cbd5e1;
+}
+
+/* JOB CARD */
+.job{
+  background:#151c32;
+  border:1px solid #26304d;
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:13px;
+}
+
+.job-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.job h3{
+  font-size:17px;
+}
+
+.badge{
+  background:#064e3b;
+  color:#6ee7b7;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  height:max-content;
+}
+
+.location{
+  color:#94a3b8;
+  font-size:13px;
+  margin-top:8px;
+}
+
+.salary{
+  color:#a78bfa;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:12px;
+}
+
+.description{
+  color:#cbd5e1;
+  font-size:13px;
+  margin-top:10px;
+  line-height:1.5;
+}
+
+.job-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:15px;
+}
+
+.time{
+  color:#64748b;
+  font-size:11px;
+}
+
+.apply{
+  border:0;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  color:#fff;
+  padding:9px 15px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+/* FLOATING BUTTON */
+.add{
+  position:fixed;
+  right:20px;
+  bottom:78px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  border:0;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  color:#fff;
+  font-size:30px;
+  box-shadow:0 8px 30px #0008;
+}
+
+/* BOTTOM NAV */
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  max-width:600px;
+  margin:auto;
+  height:65px;
+  background:#111827;
+  border-top:1px solid #26304d;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+}
+
+.nav-item{
+  color:#64748b;
+  text-align:center;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.nav-item.active{
+  color:#a78bfa;
+}
+
+.nav-item div{
+  font-size:22px;
+  margin-bottom:3px;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000b;
+  z-index:10;
+  padding:20px;
+  overflow:auto;
+}
+
+.modal-box{
+  max-width:550px;
+  margin:40px auto;
+  background:#151c32;
+  border-radius:22px;
+  padding:22px;
+}
+
+.modal-box h2{
+  margin-bottom:20px;
+}
+
+.input{
+  width:100%;
+  background:#0b1020;
+  border:1px solid #334155;
+  color:#fff;
+  padding:13px;
+  border-radius:11px;
+  outline:none;
+  margin-bottom:12px;
+}
+
+textarea.input{
+  min-height:110px;
+  resize:vertical;
+}
+
+.submit{
+  width:100%;
+  border:0;
+  padding:14px;
+  border-radius:12px;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+}
+
+.close{
+  float:right;
+  background:#334155;
+  color:#fff;
+  border:0;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+  <div class="logo">💼 কাজ খুঁজি</div>
+
+  <div class="subtitle">
+    আপনার এলাকার কাজ খুঁজুন, অথবা আপনার কাজের জন্য কর্মী খুঁজুন।
+  </div>
+
+  <div class="search">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="কাজ বা এলাকা খুঁজুন..."
+      oninput="searchJobs()"
+    >
+    <button>🔎</button>
+  </div>
+
+</header>
+
+
+<div class="content">
+
+  <div class="title">
+    কাজের ক্যাটাগরি
+  </div>
+
+  <div class="categories">
+
+    <div class="category" onclick="filterCategory('রাজমিস্ত্রি')">
+      <div class="icon">🧱</div>
+      <p>রাজমিস্ত্রি</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('ইলেকট্রিশিয়ান')">
+      <div class="icon">⚡</div>
+      <p>ইলেকট্রিশিয়ান</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('ড্রাইভার')">
+      <div class="icon">🚗</div>
+      <p>ড্রাইভার</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('ডেলিভারি')">
+      <div class="icon">📦</div>
+      <p>ডেলিভারি</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('দোকান')">
+      <div class="icon">🏪</div>
+      <p>দোকান</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('কম্পিউটার')">
+      <div class="icon">💻</div>
+      <p>কম্পিউটার</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('টিউশনি')">
+      <div class="icon">📚</div>
+      <p>টিউশনি</p>
+    </div>
+
+    <div class="category" onclick="filterCategory('অন্যান্য')">
+      <div class="icon">➕</div>
+      <p>অন্যান্য</p>
+    </div>
+
+  </div>
+
+
+  <div class="title" style="margin-top:28px">
+    🔥 সাম্প্রতিক কাজ
+  </div>
+
+  <div id="jobList">
+
+    <div class="job" data-category="ডেলিভারি" data-search="ডেলিভারি গাজীপুর">
+      <div class="job-top">
+        <h3>ডেলিভারি কর্মী প্রয়োজন</h3>
+        <span class="badge">নতুন</span>
+      </div>
+
+      <div class="location">
+        📍 গাজীপুর
+      </div>
+
+      <div class="salary">
+        ৳১২,০০০ - ৳১৬,০০০ / মাস
+      </div>
+
+      <div class="description">
+        একটি প্রতিষ্ঠানের জন্য নিয়মিত ডেলিভারি করার জন্য কর্মী প্রয়োজন।
+      </div>
+
+      <div class="job-footer">
+        <span class="time">২ ঘণ্টা আগে</span>
+        <button class="apply" onclick="applyJob('ডেলিভারি কর্মী প্রয়োজন')">
+          যোগাযোগ
+        </button>
+      </div>
+    </div>
+
+
+    <div class="job" data-category="ইলেকট্রিশিয়ান" data-search="ইলেকট্রিশিয়ান ঢাকা">
+      <div class="job-top">
+        <h3>ইলেকট্রিশিয়ান প্রয়োজন</h3>
+        <span class="badge">জরুরি</span>
+      </div>
+
+      <div class="location">
+        📍 ঢাকা
+      </div>
+
+      <div class="salary">
+        ৳৮০০ - ৳১,২০০ / দিন
+      </div>
+
+      <div class="description">
+        বাসার বৈদ্যুতিক কাজের জন্য অভিজ্ঞ ইলেকট্রিশিয়ান প্রয়োজন।
+      </div>
+
+      <div class="job-footer">
+        <span class="time">৫ ঘণ্টা আগে</span>
+        <button class="apply" onclick="applyJob('ইলেকট্রিশিয়ান প্রয়োজন')">
+          যোগাযোগ
+        </button>
+      </div>
+    </div>
+
+
+    <div class="job" data-category="দোকান" data-search="দোকান টাঙ্গাইল">
+      <div class="job-top">
+        <h3>দোকানে কর্মচারী প্রয়োজন</h3>
+        <span class="badge">নতুন</span>
+      </div>
+
+      <div class="location">
+        📍 টাঙ্গাইল
+      </div>
+
+      <div class="salary">
+        ৳১০,০০০ / মাস
+      </div>
+
+      <div class="description">
+        একটি দোকানে ফুলটাইম কাজের জন্য দায়িত্বশীল কর্মী প্রয়োজন।
+      </div>
+
+      <div class="job-footer">
+        <span class="time">১ দিন আগে</span>
+        <button class="apply" onclick="applyJob('দোকানে কর্মচারী প্রয়োজন')">
+          যোগাযোগ
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<button class="add" onclick="openModal()">+</button>
+
+
+<nav>
+
+  <div class="nav-item active" onclick="showHome()">
+    <div>🏠</div>
+    হোম
+  </div>
+
+  <div class="nav-item" onclick="showJobs()">
+    <div>🔎</div>
+    কাজ
+  </div>
+
+  <div class="nav-item" onclick="openModal()">
+    <div>➕</div>
+    পোস্ট
+  </div>
+
+  <div class="nav-item" onclick="showProfile()">
+    <div>👤</div>
+    প্রোফাইল
+  </div>
+
+</nav>
+
+</div>
+
+
+<!-- POST MODAL -->
+
+<div class="modal" id="postModal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="closeModal()">×</button>
+
+    <h2>📢 নতুন কাজ পোস্ট করুন</h2>
+
+    <input
+      class="input"
+      id="jobTitle"
+      placeholder="কাজের নাম"
+    >
+
+    <input
+      class="input"
+      id="jobLocation"
+      placeholder="কাজের এলাকা"
+    >
+
+    <input
+      class="input"
+      id="jobSalary"
+      placeholder="বেতন / পারিশ্রমিক"
+    >
+
+    <select class="input" id="jobCategory">
+      <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+      <option>রাজমিস্ত্রি</option>
+      <option>ইলেকট্রিশিয়ান</option>
+      <option>ড্রাইভার</option>
+      <option>ডেলিভারি</option>
+      <option>দোকান</option>
+      <option>কম্পিউটার</option>
+      <option>টিউশনি</option>
+      <option>অন্যান্য</option>
+    </select>
+
+    <textarea
+      class="input"
+      id="jobDescription"
+      placeholder="কাজের বিস্তারিত লিখুন..."
+    ></textarea>
+
+    <button class="submit" onclick="postJob()">
+      কাজ পোস্ট করুন
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let jobs=[];
+
+
+/* =========================
+   MODAL
+========================= */
+
+function openModal(){
+
+  document.getElementById("postModal").style.display="block";
+
+}
+
+function closeModal(){
+
+  document.getElementById("postModal").style.display="none";
+
+}
+
+
+/* =========================
+   POST JOB
+========================= */
+
+function postJob(){
+
+  const title=
+    document.getElementById("jobTitle").value.trim();
+
+  const location=
+    document.getElementById("jobLocation").value.trim();
+
+  const salary=
+    document.getElementById("jobSalary").value.trim();
+
+  const category=
+    document.getElementById("jobCategory").value;
+
+  const description=
+    document.getElementById("jobDescription").value.trim();
+
+
+  if(!title || !location || !salary || !category){
+
+    alert("দয়া করে প্রয়োজনীয় তথ্য পূরণ করুন।");
+
+    return;
+
+  }
+
+
+  const job={
+
+    title,
+    location,
+    salary,
+    category,
+    description
+
+  };
+
+
+  jobs.unshift(job);
+
+  renderNewJob(job);
+
+  closeModal();
+
+  document.getElementById("jobTitle").value="";
+  document.getElementById("jobLocation").value="";
+  document.getElementById("jobSalary").value="";
+  document.getElementById("jobCategory").value="";
+  document.getElementById("jobDescription").value="";
+
+  alert("✅ কাজ সফলভাবে পোস্ট হয়েছে!");
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderNewJob(job){
+
+  const card=document.createElement("div");
+
+  card.className="job";
+
+  card.dataset.category=job.category;
+
+  card.dataset.search=
+    (job.title+" "+job.location).toLowerCase();
+
+
+  card.innerHTML=`
+
+    <div class="job-top">
+
+      <h3>${escapeHtml(job.title)}</h3>
+
+      <span class="badge">
+        নতুন
+      </span>
+
+    </div>
+
+    <div class="location">
+      📍 ${escapeHtml(job.location)}
+    </div>
+
+    <div class="salary">
+      ${escapeHtml(job.salary)}
+    </div>
+
+    <div class="description">
+      ${escapeHtml(job.description || "কাজের বিস্তারিত দেওয়া হয়নি।")}
+    </div>
+
+    <div class="job-footer">
+
+      <span class="time">
+        এখনই
+      </span>
+
+      <button
+        class="apply"
+        onclick="applyJob('${escapeAttribute(job.title)}')">
+        যোগাযোগ
+      </button>
+
+    </div>
+
+  `;
+
+
+  document.getElementById("jobList")
+    .prepend(card);
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchJobs(){
+
+  const value=
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  document
+    .querySelectorAll(".job")
+    .forEach(job=>{
+
+      const text=
+        (job.dataset.search || "")
+        .toLowerCase();
+
+      job.style.display=
+        !value || text.includes(value)
+        ? "block"
+        : "none";
+
+    });
+
+}
+
+
+/* =========================
+   CATEGORY
+========================= */
+
+function filterCategory(category){
+
+  document
+    .querySelectorAll(".job")
+    .forEach(job=>{
+
+      job.style.display=
+        job.dataset.category===category
+        ? "block"
+        : "none";
+
+    });
+
+}
+
+
+/* =========================
+   APPLY
+========================= */
+
+function applyJob(title){
+
+  alert(
+    "📩 আপনি \""+
+    title+
+    "\" কাজটির জন্য যোগাযোগ করতে চাচ্ছেন।\n\n"+
+    "পরবর্তী ভার্সনে এখানে সরাসরি Chat ও Phone Call যুক্ত হবে।"
+  );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showHome(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function showJobs(){
+
+  document
+    .getElementById("jobList")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+function showProfile(){
+
+  alert(
+    "👤 Profile\n\n"+
+    "পরবর্তী ধাপে এখানে আপনার নাম, ছবি, দক্ষতা, এলাকা ও পোস্ট করা কাজ দেখানো হবে।"
+  );
+
+}
+
+
+/* =========================
+   SECURITY HELPERS
+========================= */
+
+function escapeHtml(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function escapeAttribute(text){
+
+  return String(text)
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll('"','&quot;');
+
+}
+
+</script>
+
+</body>
+</html>
