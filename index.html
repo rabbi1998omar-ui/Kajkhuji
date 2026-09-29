@@ -2,38 +2,31 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0b12">
-
-<title>কাজ খুঁজি</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090912">
+<title>💼 কাজ খুঁজি</title>
 
 <style>
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
 }
 
 body{
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  background:#090910;
+  background:
+    radial-gradient(circle at top,#351d48 0%,#151020 42%,#090912 100%);
   color:#fff;
   min-height:100vh;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
   font:inherit;
 }
 
 button{
+  border:0;
   cursor:pointer;
 }
 
@@ -48,100 +41,132 @@ button{
 #authPage{
   min-height:100vh;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   padding:20px;
-  background:
-    radial-gradient(
-      circle at top,
-      #382052 0,
-      #15111d 38%,
-      #090910 75%
-    );
 }
 
 .authBox{
   width:100%;
   max-width:430px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:28px;
-  padding:28px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
   backdrop-filter:blur(20px);
-  box-shadow:0 25px 70px rgba(0,0,0,.4);
+  border-radius:28px;
+  padding:25px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
 
 .logo{
   text-align:center;
-  font-size:34px;
-  font-weight:800;
-  margin-bottom:8px;
+  margin-bottom:22px;
 }
 
-.tagline{
-  text-align:center;
-  color:#aaa;
-  margin-bottom:25px;
+.logoIcon{
+  width:75px;
+  height:75px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:25px;
+  font-size:36px;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  box-shadow:0 12px 30px rgba(255,79,145,.25);
 }
 
-.tabs{
+.logo h1{
+  margin-top:14px;
+  font-size:28px;
+}
+
+.logo p{
+  margin-top:7px;
+  color:#bbb;
+  font-size:14px;
+}
+
+.authTabs{
   display:flex;
   gap:8px;
+  background:rgba(0,0,0,.22);
+  padding:5px;
+  border-radius:14px;
   margin-bottom:20px;
 }
 
-.tab{
+.authTabs button{
   flex:1;
-  border:0;
-  padding:13px;
-  border-radius:13px;
-  background:#171720;
+  padding:12px;
+  border-radius:10px;
   color:#aaa;
+  background:transparent;
 }
 
-.tab.active{
+.authTabs button.active{
+  color:#fff;
   background:linear-gradient(135deg,#ff4f91,#814cff);
-  color:#fff;
 }
 
-.form{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.formGroup{
+  margin-bottom:14px;
 }
 
-.input{
+.formGroup label{
+  display:block;
+  margin-bottom:7px;
+  color:#ddd;
+  font-size:14px;
+}
+
+.input,
+.textarea,
+.select{
   width:100%;
-  border:1px solid rgba(255,255,255,.1);
-  background:#111119;
-  color:#fff;
-  padding:14px 15px;
+  padding:14px;
   border-radius:13px;
+  border:1px solid rgba(255,255,255,.12);
   outline:none;
+  background:rgba(0,0,0,.25);
+  color:#fff;
 }
 
-.input:focus{
-  border-color:#a75cff;
+.input:focus,
+.textarea:focus,
+.select:focus{
+  border-color:#ff4f91;
 }
 
-.primaryBtn{
-  border:0;
+.input::placeholder,
+.textarea::placeholder{
+  color:#777;
+}
+
+.textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.mainBtn{
+  width:100%;
   padding:14px;
   border-radius:14px;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
   color:#fff;
-  font-weight:700;
-  margin-top:4px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  box-shadow:0 10px 25px rgba(129,76,255,.2);
+}
+
+.mainBtn:active{
+  transform:scale(.98);
 }
 
 .message{
   margin-top:12px;
-  padding:11px;
-  border-radius:10px;
-  background:#191923;
-  color:#ddd;
   text-align:center;
   font-size:14px;
+  color:#ff9fbd;
+  min-height:20px;
 }
 
 /* =========================
@@ -150,106 +175,142 @@ button{
 
 #appPage{
   min-height:100vh;
-  padding-bottom:85px;
+  padding-bottom:90px;
 }
 
 .header{
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:50;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:15px 16px;
-  background:rgba(9,9,16,.88);
+  padding:15px;
+  background:rgba(9,9,18,.82);
   backdrop-filter:blur(18px);
   border-bottom:1px solid rgba(255,255,255,.07);
 }
 
+.headerLeft{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.headerLogo{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+}
+
 .headerTitle{
-  font-size:22px;
-  font-weight:800;
+  font-weight:bold;
+  font-size:18px;
+}
+
+.headerLocation{
+  color:#aaa;
+  font-size:11px;
+  margin-top:2px;
 }
 
 .headerRight{
   display:flex;
-  align-items:center;
-  gap:10px;
+  gap:8px;
 }
 
 .iconBtn{
   position:relative;
   width:42px;
   height:42px;
-  border:1px solid rgba(255,255,255,.08);
-  background:#15151e;
-  color:#fff;
   border-radius:13px;
-  font-size:20px;
+  color:#fff;
+  background:rgba(255,255,255,.08);
 }
 
 .badge{
   position:absolute;
-  top:-4px;
-  right:-4px;
-  min-width:19px;
-  height:19px;
-  padding:0 5px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:20px;
-  background:#ff3f79;
+  top:-3px;
+  right:-3px;
+  min-width:18px;
+  height:18px;
+  padding:0 4px;
+  border-radius:10px;
+  background:#ff3f7f;
   color:#fff;
   font-size:10px;
-  font-weight:800;
-  border:2px solid #090910;
-}
-
-.container{
-  width:100%;
-  max-width:900px;
-  margin:auto;
-  padding:18px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* =========================
-   SEARCH
+   CONTENT
 ========================= */
 
-.searchBox{
-  display:flex;
-  gap:8px;
+.content{
+  padding:16px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.hero{
+  padding:20px;
+  border-radius:22px;
+  background:
+    linear-gradient(135deg,rgba(255,79,145,.18),rgba(129,76,255,.18));
+  border:1px solid rgba(255,255,255,.08);
   margin-bottom:18px;
 }
 
-.searchBox input{
-  flex:1;
+.hero h2{
+  font-size:24px;
+  line-height:1.3;
 }
 
-.searchBtn{
-  width:50px;
-  border:0;
-  border-radius:13px;
-  background:#1a1824;
-  color:#fff;
+.hero p{
+  color:#bbb;
+  margin-top:8px;
+  font-size:14px;
+}
+
+.searchBox{
+  position:relative;
+  margin-bottom:17px;
+}
+
+.searchBox input{
+  padding-left:44px;
+}
+
+.searchIcon{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#aaa;
 }
 
 /* =========================
-   CATEGORIES
+   CATEGORY
 ========================= */
-
-.sectionTitle{
-  font-size:18px;
-  font-weight:800;
-  margin:20px 0 12px;
-}
 
 .categories{
   display:flex;
   gap:9px;
   overflow-x:auto;
-  padding-bottom:4px;
+  padding-bottom:7px;
+  margin-bottom:18px;
 }
 
 .categories::-webkit-scrollbar{
@@ -257,18 +318,38 @@ button{
 }
 
 .category{
-  flex:0 0 auto;
-  border:1px solid rgba(255,255,255,.08);
-  background:#13131c;
-  color:#ddd;
-  border-radius:30px;
-  padding:10px 15px;
-  white-space:nowrap;
+  flex-shrink:0;
+  padding:10px 14px;
+  border-radius:20px;
+  color:#bbb;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.07);
+  font-size:13px;
 }
 
 .category.active{
-  background:linear-gradient(135deg,#ff4f91,#814cff);
   color:#fff;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.sectionTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:20px 0 12px;
+}
+
+.sectionTitle h3{
+  font-size:18px;
+}
+
+.sectionTitle span{
+  color:#999;
+  font-size:12px;
 }
 
 /* =========================
@@ -276,20 +357,17 @@ button{
 ========================= */
 
 .jobs{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:13px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
 .jobCard{
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.065),
-    rgba(255,255,255,.025)
-  );
+  padding:16px;
+  border-radius:19px;
+  background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
-  padding:17px;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
 }
 
 .jobTop{
@@ -299,65 +377,113 @@ button{
 }
 
 .jobTitle{
-  font-size:18px;
-  font-weight:800;
+  font-size:17px;
+  font-weight:bold;
 }
 
 .jobCategory{
   display:inline-block;
-  margin-top:6px;
-  color:#ff7eab;
-  font-size:12px;
+  margin-top:7px;
+  padding:5px 9px;
+  border-radius:10px;
+  background:rgba(255,79,145,.12);
+  color:#ff9fc2;
+  font-size:11px;
+}
+
+.jobSalary{
+  color:#8ff0a4;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.jobDescription{
+  margin-top:12px;
+  color:#ccc;
+  font-size:14px;
+  line-height:1.5;
 }
 
 .jobInfo{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
-  margin:12px 0;
-  color:#aaa;
-  font-size:13px;
+  gap:8px;
+  margin-top:13px;
 }
 
-.jobDescription{
-  color:#c8c8ce;
-  line-height:1.6;
-  font-size:14px;
-}
-
-.jobOwner{
+.infoTag{
   color:#aaa;
   font-size:12px;
-  margin-top:12px;
+  background:rgba(0,0,0,.2);
+  padding:7px 9px;
+  border-radius:9px;
+}
+
+.jobBottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+.userName{
+  font-size:12px;
+  color:#bbb;
 }
 
 .jobActions{
   display:flex;
-  gap:8px;
-  margin-top:15px;
+  gap:7px;
 }
 
-.actionBtn{
-  flex:1;
-  border:0;
-  border-radius:12px;
-  padding:11px 8px;
-  background:#1b1b27;
+.smallBtn{
+  padding:8px 11px;
+  border-radius:10px;
   color:#fff;
+  background:rgba(255,255,255,.09);
+  font-size:12px;
 }
 
-.chatBtn{
-  background:linear-gradient(135deg,#814cff,#5c5cff);
+.smallBtn.primary{
+  background:linear-gradient(135deg,#ff4f91,#814cff);
 }
 
-.callBtn{
-  background:#173b2c;
-  color:#7cffb0;
+.smallBtn.danger{
+  background:rgba(255,50,90,.15);
+  color:#ff8da8;
 }
 
-.deleteBtn{
-  background:#391b24;
-  color:#ff789d;
+.empty{
+  text-align:center;
+  padding:35px 15px;
+  color:#888;
+}
+
+/* =========================
+   POST PAGE
+========================= */
+
+.formCard{
+  padding:18px;
+  border-radius:20px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.formCard h2{
+  margin-bottom:18px;
+}
+
+.formActions{
+  display:flex;
+  gap:10px;
+}
+
+.formActions button{
+  flex:1;
 }
 
 /* =========================
@@ -365,43 +491,53 @@ button{
 ========================= */
 
 .profileCard{
-  background:#12121b;
-  border:1px solid rgba(255,255,255,.08);
+  text-align:center;
+  padding:25px 18px;
   border-radius:22px;
-  padding:22px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.profileAvatar{
-  width:75px;
-  height:75px;
+.avatar{
+  width:78px;
+  height:78px;
+  margin:auto;
   border-radius:50%;
   display:flex;
-  justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+  justify-content:center;
   font-size:30px;
-  font-weight:800;
-  margin-bottom:14px;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
 }
 
-.profileName{
-  font-size:22px;
-  font-weight:800;
+.profileCard h2{
+  margin-top:12px;
+}
+
+.profileCard p{
+  color:#aaa;
+  margin-top:5px;
 }
 
 .profileInfo{
-  color:#aaa;
-  margin-top:7px;
+  margin-top:20px;
+  text-align:left;
 }
 
-.logoutBtn{
-  width:100%;
-  margin-top:20px;
-  padding:13px;
-  border:0;
-  border-radius:13px;
-  background:#341923;
-  color:#ff789d;
+.profileRow{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:13px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.profileRow span:first-child{
+  color:#999;
+}
+
+.profileRow span:last-child{
+  text-align:right;
 }
 
 /* =========================
@@ -410,59 +546,52 @@ button{
 
 .bottomNav{
   position:fixed;
+  z-index:60;
+  bottom:0;
   left:0;
   right:0;
-  bottom:0;
-  z-index:30;
-  height:72px;
   display:flex;
-  justify-content:center;
-  background:rgba(10,10,16,.94);
-  backdrop-filter:blur(18px);
+  justify-content:space-around;
+  padding:9px 5px calc(9px + env(safe-area-inset-bottom));
+  background:rgba(9,9,18,.93);
+  backdrop-filter:blur(20px);
   border-top:1px solid rgba(255,255,255,.08);
 }
 
-.navInner{
-  width:100%;
-  max-width:600px;
-  display:flex;
+.navItem{
+  min-width:55px;
+  text-align:center;
+  color:#888;
+  font-size:10px;
+  background:none;
 }
 
-.navBtn{
-  flex:1;
-  border:0;
-  background:transparent;
-  color:#777;
-  font-size:12px;
-}
-
-.navBtn span{
+.navItem .navIcon{
   display:block;
-  font-size:22px;
+  font-size:20px;
   margin-bottom:3px;
 }
 
-.navBtn.active{
-  color:#ff65a0;
+.navItem.active{
+  color:#ff79a9;
 }
 
 /* =========================
    FLOAT BUTTON
 ========================= */
 
-.floatingBtn{
+.fab{
   position:fixed;
+  z-index:55;
   right:18px;
-  bottom:88px;
-  z-index:25;
-  width:57px;
-  height:57px;
-  border:0;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+  bottom:78px;
+  width:56px;
+  height:56px;
+  border-radius:19px;
   color:#fff;
-  font-size:28px;
-  box-shadow:0 10px 35px rgba(129,76,255,.35);
+  font-size:25px;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  box-shadow:0 10px 30px rgba(129,76,255,.35);
 }
 
 /* =========================
@@ -471,107 +600,72 @@ button{
 
 .modal{
   position:fixed;
-  inset:0;
   z-index:100;
-  background:rgba(0,0,0,.7);
-  display:flex;
+  inset:0;
+  display:none;
   align-items:flex-end;
   justify-content:center;
+  background:rgba(0,0,0,.7);
+  padding:15px;
+}
+
+.modal.show{
+  display:flex;
 }
 
 .modalBox{
   width:100%;
-  max-width:650px;
+  max-width:520px;
   max-height:90vh;
-  overflow:auto;
-  background:#11111a;
-  border-radius:25px 25px 0 0;
+  overflow-y:auto;
+  border-radius:24px 24px 10px 10px;
   padding:20px;
-  border:1px solid rgba(255,255,255,.08);
+  background:#171422;
+  border:1px solid rgba(255,255,255,.1);
 }
 
 .modalHeader{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   margin-bottom:18px;
 }
 
-.modalTitle{
-  font-size:20px;
-  font-weight:800;
-}
-
-.closeBtn{
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:11px;
-  background:#20202b;
-  color:#fff;
-  font-size:18px;
-}
-
-/* =========================
-   NOTIFICATIONS
-========================= */
-
-.notificationList{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.notificationItem{
-  display:flex;
-  gap:12px;
-  padding:14px;
-  border-radius:15px;
-  background:#191923;
-  border:1px solid rgba(255,255,255,.05);
-}
-
-.notificationItem.unread{
-  background:#211827;
-  border-color:rgba(255,79,145,.2);
-}
-
-.notificationIcon{
-  width:42px;
-  height:42px;
-  flex:0 0 42px;
-  border-radius:13px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+.modalHeader h2{
   font-size:19px;
 }
 
-.notificationText{
-  flex:1;
+.closeBtn{
+  width:35px;
+  height:35px;
+  border-radius:10px;
+  color:#fff;
+  background:rgba(255,255,255,.08);
 }
 
-.notificationTitle{
-  font-weight:700;
-  margin-bottom:4px;
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notificationItem{
+  padding:13px;
+  border-radius:14px;
+  margin-bottom:9px;
+  background:rgba(255,255,255,.06);
 }
 
-.notificationBody{
-  color:#aaa;
-  font-size:13px;
-  line-height:1.5;
+.notificationItem.unread{
+  border-left:3px solid #ff4f91;
 }
 
-.notificationTime{
-  color:#777;
-  font-size:11px;
-  margin-top:5px;
+.notificationItem p{
+  font-size:14px;
+  line-height:1.4;
 }
 
-.empty{
-  padding:35px 15px;
-  text-align:center;
+.notificationItem small{
+  display:block;
+  margin-top:6px;
   color:#777;
 }
 
@@ -579,70 +673,76 @@ button{
    CHAT
 ========================= */
 
-.chatModal{
-  align-items:stretch;
-}
-
-.chatBox{
-  max-width:700px;
-  height:100%;
-  max-height:none;
-  border-radius:0;
-  display:flex;
-  flex-direction:column;
-}
-
 .chatMessages{
-  flex:1;
-  overflow:auto;
-  padding:10px 0;
+  min-height:260px;
+  max-height:50vh;
+  overflow-y:auto;
+  padding:8px 0;
 }
 
-.chatBubbleWrap{
+.messageRow{
   display:flex;
   margin:7px 0;
 }
 
-.chatBubbleWrap.mine{
+.messageRow.me{
   justify-content:flex-end;
 }
 
 .chatBubble{
   max-width:78%;
   padding:10px 13px;
-  border-radius:16px;
-  background:#242431;
+  border-radius:15px;
+  background:rgba(255,255,255,.08);
   color:#eee;
-  line-height:1.45;
 }
 
-.mine .chatBubble{
-  background:linear-gradient(135deg,#814cff,#ff4f91);
+.messageRow.me .chatBubble{
+  background:linear-gradient(135deg,#ff4f91,#814cff);
 }
 
 .chatTime{
   display:block;
-  margin-top:4px;
-  font-size:10px;
+  font-size:9px;
   opacity:.65;
+  margin-top:4px;
 }
 
 .chatInputArea{
   display:flex;
   gap:8px;
-  padding-top:10px;
+  margin-top:10px;
 }
 
 .chatInputArea input{
   flex:1;
 }
 
-.sendBtn{
-  width:52px;
-  border:0;
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+  z-index:200;
+  left:50%;
+  bottom:90px;
+  transform:translateX(-50%) translateY(20px);
+  width:calc(100% - 35px);
+  max-width:430px;
+  padding:13px 16px;
   border-radius:13px;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
-  color:#fff;
+  text-align:center;
+  background:#262231;
+  border:1px solid rgba(255,255,255,.1);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 
 /* =========================
@@ -650,22 +750,21 @@ button{
 ========================= */
 
 @media(min-width:700px){
-  .jobs{
-    grid-template-columns:1fr 1fr;
+  .content{
+    max-width:800px;
+    margin:auto;
   }
 
-  .modal{
-    align-items:center;
-    padding:20px;
+  .bottomNav{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    width:600px;
+    border-radius:20px 20px 0 0;
   }
 
-  .modalBox{
-    border-radius:25px;
-    max-height:85vh;
-  }
-
-  .chatBox{
-    height:80vh;
+  .fab{
+    right:calc(50% - 380px);
   }
 }
 </style>
@@ -673,154 +772,170 @@ button{
 
 <body>
 
-<!-- =========================
+<!-- =====================================================
      AUTH PAGE
-========================= -->
+===================================================== -->
 
 <section id="authPage">
 
   <div class="authBox">
 
     <div class="logo">
-      💼 কাজ খুঁজি
+      <div class="logoIcon">💼</div>
+      <h1>কাজ খুঁজি</h1>
+      <p>কাজ খুঁজুন অথবা কাজের মানুষ খুঁজুন</p>
     </div>
 
-    <div class="tagline">
-      কাজ খুঁজুন, কাজ দিন
-    </div>
-
-    <div class="tabs">
-      <button
-        id="loginTab"
-        class="tab active"
-        onclick="showLogin()"
-      >
+    <div class="authTabs">
+      <button id="loginTab" class="active" onclick="showLogin()">
         লগইন
       </button>
 
-      <button
-        id="registerTab"
-        class="tab"
-        onclick="showRegister()"
-      >
+      <button id="registerTab" onclick="showRegister()">
         রেজিস্টার
       </button>
     </div>
 
-
     <!-- LOGIN -->
 
-    <div id="loginForm" class="form">
+    <div id="loginForm">
 
-      <input
-        id="loginPhone"
-        class="input"
-        type="tel"
-        placeholder="মোবাইল নম্বর"
-      >
+      <div class="formGroup">
+        <label>মোবাইল নম্বর</label>
 
-      <input
-        id="loginPin"
-        class="input"
-        type="password"
-        placeholder="PIN"
-      >
+        <input
+          id="loginPhone"
+          class="input"
+          type="tel"
+          inputmode="numeric"
+          placeholder="01XXXXXXXXX"
+        >
+      </div>
 
-      <button
-        class="primaryBtn"
-        onclick="login()"
-      >
-        লগইন
+      <div class="formGroup">
+        <label>৬ সংখ্যার PIN</label>
+
+        <input
+          id="loginPin"
+          class="input"
+          type="password"
+          inputmode="numeric"
+          maxlength="6"
+          pattern="[0-9]{6}"
+          placeholder="৬ সংখ্যার PIN"
+        >
+      </div>
+
+      <button class="mainBtn" onclick="login()">
+        🔐 লগইন
       </button>
+
+      <div id="loginMessage" class="message"></div>
 
     </div>
 
 
     <!-- REGISTER -->
 
-    <div
-      id="registerForm"
-      class="form hidden"
-    >
+    <div id="registerForm" class="hidden">
 
-      <input
-        id="registerName"
-        class="input"
-        type="text"
-        placeholder="আপনার নাম"
-      >
+      <div class="formGroup">
+        <label>আপনার নাম</label>
 
-      <input
-        id="registerPhone"
-        class="input"
-        type="tel"
-        placeholder="মোবাইল নম্বর"
-      >
+        <input
+          id="registerName"
+          class="input"
+          type="text"
+          maxlength="50"
+          placeholder="আপনার নাম"
+        >
+      </div>
 
-      <input
-        id="registerLocation"
-        class="input"
-        type="text"
-        placeholder="আপনার এলাকা"
-      >
+      <div class="formGroup">
+        <label>মোবাইল নম্বর</label>
 
-      <input
-        id="registerPin"
-        class="input"
-        type="password"
-        placeholder="৪-২০ সংখ্যার PIN"
-      >
+        <input
+          id="registerPhone"
+          class="input"
+          type="tel"
+          inputmode="numeric"
+          maxlength="11"
+          placeholder="01XXXXXXXXX"
+        >
+      </div>
 
-      <button
-        class="primaryBtn"
-        onclick="register()"
-      >
-        অ্যাকাউন্ট তৈরি করুন
+      <div class="formGroup">
+        <label>আপনার এলাকা</label>
+
+        <input
+          id="registerLocation"
+          class="input"
+          type="text"
+          maxlength="80"
+          placeholder="যেমন: টাংগাইল, ঢাকা"
+        >
+      </div>
+
+      <div class="formGroup">
+        <label>PIN</label>
+
+        <input
+          id="registerPin"
+          class="input"
+          type="password"
+          inputmode="numeric"
+          maxlength="6"
+          pattern="[0-9]{6}"
+          placeholder="৬ সংখ্যার PIN"
+        >
+      </div>
+
+      <button class="mainBtn" onclick="register()">
+        ✨ নতুন অ্যাকাউন্ট তৈরি
       </button>
 
-    </div>
+      <div id="registerMessage" class="message"></div>
 
-    <div
-      id="authMessage"
-      class="message hidden"
-    ></div>
+    </div>
 
   </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      APP PAGE
-========================= -->
+===================================================== -->
 
-<section
-  id="appPage"
-  class="hidden"
->
+<section id="appPage" class="hidden">
+
+  <!-- HEADER -->
 
   <header class="header">
 
-    <div class="headerTitle">
-      💼 কাজ খুঁজি
+    <div class="headerLeft">
+
+      <div class="headerLogo">
+        💼
+      </div>
+
+      <div>
+        <div class="headerTitle">
+          কাজ খুঁজি
+        </div>
+
+        <div id="headerLocation" class="headerLocation">
+          বাংলাদেশ
+        </div>
+      </div>
+
     </div>
 
     <div class="headerRight">
 
-      <button
-        class="iconBtn"
-        onclick="openNotifications()"
-        aria-label="Notifications"
-      >
+      <button class="iconBtn" onclick="openNotifications()">
         🔔
-
-        <span
-          id="notificationBadge"
-          class="badge hidden"
-        >
-          0
-        </span>
-
+        <span id="notificationBadge" class="badge hidden">0</span>
       </button>
 
     </div>
@@ -828,35 +943,39 @@ button{
   </header>
 
 
-  <main class="container">
+  <main class="content">
 
-    <!-- HOME -->
+    <!-- ================= HOME ================= -->
 
-    <section id="homeSection">
+    <section id="homePage" class="page active">
+
+      <div class="hero">
+
+        <h2>
+          আজকের কাজ খুঁজে নিন 🔎
+        </h2>
+
+        <p>
+          আপনার এলাকার কাজ এবং কাজের মানুষ সহজেই খুঁজুন।
+        </p>
+
+      </div>
+
 
       <div class="searchBox">
+
+        <span class="searchIcon">🔎</span>
 
         <input
           id="searchInput"
           class="input"
           type="search"
-          placeholder="কাজ খুঁজুন..."
+          placeholder="কাজ, লোকেশন বা ক্যাটাগরি খুঁজুন..."
           oninput="searchJobs()"
         >
 
-        <button
-          class="searchBtn"
-          onclick="searchJobs()"
-        >
-          🔍
-        </button>
-
       </div>
 
-
-      <div class="sectionTitle">
-        কাজের ধরন
-      </div>
 
       <div class="categories">
 
@@ -920,110 +1039,27 @@ button{
           class="category"
           onclick="filterCategory('অন্যান্য',this)"
         >
-          🛠️ অন্যান্য
+          📌 অন্যান্য
         </button>
 
       </div>
 
 
       <div class="sectionTitle">
-        সাম্প্রতিক কাজ
+
+        <h3>সাম্প্রতিক কাজ</h3>
+
+        <span id="jobCount">
+          0টি কাজ
+        </span>
+
       </div>
 
-      <div
-        id="homeJobs"
-        class="jobs"
-      ></div>
 
-    </section>
+      <div id="jobsList" class="jobs">
 
-
-    <!-- ALL JOBS -->
-
-    <section
-      id="jobsSection"
-      class="hidden"
-    >
-
-      <div class="sectionTitle">
-        সব কাজ
-      </div>
-
-      <div
-        id="allJobs"
-        class="jobs"
-      ></div>
-
-    </section>
-
-
-    <!-- POST -->
-
-    <section
-      id="postSection"
-      class="hidden"
-    >
-
-      <div class="sectionTitle">
-        নতুন কাজ পোস্ট করুন
-      </div>
-
-      <div class="profileCard">
-
-        <div class="form">
-
-          <input
-            id="jobTitle"
-            class="input"
-            placeholder="কাজের নাম"
-          >
-
-          <input
-            id="jobLocation"
-            class="input"
-            placeholder="কাজের জায়গা"
-          >
-
-          <input
-            id="jobSalary"
-            class="input"
-            placeholder="বেতন / পারিশ্রমিক"
-          >
-
-          <select
-            id="jobCategory"
-            class="input"
-          >
-            <option value="">কাজের ধরন নির্বাচন করুন</option>
-            <option>রাজমিস্ত্রি</option>
-            <option>ইলেকট্রিশিয়ান</option>
-            <option>ড্রাইভার</option>
-            <option>ডেলিভারি</option>
-            <option>দোকান</option>
-            <option>কম্পিউটার</option>
-            <option>টিউশনি</option>
-            <option>অন্যান্য</option>
-          </select>
-
-          <textarea
-            id="jobDescription"
-            class="input"
-            rows="5"
-            placeholder="কাজের বিস্তারিত"
-          ></textarea>
-
-          <button
-            class="primaryBtn"
-            onclick="createJob()"
-          >
-            কাজ পোস্ট করুন
-          </button>
-
-          <div
-            id="jobMessage"
-            class="message hidden"
-          ></div>
-
+        <div class="empty">
+          কাজ খোঁজা হচ্ছে...
         </div>
 
       </div>
@@ -1031,30 +1067,190 @@ button{
     </section>
 
 
-    <!-- PROFILE -->
+    <!-- ================= MY JOBS ================= -->
 
-    <section
-      id="profileSection"
-      class="hidden"
-    >
+    <section id="myJobsPage" class="page">
 
       <div class="sectionTitle">
-        আমার প্রোফাইল
+
+        <h3>আমার পোস্ট করা কাজ</h3>
+
       </div>
 
-      <div
-        id="profileContent"
-        class="profileCard"
-      ></div>
+      <div id="myJobsList" class="jobs">
 
-      <div class="sectionTitle">
-        আমার পোস্ট করা কাজ
+        <div class="empty">
+          আপনার পোস্ট করা কাজ এখানে দেখা যাবে।
+        </div>
+
       </div>
 
-      <div
-        id="myJobs"
-        class="jobs"
-      ></div>
+    </section>
+
+
+    <!-- ================= POST ================= -->
+
+    <section id="postPage" class="page">
+
+      <div class="formCard">
+
+        <h2>
+          📝 নতুন কাজ পোস্ট করুন
+        </h2>
+
+        <div class="formGroup">
+
+          <label>কাজের নাম</label>
+
+          <input
+            id="jobTitle"
+            class="input"
+            maxlength="100"
+            placeholder="যেমন: একজন ইলেকট্রিশিয়ান প্রয়োজন"
+          >
+
+        </div>
+
+
+        <div class="formGroup">
+
+          <label>ক্যাটাগরি</label>
+
+          <select id="jobCategory" class="select">
+
+            <option value="রাজমিস্ত্রি">রাজমিস্ত্রি</option>
+            <option value="ইলেকট্রিশিয়ান">ইলেকট্রিশিয়ান</option>
+            <option value="ড্রাইভার">ড্রাইভার</option>
+            <option value="ডেলিভারি">ডেলিভারি</option>
+            <option value="দোকান">দোকান</option>
+            <option value="কম্পিউটার">কম্পিউটার</option>
+            <option value="টিউশনি">টিউশনি</option>
+            <option value="অন্যান্য">অন্যান্য</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="formGroup">
+
+          <label>কাজের বিবরণ</label>
+
+          <textarea
+            id="jobDescription"
+            class="textarea"
+            maxlength="1000"
+            placeholder="কাজ সম্পর্কে বিস্তারিত লিখুন..."
+          ></textarea>
+
+        </div>
+
+
+        <div class="formGroup">
+
+          <label>বেতন / পারিশ্রমিক</label>
+
+          <input
+            id="jobSalary"
+            class="input"
+            maxlength="50"
+            placeholder="যেমন: ১৫,০০০ টাকা"
+          >
+
+        </div>
+
+
+        <div class="formGroup">
+
+          <label>কাজের লোকেশন</label>
+
+          <input
+            id="jobLocation"
+            class="input"
+            maxlength="100"
+            placeholder="যেমন: টাংগাইল সদর"
+          >
+
+        </div>
+
+
+        <button
+          class="mainBtn"
+          onclick="createJob()"
+        >
+          🚀 কাজ পোস্ট করুন
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= PROFILE ================= -->
+
+    <section id="profilePage" class="page">
+
+      <div class="profileCard">
+
+        <div id="profileAvatar" class="avatar">
+          👤
+        </div>
+
+        <h2 id="profileName">
+          -
+        </h2>
+
+        <p id="profilePhone">
+          -
+        </p>
+
+
+        <div class="profileInfo">
+
+          <div class="profileRow">
+
+            <span>📍 এলাকা</span>
+
+            <span id="profileLocation">
+              -
+            </span>
+
+          </div>
+
+
+          <div class="profileRow">
+
+            <span>💼 পোস্ট করা কাজ</span>
+
+            <span id="profileJobCount">
+              0
+            </span>
+
+          </div>
+
+
+          <div class="profileRow">
+
+            <span>👤 অ্যাকাউন্ট</span>
+
+            <span>
+              সক্রিয়
+            </span>
+
+          </div>
+
+        </div>
+
+        <br>
+
+        <button
+          class="mainBtn"
+          onclick="logout()"
+        >
+          🚪 লগআউট
+        </button>
+
+      </div>
 
     </section>
 
@@ -1064,184 +1260,88 @@ button{
   <!-- FLOATING POST BUTTON -->
 
   <button
-    class="floatingBtn"
-    onclick="openPost()"
+    class="fab"
+    onclick="showPage('postPage')"
   >
     +
   </button>
 
 
-  <!-- BOTTOM NAV -->
+  <!-- ================= BOTTOM NAV ================= -->
 
   <nav class="bottomNav">
 
-    <div class="navInner">
+    <button
+      id="navHome"
+      class="navItem active"
+      onclick="showPage('homePage',this)"
+    >
+      <span class="navIcon">🏠</span>
+      হোম
+    </button>
 
-      <button
-        id="navHome"
-        class="navBtn active"
-        onclick="showSection('home')"
-      >
-        <span>🏠</span>
-        হোম
-      </button>
 
-      <button
-        id="navJobs"
-        class="navBtn"
-        onclick="showSection('jobs')"
-      >
-        <span>💼</span>
-        কাজ
-      </button>
+    <button
+      id="navMyJobs"
+      class="navItem"
+      onclick="showPage('myJobsPage',this);loadMyJobs()"
+    >
+      <span class="navIcon">💼</span>
+      আমার কাজ
+    </button>
 
-      <button
-        id="navPost"
-        class="navBtn"
-        onclick="showSection('post')"
-      >
-        <span>➕</span>
-        পোস্ট
-      </button>
 
-      <button
-        id="navProfile"
-        class="navBtn"
-        onclick="showSection('profile')"
-      >
-        <span>👤</span>
-        প্রোফাইল
-      </button>
+    <button
+      id="navPost"
+      class="navItem"
+      onclick="showPage('postPage',this)"
+    >
+      <span class="navIcon">➕</span>
+      পোস্ট
+    </button>
 
-    </div>
+
+    <button
+      id="navProfile"
+      class="navItem"
+      onclick="showPage('profilePage',this);loadProfile()"
+    >
+      <span class="navIcon">👤</span>
+      প্রোফাইল
+    </button>
 
   </nav>
 
 </section>
 
 
-<!-- =========================
-     POST MODAL
-========================= -->
-
-<div
-  id="postModal"
-  class="modal hidden"
-  onclick="closeModalOutside(event,'postModal')"
->
-
-  <div class="modalBox">
-
-    <div class="modalHeader">
-
-      <div class="modalTitle">
-        নতুন কাজ পোস্ট করুন
-      </div>
-
-      <button
-        class="closeBtn"
-        onclick="closePost()"
-      >
-        ✕
-      </button>
-
-    </div>
-
-    <div class="form">
-
-      <input
-        id="modalJobTitle"
-        class="input"
-        placeholder="কাজের নাম"
-      >
-
-      <input
-        id="modalJobLocation"
-        class="input"
-        placeholder="কাজের জায়গা"
-      >
-
-      <input
-        id="modalJobSalary"
-        class="input"
-        placeholder="বেতন / পারিশ্রমিক"
-      >
-
-      <select
-        id="modalJobCategory"
-        class="input"
-      >
-        <option value="">কাজের ধরন</option>
-        <option>রাজমিস্ত্রি</option>
-        <option>ইলেকট্রিশিয়ান</option>
-        <option>ড্রাইভার</option>
-        <option>ডেলিভারি</option>
-        <option>দোকান</option>
-        <option>কম্পিউটার</option>
-        <option>টিউশনি</option>
-        <option>অন্যান্য</option>
-      </select>
-
-      <textarea
-        id="modalJobDescription"
-        class="input"
-        rows="5"
-        placeholder="কাজের বিস্তারিত"
-      ></textarea>
-
-      <button
-        class="primaryBtn"
-        onclick="createJobFromModal()"
-      >
-        পোস্ট করুন
-      </button>
-
-      <div
-        id="modalJobMessage"
-        class="message hidden"
-      ></div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
+<!-- =====================================================
      NOTIFICATION MODAL
-========================= -->
+===================================================== -->
 
-<div
-  id="notificationModal"
-  class="modal hidden"
-  onclick="closeModalOutside(event,'notificationModal')"
->
+<div id="notificationModal" class="modal">
 
   <div class="modalBox">
 
     <div class="modalHeader">
 
-      <div class="modalTitle">
-        🔔 Notifications
-      </div>
+      <h2>🔔 নোটিফিকেশন</h2>
 
       <button
         class="closeBtn"
-        onclick="closeNotifications()"
+        onclick="closeModal('notificationModal')"
       >
         ✕
       </button>
 
     </div>
 
-    <div
-      id="notificationList"
-      class="notificationList"
-    >
+    <div id="notificationsList">
+
       <div class="empty">
-        Notification লোড হচ্ছে...
+        কোনো নোটিফিকেশন নেই।
       </div>
+
     </div>
 
   </div>
@@ -1249,29 +1349,23 @@ button{
 </div>
 
 
-<!-- =========================
+<!-- =====================================================
      CHAT MODAL
-========================= -->
+===================================================== -->
 
-<div
-  id="chatModal"
-  class="modal chatModal hidden"
->
+<div id="chatModal" class="modal">
 
-  <div class="modalBox chatBox">
+  <div class="modalBox">
 
     <div class="modalHeader">
 
-      <div
-        id="chatTitle"
-        class="modalTitle"
-      >
-        Chat
-      </div>
+      <h2 id="chatTitle">
+        💬 মেসেজ
+      </h2>
 
       <button
         class="closeBtn"
-        onclick="closeChat()"
+        onclick="closeModal('chatModal')"
       >
         ✕
       </button>
@@ -1279,10 +1373,13 @@ button{
     </div>
 
 
-    <div
-      id="chatMessages"
-      class="chatMessages"
-    ></div>
+    <div id="chatMessages" class="chatMessages">
+
+      <div class="empty">
+        কোনো মেসেজ নেই।
+      </div>
+
+    </div>
 
 
     <div class="chatInputArea">
@@ -1290,17 +1387,15 @@ button{
       <input
         id="chatInput"
         class="input"
-        type="text"
-        maxlength="2000"
         placeholder="মেসেজ লিখুন..."
-        onkeydown="chatKey(event)"
+        onkeydown="if(event.key==='Enter')sendMessage()"
       >
 
       <button
-        class="sendBtn"
+        class="smallBtn primary"
         onclick="sendMessage()"
       >
-        ➤
+        পাঠান
       </button>
 
     </div>
@@ -1310,87 +1405,127 @@ button{
 </div>
 
 
+<!-- TOAST -->
+
+<div id="toast" class="toast"></div>
+
+
 <script>
 
-/* =========================================
+/* =====================================================
    GLOBAL
-========================================= */
+===================================================== */
 
 const API = window.location.origin;
 
 let currentUser = null;
+
 let allJobs = [];
+
 let currentCategory = "সব";
 
-let chatUser = null;
-let chatTimer = null;
+let chatPhone = "";
 
-let notificationTimer = null;
+let toastTimer = null;
 
 
-/* =========================================
+/* =====================================================
    HELPERS
-========================================= */
+===================================================== */
 
 function $(id){
   return document.getElementById(id);
 }
 
 
-function showMessage(id,text){
-  const el = $(id);
-
-  if(!el) return;
-
-  el.textContent = text;
-  el.classList.remove("hidden");
+function clean(value){
+  return String(value ?? "").trim();
 }
 
 
-function hideMessage(id){
+function showMessage(id,message){
   const el = $(id);
 
   if(el){
-    el.classList.add("hidden");
+    el.textContent = message;
   }
 }
 
 
-function escapeHtml(value){
+function showToast(message){
+
+  const toast = $("toast");
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2500);
+}
+
+
+function escapeHTML(value){
+
   return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
 
-function escapeAttr(value){
-  return escapeHtml(value);
-}
+async function apiFetch(url,options={}){
 
-
-function formatDate(date){
   try{
-    return new Date(date).toLocaleString(
-      "bn-BD",
-      {
-        day:"numeric",
-        month:"short",
-        hour:"numeric",
-        minute:"2-digit"
+
+    const response = await fetch(API + url,{
+      ...options,
+      headers:{
+        "Content-Type":"application/json",
+        ...(options.headers || {})
       }
-    );
-  }catch{
-    return "";
+    });
+
+    const text = await response.text();
+
+    let data={};
+
+    try{
+      data = text ? JSON.parse(text) : {};
+    }catch{
+      data = {
+        success:false,
+        message:text || "সার্ভার থেকে সঠিক উত্তর পাওয়া যায়নি"
+      };
+    }
+
+    if(!response.ok){
+
+      throw new Error(
+        data.message ||
+        "Server error: " + response.status
+      );
+    }
+
+    return data;
+
+  }catch(error){
+
+    console.error(error);
+
+    throw error;
   }
 }
 
 
-/* =========================================
+/* =====================================================
    AUTH TABS
-========================================= */
+===================================================== */
 
 function showLogin(){
 
@@ -1400,7 +1535,8 @@ function showLogin(){
   $("loginTab").classList.add("active");
   $("registerTab").classList.remove("active");
 
-  hideMessage("authMessage");
+  showMessage("loginMessage","");
+  showMessage("registerMessage","");
 }
 
 
@@ -1412,79 +1548,95 @@ function showRegister(){
   $("loginTab").classList.remove("active");
   $("registerTab").classList.add("active");
 
-  hideMessage("authMessage");
+  showMessage("loginMessage","");
+  showMessage("registerMessage","");
 }
 
 
-/* =========================================
+/* =====================================================
    REGISTER
-========================================= */
+===================================================== */
 
 async function register(){
 
-  hideMessage("authMessage");
-
-  const name =
-    $("registerName").value.trim();
-
-  const phone =
-    $("registerPhone").value.trim();
-
-  const location =
-    $("registerLocation").value.trim();
-
-  const pin =
-    $("registerPin").value.trim();
+  const name = clean($("registerName").value);
+  const phone = clean($("registerPhone").value);
+  const location = clean($("registerLocation").value);
+  const pin = clean($("registerPin").value);
 
 
-  if(!name || !phone || !location || !pin){
+  if(name.length < 2){
+
     showMessage(
-      "authMessage",
-      "সব তথ্য পূরণ করুন"
+      "registerMessage",
+      "সঠিক নাম লিখুন"
     );
+
     return;
   }
 
 
-  if(pin.length < 4){
+  if(!/^01\d{9}$/.test(phone)){
+
     showMessage(
-      "authMessage",
-      "PIN কমপক্ষে ৪ সংখ্যার হতে হবে"
+      "registerMessage",
+      "সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন"
     );
+
     return;
   }
+
+
+  if(!location){
+
+    showMessage(
+      "registerMessage",
+      "আপনার এলাকা লিখুন"
+    );
+
+    return;
+  }
+
+
+  if(!/^\d{6}$/.test(pin)){
+
+    showMessage(
+      "registerMessage",
+      "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "registerMessage",
+    "অ্যাকাউন্ট তৈরি হচ্ছে..."
+  );
 
 
   try{
 
-    const response =
-      await fetch(
-        API + "/api/register",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            name,
-            phone,
-            location,
-            pin
-          })
-        }
-      );
+    const data = await apiFetch(
+      "/api/register",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+          name,
+          phone,
+          location,
+          pin
+        })
+      }
+    );
 
 
-    const data =
-      await response.json();
-
-
-    if(!response.ok || !data.success){
+    if(!data.success){
 
       showMessage(
-        "authMessage",
-        data.message ||
-        "রেজিস্টার করা যায়নি"
+        "registerMessage",
+        data.message || "রেজিস্টার করা যায়নি"
       );
 
       return;
@@ -1492,479 +1644,553 @@ async function register(){
 
 
     showMessage(
-      "authMessage",
-      "অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।"
+      "registerMessage",
+      "অ্যাকাউন্ট তৈরি হয়েছে। লগইন করুন।"
     );
 
 
-    $("loginPhone").value = phone;
+    showToast("অ্যাকাউন্ট তৈরি সফল হয়েছে ✅");
 
-    $("registerName").value = "";
-    $("registerPhone").value = "";
-    $("registerLocation").value = "";
-    $("registerPin").value = "";
-
-    showLogin();
 
     $("loginPhone").value = phone;
+    $("loginPin").value = pin;
+
+
+    setTimeout(()=>{
+      showLogin();
+    },700);
+
 
   }catch(error){
 
     showMessage(
-      "authMessage",
-      "সার্ভারের সাথে সংযোগ পাওয়া যায়নি"
+      "registerMessage",
+      error.message || "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
   }
 }
 
 
-/* =========================================
+/* =====================================================
    LOGIN
-========================================= */
+===================================================== */
 
 async function login(){
 
-  hideMessage("authMessage");
-
-  const phone =
-    $("loginPhone").value.trim();
-
-  const pin =
-    $("loginPin").value.trim();
+  const phone = clean($("loginPhone").value);
+  const pin = clean($("loginPin").value);
 
 
-  if(!phone || !pin){
+  if(!/^01\d{9}$/.test(phone)){
 
     showMessage(
-      "authMessage",
-      "মোবাইল নম্বর ও PIN দিন"
+      "loginMessage",
+      "সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন"
     );
 
     return;
   }
 
 
+  if(!/^\d{6}$/.test(pin)){
+
+    showMessage(
+      "loginMessage",
+      "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "loginMessage",
+    "লগইন হচ্ছে..."
+  );
+
+
   try{
 
-    const response =
-      await fetch(
-        API + "/api/login",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            phone,
-            pin
-          })
-        }
-      );
+    const data = await apiFetch(
+      "/api/login",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+          phone,
+          pin
+        })
+      }
+    );
 
 
-    const data =
-      await response.json();
-
-
-    if(!response.ok || !data.success){
+    if(!data.success){
 
       showMessage(
-        "authMessage",
-        data.message ||
-        "লগইন ব্যর্থ"
+        "loginMessage",
+        data.message || "লগইন ব্যর্থ হয়েছে"
       );
 
       return;
     }
 
 
-    currentUser = data.user;
+    currentUser = data.user || data;
+
 
     localStorage.setItem(
-      "kajKhujiUser",
+      "kajkhuji_user",
       JSON.stringify(currentUser)
     );
 
 
     openApp();
 
+
   }catch(error){
 
     showMessage(
-      "authMessage",
-      "সার্ভারের সাথে সংযোগ পাওয়া যায়নি"
+      "loginMessage",
+      error.message || "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
   }
 }
 
 
-/* =========================================
+/* =====================================================
    OPEN APP
-========================================= */
+===================================================== */
 
 function openApp(){
 
   $("authPage").classList.add("hidden");
+
   $("appPage").classList.remove("hidden");
 
-  showSection("home");
+
+  updateHeader();
 
   loadJobs();
 
-  updateProfile();
-
   loadNotifications();
 
-  startNotificationPolling();
+
+  showPage("homePage",$("navHome"));
 }
 
 
-/* =========================================
-   LOGOUT
-========================================= */
+function updateHeader(){
 
-function logout(){
+  if(!currentUser) return;
 
-  stopNotificationPolling();
 
-  localStorage.removeItem(
-    "kajKhujiUser"
-  );
-
-  currentUser = null;
-
-  $("appPage").classList.add("hidden");
-  $("authPage").classList.remove("hidden");
-
-  showLogin();
+  $("headerLocation").textContent =
+    currentUser.location || "বাংলাদেশ";
 }
 
 
-/* =========================================
+/* =====================================================
    SAVED USER
-========================================= */
+===================================================== */
 
 function loadSavedUser(){
 
   try{
 
     const saved =
-      localStorage.getItem(
-        "kajKhujiUser"
-      );
+      localStorage.getItem("kajkhuji_user");
 
     if(!saved) return;
 
-    const user =
-      JSON.parse(saved);
+
+    currentUser = JSON.parse(saved);
+
 
     if(
-      user &&
-      user.phone &&
-      user.name
+      currentUser &&
+      currentUser.phone
     ){
-
-      currentUser = user;
 
       openApp();
     }
 
   }catch(error){
 
+    console.error(error);
+
     localStorage.removeItem(
-      "kajKhujiUser"
+      "kajkhuji_user"
     );
   }
 }
 
 
-/* =========================================
-   NAVIGATION
-========================================= */
+/* =====================================================
+   LOGOUT
+===================================================== */
 
-function showSection(section){
+function logout(){
 
-  $("homeSection").classList.add("hidden");
-  $("jobsSection").classList.add("hidden");
-  $("postSection").classList.add("hidden");
-  $("profileSection").classList.add("hidden");
+  localStorage.removeItem(
+    "kajkhuji_user"
+  );
 
-  $("navHome").classList.remove("active");
-  $("navJobs").classList.remove("active");
-  $("navPost").classList.remove("active");
-  $("navProfile").classList.remove("active");
+  currentUser = null;
 
+  allJobs = [];
 
-  if(section === "home"){
+  $("appPage").classList.add("hidden");
 
-    $("homeSection").classList.remove("hidden");
-    $("navHome").classList.add("active");
+  $("authPage").classList.remove("hidden");
 
-    loadJobs();
+  showLogin();
 
-  }
+  $("loginPhone").value = "";
+  $("loginPin").value = "";
 
-
-  if(section === "jobs"){
-
-    $("jobsSection").classList.remove("hidden");
-    $("navJobs").classList.add("active");
-
-    renderJobs(
-      allJobs,
-      "allJobs"
-    );
-
-  }
-
-
-  if(section === "post"){
-
-    $("postSection").classList.remove("hidden");
-    $("navPost").classList.add("active");
-
-  }
-
-
-  if(section === "profile"){
-
-    $("profileSection").classList.remove("hidden");
-    $("navProfile").classList.add("active");
-
-    updateProfile();
-    loadMyJobs();
-
-  }
+  showToast("লগআউট হয়েছে");
 }
 
 
-/* =========================================
-   LOAD JOBS
-========================================= */
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+function showPage(pageId,navButton){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.remove("active");
+    });
+
+
+  const page = $(pageId);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+
+  document
+    .querySelectorAll(".navItem")
+    .forEach(item=>{
+      item.classList.remove("active");
+    });
+
+
+  if(navButton){
+    navButton.classList.add("active");
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* =====================================================
+   JOBS
+===================================================== */
 
 async function loadJobs(){
 
   try{
 
-    const response =
-      await fetch(
-        API + "/api/jobs"
-      );
-
-    const data =
-      await response.json();
+    const data = await apiFetch(
+      "/api/jobs"
+    );
 
 
-    if(data.success){
-
-      allJobs = data.jobs || [];
-
-      renderJobs(
-        allJobs.slice(0,20),
-        "homeJobs"
-      );
-
-      renderJobs(
-        allJobs,
-        "allJobs"
-      );
-
+    if(Array.isArray(data)){
+      allJobs = data;
+    }else if(Array.isArray(data.jobs)){
+      allJobs = data.jobs;
+    }else{
+      allJobs = [];
     }
+
+
+    renderJobs();
 
   }catch(error){
 
-    $("homeJobs").innerHTML =
-      `<div class="empty">
-        কাজ লোড করা যায়নি
-      </div>`;
+    console.error(error);
 
+    $("jobsList").innerHTML = `
+      <div class="empty">
+        কাজ লোড করা যাচ্ছে না।
+        <br><br>
+        <button class="smallBtn primary" onclick="loadJobs()">
+          আবার চেষ্টা করুন
+        </button>
+      </div>
+    `;
   }
 }
 
 
-/* =========================================
+/* =====================================================
    RENDER JOBS
-========================================= */
+===================================================== */
 
-function renderJobs(jobsList, elementId){
+function renderJobs(){
 
-  const container = $(elementId);
+  const container = $("jobsList");
 
-  if(!container) return;
+  const search =
+    clean($("searchInput").value).toLowerCase();
 
 
-  if(!jobsList.length){
+  let jobs = [...allJobs];
 
-    container.innerHTML =
-      `<div class="empty">
-        কোনো কাজ পাওয়া যায়নি
-      </div>`;
+
+  if(currentCategory !== "সব"){
+
+    jobs = jobs.filter(job =>
+      clean(job.category) === currentCategory
+    );
+  }
+
+
+  if(search){
+
+    jobs = jobs.filter(job => {
+
+      const text = [
+        job.title,
+        job.description,
+        job.category,
+        job.location,
+        job.name,
+        job.userName
+      ]
+      .join(" ")
+      .toLowerCase();
+
+      return text.includes(search);
+    });
+  }
+
+
+  $("jobCount").textContent =
+    jobs.length + "টি কাজ";
+
+
+  if(!jobs.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        😔 কোনো কাজ পাওয়া যায়নি।
+        <br><br>
+        অন্য কিছু লিখে খুঁজে দেখুন।
+      </div>
+    `;
 
     return;
   }
 
 
   container.innerHTML =
-    jobsList.map(job => jobCard(job)).join("");
+    jobs.map(job => jobCardHTML(job)).join("");
 }
 
 
-/* =========================================
+/* =====================================================
    JOB CARD
-========================================= */
+===================================================== */
 
-function jobCard(job){
+function jobCardHTML(job){
+
+  const id =
+    job.id ||
+    job._id ||
+    job.jobId ||
+    "";
+
+
+  const title =
+    job.title ||
+    "কাজের নাম নেই";
+
+
+  const category =
+    job.category ||
+    "অন্যান্য";
+
+
+  const description =
+    job.description ||
+    "কোনো বিবরণ দেওয়া হয়নি।";
+
+
+  const salary =
+    job.salary ||
+    "আলোচনা সাপেক্ষে";
+
+
+  const location =
+    job.location ||
+    "লোকেশন দেওয়া হয়নি";
+
+
+  const name =
+    job.name ||
+    job.userName ||
+    "ব্যবহারকারী";
+
+
+  const phone =
+    job.phone ||
+    "";
+
 
   const isMine =
     currentUser &&
-    job.phone === currentUser.phone;
-
-
-  const safePhone =
-    escapeAttr(job.phone);
-
-  const safeName =
-    escapeAttr(job.ownerName);
+    phone === currentUser.phone;
 
 
   return `
-    <article class="jobCard">
+
+    <div class="jobCard">
 
       <div class="jobTop">
 
         <div>
+
           <div class="jobTitle">
-            ${escapeHtml(job.title)}
+            ${escapeHTML(title)}
           </div>
 
           <div class="jobCategory">
-            ${escapeHtml(job.category)}
+            ${escapeHTML(category)}
           </div>
+
+        </div>
+
+        <div class="jobSalary">
+          ${escapeHTML(salary)}
         </div>
 
       </div>
 
 
+      <div class="jobDescription">
+        ${escapeHTML(description)}
+      </div>
+
+
       <div class="jobInfo">
 
-        <span>
-          📍 ${escapeHtml(job.location)}
+        <span class="infoTag">
+          📍 ${escapeHTML(location)}
         </span>
 
-        <span>
-          💰 ${escapeHtml(job.salary)}
+        <span class="infoTag">
+          👤 ${escapeHTML(name)}
         </span>
 
       </div>
 
 
-      <div class="jobDescription">
-        ${escapeHtml(job.description)}
-      </div>
+      <div class="jobBottom">
+
+        <div class="userName">
+          📱 ${escapeHTML(phone)}
+        </div>
 
 
-      <div class="jobOwner">
-        👤 ${escapeHtml(job.ownerName)}
-        · ${formatDate(job.createdAt)}
-      </div>
+        <div class="jobActions">
 
-
-      <div class="jobActions">
-
-        ${
-          isMine
-          ? `
+          ${
+            !isMine && phone
+            ?
+            `
             <button
-              class="actionBtn deleteBtn"
-              onclick="deleteJob('${escapeAttr(job.id)}')"
+              class="smallBtn"
+              onclick="callUser('${escapeJS(phone)}')"
+            >
+              📞 কল
+            </button>
+
+            <button
+              class="smallBtn primary"
+              onclick="openChat('${escapeJS(phone)}','${escapeJS(name)}')"
+            >
+              💬 মেসেজ
+            </button>
+            `
+            :
+            ""
+          }
+
+
+          ${
+            isMine
+            ?
+            `
+            <button
+              class="smallBtn danger"
+              onclick="deleteJob('${escapeJS(id)}')"
             >
               🗑️ মুছুন
             </button>
-          `
-          : `
-            <button
-              class="actionBtn chatBtn"
-              onclick="openChat('${safePhone}','${safeName}')"
-            >
-              💬 Chat
-            </button>
+            `
+            :
+            ""
+          }
 
-            <button
-              class="actionBtn callBtn"
-              onclick="callJob('${safePhone}')"
-            >
-              📞 Call
-            </button>
-          `
-        }
+        </div>
 
       </div>
 
-    </article>
+    </div>
+
   `;
 }
 
 
-/* =========================================
-   SEARCH
-========================================= */
+/* =====================================================
+   ESCAPE JS
+===================================================== */
 
-function searchJobs(){
+function escapeJS(value){
 
-  const query =
-    $("searchInput")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  let filtered =
-    allJobs.filter(job => {
-
-      const text = `
-        ${job.title}
-        ${job.location}
-        ${job.category}
-        ${job.description}
-        ${job.ownerName}
-      `.toLowerCase();
-
-      return text.includes(query);
-    });
-
-
-  if(currentCategory !== "সব"){
-
-    filtered =
-      filtered.filter(
-        job =>
-          job.category === currentCategory
-      );
-
-  }
-
-
-  renderJobs(
-    filtered,
-    "homeJobs"
-  );
+  return String(value ?? "")
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll('"','\\"')
+    .replaceAll("\n","\\n")
+    .replaceAll("\r","\\r");
 }
 
 
-/* =========================================
-   CATEGORY FILTER
-========================================= */
+/* =====================================================
+   SEARCH
+===================================================== */
 
-function filterCategory(category, button){
+function searchJobs(){
+
+  renderJobs();
+}
+
+
+/* =====================================================
+   CATEGORY FILTER
+===================================================== */
+
+function filterCategory(category,button){
 
   currentCategory = category;
 
 
   document
     .querySelectorAll(".category")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
+    .forEach(item=>{
+      item.classList.remove("active");
+    });
 
 
   if(button){
@@ -1972,46 +2198,74 @@ function filterCategory(category, button){
   }
 
 
-  searchJobs();
+  renderJobs();
 }
 
 
-/* =========================================
+/* =====================================================
    CREATE JOB
-========================================= */
+===================================================== */
 
 async function createJob(){
 
-  hideMessage("jobMessage");
+  if(!currentUser){
+
+    showToast("আগে লগইন করুন");
+
+    return;
+  }
+
 
   const title =
-    $("jobTitle").value.trim();
-
-  const location =
-    $("jobLocation").value.trim();
-
-  const salary =
-    $("jobSalary").value.trim();
+    clean($("jobTitle").value);
 
   const category =
-    $("jobCategory").value.trim();
+    clean($("jobCategory").value);
 
   const description =
-    $("jobDescription").value.trim();
+    clean($("jobDescription").value);
+
+  const salary =
+    clean($("jobSalary").value);
+
+  const location =
+    clean($("jobLocation").value);
 
 
-  if(
-    !title ||
-    !location ||
-    !salary ||
-    !category ||
-    !description
-  ){
+  if(title.length < 3){
 
-    showMessage(
-      "jobMessage",
-      "সব তথ্য পূরণ করুন"
-    );
+    showToast("কাজের নাম লিখুন");
+
+    return;
+  }
+
+
+  if(description.length < 5){
+
+    showToast("কাজের বিবরণ লিখুন");
+
+    return;
+  }
+
+
+  if(!location){
+
+    showToast("কাজের লোকেশন লিখুন");
+
+    return;
+  }
+
+
+  const pin =
+    prompt("আপনার ৬ সংখ্যার PIN দিন");
+
+
+  if(pin === null) return;
+
+
+  if(!/^\d{6}$/.test(pin)){
+
+    showToast("PIN অবশ্যই ৬ সংখ্যার হতে হবে");
 
     return;
   }
@@ -2019,597 +2273,279 @@ async function createJob(){
 
   try{
 
-    const response =
-      await fetch(
-        API + "/api/jobs",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            phone:currentUser.phone,
-            pin:prompt("আপনার PIN দিন"),
-            title,
-            location,
-            salary,
-            category,
-            description
-          })
-        }
-      );
+    const data = await apiFetch(
+      "/api/jobs",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+
+          phone:currentUser.phone,
+
+          pin:pin,
+
+          title:title,
+
+          category:category,
+
+          description:description,
+
+          salary:salary,
+
+          location:location
+
+        })
+      }
+    );
 
 
-    const data =
-      await response.json();
+    if(!data.success){
 
-
-    if(!response.ok || !data.success){
-
-      showMessage(
-        "jobMessage",
-        data.message ||
-        "কাজ পোস্ট করা যায়নি"
+      showToast(
+        data.message || "কাজ পোস্ট করা যায়নি"
       );
 
       return;
     }
+
+
+    showToast("কাজ সফলভাবে পোস্ট হয়েছে ✅");
 
 
     $("jobTitle").value = "";
-    $("jobLocation").value = "";
-    $("jobSalary").value = "";
-    $("jobCategory").value = "";
     $("jobDescription").value = "";
-
-
-    showMessage(
-      "jobMessage",
-      "কাজ সফলভাবে পোস্ট হয়েছে ✅"
-    );
+    $("jobSalary").value = "";
+    $("jobLocation").value = "";
 
 
     await loadJobs();
 
+    await loadMyJobs();
+
+
+    showPage(
+      "homePage",
+      $("navHome")
+    );
+
+
   }catch(error){
 
-    showMessage(
-      "jobMessage",
-      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
+    showToast(
+      error.message || "সার্ভারের সমস্যা হয়েছে"
     );
   }
 }
 
 
-/* =========================================
-   MODAL POST
-========================================= */
-
-function openPost(){
-
-  $("postModal").classList.remove("hidden");
-}
-
-
-function closePost(){
-
-  $("postModal").classList.add("hidden");
-}
-
-
-async function createJobFromModal(){
-
-  hideMessage("modalJobMessage");
-
-
-  const title =
-    $("modalJobTitle").value.trim();
-
-  const location =
-    $("modalJobLocation").value.trim();
-
-  const salary =
-    $("modalJobSalary").value.trim();
-
-  const category =
-    $("modalJobCategory").value.trim();
-
-  const description =
-    $("modalJobDescription").value.trim();
-
-
-  if(
-    !title ||
-    !location ||
-    !salary ||
-    !category ||
-    !description
-  ){
-
-    showMessage(
-      "modalJobMessage",
-      "সব তথ্য পূরণ করুন"
-    );
-
-    return;
-  }
-
-
-  const pin =
-    prompt("আপনার PIN দিন");
-
-
-  if(pin === null) return;
-
-
-  try{
-
-    const response =
-      await fetch(
-        API + "/api/jobs",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            phone:currentUser.phone,
-            pin:pin,
-            title,
-            location,
-            salary,
-            category,
-            description
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok || !data.success){
-
-      showMessage(
-        "modalJobMessage",
-        data.message ||
-        "কাজ পোস্ট করা যায়নি"
-      );
-
-      return;
-    }
-
-
-    $("modalJobTitle").value = "";
-    $("modalJobLocation").value = "";
-    $("modalJobSalary").value = "";
-    $("modalJobCategory").value = "";
-    $("modalJobDescription").value = "";
-
-
-    closePost();
-
-    await loadJobs();
-
-    showSection("jobs");
-
-  }catch(error){
-
-    showMessage(
-      "modalJobMessage",
-      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
-    );
-  }
-}
-
-
-/* =========================================
-   DELETE JOB
-========================================= */
-
-async function deleteJob(jobId){
-
-  const ok =
-    confirm("এই কাজটি মুছে ফেলবেন?");
-
-
-  if(!ok) return;
-
-
-  const pin =
-    prompt("আপনার PIN দিন");
-
-
-  if(pin === null) return;
-
-
-  try{
-
-    const response =
-      await fetch(
-        API + "/api/jobs/delete",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            phone:currentUser.phone,
-            pin:pin,
-            jobId:jobId
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok || !data.success){
-
-      alert(
-        data.message ||
-        "কাজ মুছতে সমস্যা হয়েছে"
-      );
-
-      return;
-    }
-
-
-    await loadJobs();
-    loadMyJobs();
-
-  }catch(error){
-
-    alert("সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না");
-  }
-}
-
-
-/* =========================================
-   CALL
-========================================= */
-
-function callJob(phone){
-
-  if(!phone) return;
-
-  window.location.href =
-    "tel:" + phone;
-}
-
-
-/* =========================================
-   PROFILE
-========================================= */
-
-function updateProfile(){
-
-  if(!currentUser) return;
-
-
-  const first =
-    (currentUser.name || "?")
-      .trim()
-      .charAt(0)
-      .toUpperCase();
-
-
-  $("profileContent").innerHTML = `
-
-    <div class="profileAvatar">
-      ${escapeHtml(first)}
-    </div>
-
-    <div class="profileName">
-      ${escapeHtml(currentUser.name)}
-    </div>
-
-    <div class="profileInfo">
-      📱 ${escapeHtml(currentUser.phone)}
-    </div>
-
-    <div class="profileInfo">
-      📍 ${escapeHtml(currentUser.location || "লোকেশন নেই")}
-    </div>
-
-    <button
-      class="logoutBtn"
-      onclick="logout()"
-    >
-      🚪 লগআউট
-    </button>
-
-  `;
-}
-
-
-/* =========================================
+/* =====================================================
    MY JOBS
-========================================= */
+===================================================== */
 
 async function loadMyJobs(){
 
   if(!currentUser) return;
 
 
+  const container =
+    $("myJobsList");
+
+
+  container.innerHTML = `
+    <div class="empty">
+      লোড হচ্ছে...
+    </div>
+  `;
+
+
   try{
 
-    const response =
-      await fetch(
-        API +
-        "/api/my-jobs?phone=" +
-        encodeURIComponent(
-          currentUser.phone
-        )
-      );
+    const data = await apiFetch(
+      "/api/my-jobs?phone=" +
+      encodeURIComponent(currentUser.phone)
+    );
 
 
-    const data =
-      await response.json();
+    let jobs = [];
 
 
-    if(data.success){
-
-      renderJobs(
-        data.jobs || [],
-        "myJobs"
-      );
-
+    if(Array.isArray(data)){
+      jobs = data;
+    }else if(Array.isArray(data.jobs)){
+      jobs = data.jobs;
     }
 
-  }catch(error){
 
-    $("myJobs").innerHTML =
-      `<div class="empty">
-        কাজ লোড করা যায়নি
-      </div>`;
-  }
-}
+    if(!jobs.length){
 
-
-/* =========================================
-   CHAT
-========================================= */
-
-function openChat(phone,name){
-
-  if(!currentUser) return;
-
-
-  if(phone === currentUser.phone){
-
-    alert("নিজের সাথে Chat করা যাবে না");
-    return;
-  }
-
-
-  chatUser = {
-    phone:phone,
-    name:name
-  };
-
-
-  $("chatTitle").textContent =
-    "💬 " + name;
-
-
-  $("chatModal")
-    .classList
-    .remove("hidden");
-
-
-  loadChat();
-
-
-  clearInterval(chatTimer);
-
-  chatTimer =
-    setInterval(
-      loadChat,
-      3000
-    );
-
-
-  setTimeout(() => {
-    $("chatInput").focus();
-  },100);
-
-}
-
-
-function closeChat(){
-
-  $("chatModal")
-    .classList
-    .add("hidden");
-
-
-  clearInterval(chatTimer);
-
-  chatTimer = null;
-
-  chatUser = null;
-}
-
-
-function chatKey(event){
-
-  if(event.key === "Enter"){
-
-    event.preventDefault();
-
-    sendMessage();
-  }
-}
-
-
-/* =========================================
-   LOAD CHAT
-========================================= */
-
-async function loadChat(){
-
-  if(
-    !currentUser ||
-    !chatUser
-  ) return;
-
-
-  try{
-
-    const url =
-      API +
-      "/api/messages?me=" +
-      encodeURIComponent(
-        currentUser.phone
-      ) +
-      "&other=" +
-      encodeURIComponent(
-        chatUser.phone
-      );
-
-
-    const response =
-      await fetch(url);
-
-
-    const data =
-      await response.json();
-
-
-    if(!data.success) return;
-
-
-    const container =
-      $("chatMessages");
-
-
-    container.innerHTML =
-      data.messages
-        .map(message => {
-
-          const mine =
-            message.from ===
-            currentUser.phone;
-
-
-          return `
-            <div class="chatBubbleWrap ${mine ? "mine" : ""}">
-
-              <div class="chatBubble">
-
-                ${escapeHtml(message.text)}
-
-                <span class="chatTime">
-                  ${formatDate(message.createdAt)}
-                </span>
-
-              </div>
-
-            </div>
-          `;
-
-        })
-        .join("");
-
-
-    container.scrollTop =
-      container.scrollHeight;
-
-
-  }catch(error){
-
-    console.log(
-      "Chat load error:",
-      error
-    );
-  }
-}
-
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
-
-async function sendMessage(){
-
-  if(
-    !currentUser ||
-    !chatUser
-  ) return;
-
-
-  const input =
-    $("chatInput");
-
-
-  const text =
-    input.value.trim();
-
-
-  if(!text) return;
-
-
-  input.value = "";
-
-
-  try{
-
-    const response =
-      await fetch(
-        API + "/api/messages/send",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            from:currentUser.phone,
-            to:chatUser.phone,
-            text:text
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok || !data.success){
-
-      alert(
-        data.message ||
-        "মেসেজ পাঠানো যায়নি"
-      );
-
-      input.value = text;
+      container.innerHTML = `
+        <div class="empty">
+          📭 আপনি এখনো কোনো কাজ পোস্ট করেননি।
+        </div>
+      `;
 
       return;
     }
 
 
-    await loadChat();
+    container.innerHTML =
+      jobs.map(job=>jobCardHTML(job)).join("");
 
-    loadNotifications();
 
   }catch(error){
 
-    alert(
-      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
-    );
-
-    input.value = text;
+    container.innerHTML = `
+      <div class="empty">
+        কাজ লোড করা যায়নি।
+      </div>
+    `;
   }
 }
 
 
-/* =========================================
+/* =====================================================
+   DELETE JOB
+===================================================== */
+
+async function deleteJob(jobId){
+
+  if(!currentUser){
+
+    showToast("আগে লগইন করুন");
+
+    return;
+  }
+
+
+  if(!confirm("আপনি কি এই কাজটি মুছে ফেলতে চান?")){
+
+    return;
+  }
+
+
+  const pin =
+    prompt("আপনার ৬ সংখ্যার PIN দিন");
+
+
+  if(pin === null) return;
+
+
+  if(!/^\d{6}$/.test(pin)){
+
+    showToast("PIN অবশ্যই ৬ সংখ্যার হতে হবে");
+
+    return;
+  }
+
+
+  try{
+
+    const data = await apiFetch(
+      "/api/jobs/delete",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+
+          phone:currentUser.phone,
+
+          pin:pin,
+
+          id:jobId
+
+        })
+      }
+    );
+
+
+    if(!data.success){
+
+      showToast(
+        data.message || "কাজ মুছে ফেলা যায়নি"
+      );
+
+      return;
+    }
+
+
+    showToast("কাজ মুছে ফেলা হয়েছে 🗑️");
+
+
+    await loadJobs();
+
+    await loadMyJobs();
+
+  }catch(error){
+
+    showToast(
+      error.message || "সার্ভারের সমস্যা হয়েছে"
+    );
+  }
+}
+
+
+/* =====================================================
+   CALL USER
+===================================================== */
+
+function callUser(phone){
+
+  if(!phone){
+
+    showToast("মোবাইল নম্বর পাওয়া যায়নি");
+
+    return;
+  }
+
+
+  window.location.href =
+    "tel:" + phone;
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+async function loadProfile(){
+
+  if(!currentUser) return;
+
+
+  $("profileName").textContent =
+    currentUser.name || "ব্যবহারকারী";
+
+
+  $("profilePhone").textContent =
+    currentUser.phone || "-";
+
+
+  $("profileLocation").textContent =
+    currentUser.location || "-";
+
+
+  const jobs =
+    allJobs.filter(job =>
+      job.phone === currentUser.phone
+    );
+
+
+  $("profileJobCount").textContent =
+    jobs.length;
+
+
+  const name =
+    currentUser.name || "";
+
+
+  $("profileAvatar").textContent =
+    name ? name.charAt(0).toUpperCase() : "👤";
+}
+
+
+/* =====================================================
    NOTIFICATIONS
-========================================= */
+===================================================== */
 
 async function loadNotifications(){
 
@@ -2618,261 +2554,484 @@ async function loadNotifications(){
 
   try{
 
-    const response =
-      await fetch(
-        API +
-        "/api/notifications?phone=" +
-        encodeURIComponent(
-          currentUser.phone
-        )
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!data.success) return;
-
-
-    updateNotificationBadge(
-      data.unreadCount || 0
+    const data = await apiFetch(
+      "/api/notifications?phone=" +
+      encodeURIComponent(currentUser.phone)
     );
 
 
-    renderNotifications(
-      data.notifications || []
-    );
+    let notifications = [];
+
+
+    if(Array.isArray(data)){
+      notifications = data;
+    }else if(Array.isArray(data.notifications)){
+      notifications = data.notifications;
+    }
+
+
+    const unread =
+      notifications.filter(
+        item => !item.read
+      ).length;
+
+
+    const badge =
+      $("notificationBadge");
+
+
+    if(unread > 0){
+
+      badge.textContent =
+        unread > 99 ? "99+" : unread;
+
+      badge.classList.remove("hidden");
+
+    }else{
+
+      badge.classList.add("hidden");
+    }
 
 
   }catch(error){
 
-    console.log(
-      "Notification error:",
-      error
-    );
+    console.error(error);
   }
 }
 
 
-/* =========================================
-   NOTIFICATION BADGE
-========================================= */
-
-function updateNotificationBadge(count){
-
-  const badge =
-    $("notificationBadge");
-
-
-  if(!count || count <= 0){
-
-    badge.classList.add("hidden");
-    badge.textContent = "";
-
-    return;
-  }
-
-
-  badge.classList.remove("hidden");
-
-
-  badge.textContent =
-    count > 99
-      ? "99+"
-      : count;
-}
-
-
-/* =========================================
-   RENDER NOTIFICATIONS
-========================================= */
-
-function renderNotifications(list){
-
-  const container =
-    $("notificationList");
-
-
-  if(!list.length){
-
-    container.innerHTML =
-      `
-        <div class="empty">
-          🔔 এখনো কোনো notification নেই
-        </div>
-      `;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    list.map(item => {
-
-      let icon = "🔔";
-
-
-      if(item.type === "message"){
-        icon = "💬";
-      }
-
-
-      if(item.type === "job"){
-        icon = "💼";
-      }
-
-
-      return `
-        <div
-          class="notificationItem ${item.read ? "" : "unread"}"
-        >
-
-          <div class="notificationIcon">
-            ${icon}
-          </div>
-
-          <div class="notificationText">
-
-            <div class="notificationTitle">
-              ${escapeHtml(item.title)}
-            </div>
-
-            <div class="notificationBody">
-              ${escapeHtml(item.text)}
-            </div>
-
-            <div class="notificationTime">
-              ${formatDate(item.createdAt)}
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-}
-
-
-/* =========================================
+/* =====================================================
    OPEN NOTIFICATIONS
-========================================= */
+===================================================== */
 
 async function openNotifications(){
 
   $("notificationModal")
-    .classList
-    .remove("hidden");
+    .classList.add("show");
 
 
-  await loadNotifications();
+  const container =
+    $("notificationsList");
 
 
-  await markNotificationsRead();
-
-
-  updateNotificationBadge(0);
-
-
-  await loadNotifications();
-}
-
-
-/* =========================================
-   CLOSE NOTIFICATIONS
-========================================= */
-
-function closeNotifications(){
-
-  $("notificationModal")
-    .classList
-    .add("hidden");
-}
-
-
-/* =========================================
-   MARK NOTIFICATIONS READ
-========================================= */
-
-async function markNotificationsRead(){
-
-  if(!currentUser) return;
+  container.innerHTML = `
+    <div class="empty">
+      লোড হচ্ছে...
+    </div>
+  `;
 
 
   try{
 
-    await fetch(
-      API + "/api/notifications/read",
+    const data = await apiFetch(
+      "/api/notifications?phone=" +
+      encodeURIComponent(currentUser.phone)
+    );
+
+
+    let notifications = [];
+
+
+    if(Array.isArray(data)){
+      notifications = data;
+    }else if(Array.isArray(data.notifications)){
+      notifications = data.notifications;
+    }
+
+
+    if(!notifications.length){
+
+      container.innerHTML = `
+        <div class="empty">
+          🔕 কোনো নোটিফিকেশন নেই।
+        </div>
+      `;
+
+    }else{
+
+      container.innerHTML =
+        notifications
+        .map(notification => `
+
+          <div class="notificationItem ${
+            notification.read ? "" : "unread"
+          }">
+
+            <p>
+              ${escapeHTML(
+                notification.message ||
+                notification.text ||
+                "নতুন নোটিফিকেশন"
+              )}
+            </p>
+
+            <small>
+              ${formatDate(
+                notification.createdAt ||
+                notification.created_at ||
+                notification.time
+              )}
+            </small>
+
+          </div>
+
+        `)
+        .join("");
+    }
+
+
+    $("notificationBadge")
+      .classList.add("hidden");
+
+
+    try{
+
+      await apiFetch(
+        "/api/notifications/read",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            phone:currentUser.phone
+          })
+        }
+      );
+
+    }catch(error){
+
+      console.log(error);
+    }
+
+
+  }catch(error){
+
+    container.innerHTML = `
+      <div class="empty">
+        নোটিফিকেশন লোড করা যায়নি।
+      </div>
+    `;
+  }
+}
+
+
+/* =====================================================
+   DATE FORMAT
+===================================================== */
+
+function formatDate(value){
+
+  if(!value) return "";
+
+
+  try{
+
+    return new Date(value)
+      .toLocaleString("bn-BD");
+
+  }catch{
+
+    return String(value);
+  }
+}
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+async function openChat(phone,name){
+
+  if(!currentUser){
+
+    showToast("আগে লগইন করুন");
+
+    return;
+  }
+
+
+  if(!phone){
+
+    showToast("ব্যবহারকারীর নম্বর পাওয়া যায়নি");
+
+    return;
+  }
+
+
+  chatPhone = phone;
+
+
+  $("chatTitle").textContent =
+    "💬 " + (name || phone);
+
+
+  $("chatModal")
+    .classList.add("show");
+
+
+  await loadMessages();
+}
+
+
+/* =====================================================
+   LOAD MESSAGES
+===================================================== */
+
+async function loadMessages(){
+
+  if(!currentUser || !chatPhone) return;
+
+
+  const container =
+    $("chatMessages");
+
+
+  try{
+
+    const url =
+      "/api/messages?phone=" +
+      encodeURIComponent(currentUser.phone) +
+      "&with=" +
+      encodeURIComponent(chatPhone);
+
+
+    const data =
+      await apiFetch(url);
+
+
+    let messages = [];
+
+
+    if(Array.isArray(data)){
+      messages = data;
+    }else if(Array.isArray(data.messages)){
+      messages = data.messages;
+    }
+
+
+    if(!messages.length){
+
+      container.innerHTML = `
+        <div class="empty">
+          💬 এখনো কোনো মেসেজ নেই।
+        </div>
+      `;
+
+      return;
+    }
+
+
+    container.innerHTML =
+      messages.map(message => {
+
+        const sender =
+          message.from ||
+          message.sender ||
+          message.phone;
+
+
+        const isMe =
+          sender === currentUser.phone;
+
+
+        return `
+
+          <div class="messageRow ${
+            isMe ? "me" : ""
+          }">
+
+            <div class="chatBubble">
+
+              ${escapeHTML(
+                message.text ||
+                message.message ||
+                ""
+              )}
+
+              <span class="chatTime">
+                ${formatDate(
+                  message.createdAt ||
+                  message.time
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+    container.scrollTop =
+      container.scrollHeight;
+
+
+  }catch(error){
+
+    container.innerHTML = `
+      <div class="empty">
+        মেসেজ লোড করা যাচ্ছে না।
+      </div>
+    `;
+  }
+}
+
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendMessage(){
+
+  if(!currentUser || !chatPhone) return;
+
+
+  const input =
+    $("chatInput");
+
+
+  const text =
+    clean(input.value);
+
+
+  if(!text) return;
+
+
+  try{
+
+    const data = await apiFetch(
+      "/api/messages/send",
       {
         method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
+
         body:JSON.stringify({
-          phone:currentUser.phone
+
+          from:currentUser.phone,
+
+          to:chatPhone,
+
+          message:text,
+
+          text:text
+
         })
       }
     );
 
+
+    if(!data.success){
+
+      showToast(
+        data.message || "মেসেজ পাঠানো যায়নি"
+      );
+
+      return;
+    }
+
+
+    input.value = "";
+
+    await loadMessages();
+
   }catch(error){
 
-    console.log(
-      "Notification read error:",
-      error
+    showToast(
+      error.message || "মেসেজ পাঠানো যায়নি"
     );
   }
 }
 
 
-/* =========================================
-   NOTIFICATION POLLING
-========================================= */
+/* =====================================================
+   MODAL CLOSE
+===================================================== */
 
-function startNotificationPolling(){
+function closeModal(id){
 
-  stopNotificationPolling();
+  const modal = $(id);
 
-
-  notificationTimer =
-    setInterval(
-      loadNotifications,
-      5000
-    );
-}
-
-
-function stopNotificationPolling(){
-
-  if(notificationTimer){
-
-    clearInterval(
-      notificationTimer
-    );
-
-    notificationTimer = null;
+  if(modal){
+    modal.classList.remove("show");
   }
 }
 
 
-/* =========================================
-   MODAL OUTSIDE CLICK
-========================================= */
+/* =====================================================
+   CLOSE MODAL OUTSIDE
+===================================================== */
 
-function closeModalOutside(event,id){
+document
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
 
-  if(event.target.id === id){
+    modal.addEventListener(
+      "click",
+      function(event){
 
-    $(id)
-      .classList
-      .add("hidden");
+        if(event.target === modal){
+
+          modal.classList.remove("show");
+        }
+      }
+    );
+
+  });
+
+
+/* =====================================================
+   ENTER KEY LOGIN
+===================================================== */
+
+$("loginPin").addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+      login();
+    }
+
   }
-}
+);
 
 
-/* =========================================
+/* =====================================================
+   ENTER KEY REGISTER
+===================================================== */
+
+$("registerPin").addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+      register();
+    }
+
+  }
+);
+
+
+/* =====================================================
+   AUTO POLLING
+===================================================== */
+
+setInterval(()=>{
+
+  if(
+    currentUser &&
+    !$("appPage").classList.contains("hidden")
+  ){
+
+    loadNotifications();
+
+  }
+
+},30000);
+
+
+/* =====================================================
    START
-========================================= */
+===================================================== */
 
 loadSavedUser();
 
