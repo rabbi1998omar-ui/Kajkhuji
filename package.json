@@ -1,0 +1,9 @@
+{
+  "name": "kaj-khuji",
+  "version": "1.0.0",
+  "description": "কাজ খুঁজি - Local Job App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
