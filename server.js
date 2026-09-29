@@ -8,188 +8,96 @@ const PORT = process.env.PORT || 10000;
 const DB = {
   users: path.join(__dirname, "users.json"),
   jobs: path.join(__dirname, "jobs.json"),
-  messages: path.join(__dirname, "messages.json"),
-  notifications: path.join(__dirname, "notifications.json"),
   applications: path.join(__dirname, "applications.json"),
   saved: path.join(__dirname, "saved.json"),
-  ratings: path.join(__dirname, "ratings.json"),
-  alerts: path.join(__dirname, "alerts.json"),
-  interviews: path.join(__dirname, "interviews.json")
+  messages: path.join(__dirname, "messages.json"),
+  notifications: path.join(__dirname, "notifications.json")
 };
 
-const MAX_BODY = 2 * 1024 * 1024;
-const MAX_AVATAR = 350 * 1024;
-const MAX_JOB_IMAGE = 700 * 1024;
-
-function loadJSON(file, fallback) {
+function load(file, fallback = []) {
   try {
     if (!fs.existsSync(file)) {
       fs.writeFileSync(file, JSON.stringify(fallback, null, 2));
       return fallback;
     }
 
-    const text = fs.readFileSync(file, "utf8");
-
-    if (!text.trim()) return fallback;
-
-    return JSON.parse(text);
+    const data = JSON.parse(fs.readFileSync(file, "utf8"));
+    return data;
   } catch (e) {
-    console.error("DB READ ERROR:", e.message);
     return fallback;
   }
 }
 
-function saveJSON(file, data) {
-  try {
-    fs.writeFileSync(file, JSON.stringify(data, null, 2));
-    return true;
-  } catch (e) {
-    console.error("DB SAVE ERROR:", e.message);
-    return false;
-  }
+function save(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-let users = loadJSON(DB.users, []);
-let jobs = loadJSON(DB.jobs, []);
-let messages = loadJSON(DB.messages, []);
-let notifications = loadJSON(DB.notifications, []);
-let applications = loadJSON(DB.applications, []);
-let saved = loadJSON(DB.saved, []);
-let ratings = loadJSON(DB.ratings, []);
-let alerts = loadJSON(DB.alerts, []);
-let interviews = loadJSON(DB.interviews, []);
+let users = load(DB.users, []);
+let jobs = load(DB.jobs, []);
+let applications = load(DB.applications, []);
+let saved = load(DB.saved, []);
+let messages = load(DB.messages, []);
+let notifications = load(DB.notifications, []);
 
-function clean(v) {
-  return String(v ?? "").trim();
+function id() {
+  return Date.now().toString(36) + crypto.randomBytes(5).toString("hex");
 }
 
-function normalize(v) {
-  return clean(v)
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-}
-
-function id(prefix) {
-  return (
-    prefix +
-    "_" +
-    Date.now() +
-    "_" +
-    crypto.randomBytes(5).toString("hex")
-  );
-}
-
-function hashPIN(pin) {
+function hash(pin) {
   return crypto
     .createHash("sha256")
     .update(String(pin))
     .digest("hex");
 }
 
-function validPIN(pin) {
-  return /^\d{6}$/.test(clean(pin));
+function clean(v) {
+  return String(v || "").trim();
 }
 
-function userByPhone(phone) {
-  return users.find(u => u.phone === clean(phone));
-}
-
-function publicUser(user) {
-  if (!user) return null;
-
+function publicUser(u) {
   return {
-    id: user.id,
-    phone: user.phone,
-    name: user.name,
-    location: user.location,
-    avatar: user.avatar || "",
-    verified: !!user.verified,
-    skills: user.skills || "",
-    bio: user.bio || "",
-    cv: user.cv || "",
-    rating: getUserRating(user.phone)
+    id: u.id,
+    phone: u.phone,
+    name: u.name,
+    location: u.location || "",
+    avatar: u.avatar || "",
+    skills: u.skills || "",
+    bio: u.bio || "",
+    cv: u.cv || "",
+    verified: !!u.verified,
+    rating: Number(u.rating || 0)
   };
 }
 
-function getUserRating(phone) {
-  const list = ratings.filter(r => r.to === phone);
-
-  if (!list.length) {
-    return {
-      average: 0,
-      count: 0
-    };
-  }
-
-  const total = list.reduce((sum, r) => sum + Number(r.rating || 0), 0);
-
-  return {
-    average: Number((total / list.length).toFixed(1)),
-    count: list.length
-  };
-}
-
-function imageValid(value, maxSize) {
-  if (!value) return true;
-
-  if (!/^data:image\/(jpeg|jpg|png|webp);base64,/i.test(value)) {
-    return false;
-  }
-
-  const base64 = value.split(",")[1] || "";
-
-  const bytes = Math.ceil((base64.length * 3) / 4);
-
-  return bytes <= maxSize;
-}
-
-function sendJSON(res, status, data) {
+function json(res, status, data) {
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+    "Access-Control-Allow-Methods": "GET,POST,DELETE,OPTIONS"
   });
 
   res.end(JSON.stringify(data));
 }
 
-function sendHTML(res, html) {
-  res.writeHead(200, {
-    "Content-Type": "text/html; charset=utf-8",
-    "Access-Control-Allow-Origin": "*"
-  });
-
-  res.end(html);
-}
-
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
-    let size = 0;
 
     req.on("data", chunk => {
-      size += chunk.length;
-
-      if (size > MAX_BODY) {
-        reject(new Error("REQUEST_TOO_LARGE"));
-        req.destroy();
-        return;
-      }
-
       body += chunk;
+
+      if (body.length > 4 * 1024 * 1024) {
+        reject(new Error("Request too large"));
+        req.destroy();
+      }
     });
 
     req.on("end", () => {
-      if (!body) {
-        resolve({});
-        return;
-      }
-
       try {
-        resolve(JSON.parse(body));
-      } catch (e) {
-        reject(e);
+        resolve(body ? JSON.parse(body) : {});
+      } catch {
+        reject(new Error("Invalid JSON"));
       }
     });
 
@@ -197,695 +105,611 @@ function readBody(req) {
   });
 }
 
-function locationMatch(jobLocation, searchLocation) {
-  const job = normalize(jobLocation);
-  const search = normalize(searchLocation);
+function findUser(phone, pin) {
+  const u = users.find(x => x.phone === clean(phone));
 
-  if (!search) return true;
-  if (!job) return false;
+  if (!u) return null;
 
-  if (job.includes(search)) return true;
-  if (search.includes(job)) return true;
-
-  const a = job.split(/[,\s]+/).filter(Boolean);
-  const b = search.split(/[,\s]+/).filter(Boolean);
-
-  return b.some(x => x.length >= 2 && a.includes(x));
-}
-
-function notify(phone, type, title, text, from = "") {
-  notifications.unshift({
-    id: id("notification"),
-    phone,
-    type,
-    title,
-    text,
-    from,
-    read: false,
-    createdAt: new Date().toISOString()
-  });
-
-  if (notifications.length > 10000) {
-    notifications = notifications.slice(0, 10000);
+  if (pin !== undefined && u.pin !== hash(pin)) {
+    return null;
   }
 
-  saveJSON(DB.notifications, notifications);
+  return u;
+}
+
+function notify(phone, title, message) {
+  notifications.push({
+    id: id(),
+    phone,
+    title,
+    message,
+    read: false,
+    createdAt: Date.now()
+  });
+
+  save(DB.notifications, notifications);
+}
+
+function dataUrlOK(value, maxKB = 700) {
+  if (!value) return true;
+
+  if (typeof value !== "string") return false;
+
+  if (!value.startsWith("data:image/")) return false;
+
+  if (value.length > maxKB * 1024 * 1.4) {
+    return false;
+  }
+
+  return true;
 }
 
 function jobScore(job, user) {
+  if (!user) return 0;
+
   let score = 0;
 
-  const text = normalize(
-    [
-      job.title,
-      job.category,
-      job.description,
-      job.location
-    ].join(" ")
-  );
+  const location = clean(user.location).toLowerCase();
+  const skills = clean(user.skills)
+    .toLowerCase()
+    .split(/[,\s]+/)
+    .filter(Boolean);
 
-  const location = normalize(user?.location);
+  const text = (
+    job.title +
+    " " +
+    job.description +
+    " " +
+    job.category +
+    " " +
+    job.location
+  ).toLowerCase();
 
   if (location && text.includes(location)) {
     score += 40;
   }
 
-  const skills = normalize(user?.skills || "");
-
-  if (skills) {
-    const words = skills
-      .split(/[,\s]+/)
-      .filter(x => x.length > 2);
-
-    for (const word of words) {
-      if (text.includes(word)) score += 10;
+  skills.forEach(skill => {
+    if (skill.length > 1 && text.includes(skill)) {
+      score += 10;
     }
-  }
+  });
 
-  if (normalize(job.location) === location) {
+  if (
+    location &&
+    clean(job.location).toLowerCase() === location
+  ) {
     score += 30;
   }
 
-  return Math.min(score, 100);
+  return Math.min(100, score);
 }
 
 const server = http.createServer(async (req, res) => {
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "GET,POST,DELETE,OPTIONS"
+    });
+
+    return res.end();
+  }
+
+  const url = new URL(
+    req.url,
+    `http://${req.headers.host}`
+  );
+
+  const pathname = url.pathname;
+
   try {
-    if (req.method === "OPTIONS") {
-      res.writeHead(204, {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
-      });
 
-      res.end();
-      return;
-    }
+    /* =========================
+       HOME
+    ========================= */
 
-    /* HOME */
-
-    if (req.method === "GET" && req.url === "/") {
+    if (pathname === "/" && req.method === "GET") {
       const file = path.join(__dirname, "index.html");
 
-      if (fs.existsSync(file)) {
-        sendHTML(res, fs.readFileSync(file, "utf8"));
-      } else {
-        sendHTML(res, "<h1>কাজ খুঁজি</h1>");
+      if (!fs.existsSync(file)) {
+        return json(res, 404, {
+          error: "index.html পাওয়া যায়নি"
+        });
       }
 
-      return;
-    }
-
-    /* HEALTH */
-
-    if (req.method === "GET" && req.url === "/health") {
-      sendJSON(res, 200, {
-        success: true,
-        app: "কাজ খুঁজি",
-        status: "ok",
-        users: users.length,
-        jobs: jobs.length,
-        applications: applications.length,
-        saved: saved.length,
-        messages: messages.length,
-        notifications: notifications.length,
-        time: new Date().toISOString()
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8"
       });
 
-      return;
+      return res.end(
+        fs.readFileSync(file)
+      );
     }
 
-    /* REGISTER */
+    /* =========================
+       HEALTH
+    ========================= */
 
-    if (req.method === "POST" && req.url === "/api/register") {
+    if (pathname === "/health") {
+      return json(res, 200, {
+        ok: true,
+        message: "কাজ খুঁজি server চলছে",
+        time: new Date().toISOString()
+      });
+    }
+
+    /* =========================
+       REGISTER
+    ========================= */
+
+    if (
+      pathname === "/api/register" &&
+      req.method === "POST"
+    ) {
       const body = await readBody(req);
 
       const name = clean(body.name);
       const phone = clean(body.phone);
-      const location = clean(body.location);
       const pin = clean(body.pin);
+      const location = clean(body.location);
+      const skills = clean(body.skills);
       const avatar = clean(body.avatar);
 
-      if (!name || !phone || !location || !pin) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "সব তথ্য পূরণ করুন"
+      if (!name || !phone || !pin) {
+        return json(res, 400, {
+          error: "নাম, ফোন এবং PIN দিন"
         });
-        return;
       }
 
-      if (!validPIN(pin)) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+      if (!/^\d{6}$/.test(pin)) {
+        return json(res, 400, {
+          error: "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
         });
-        return;
       }
 
-      if (!imageValid(avatar, MAX_AVATAR)) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "প্রোফাইল ছবির সাইজ বা ফরম্যাট সঠিক নয়"
+      if (users.some(u => u.phone === phone)) {
+        return json(res, 409, {
+          error: "এই ফোন নম্বর দিয়ে ইতিমধ্যে account আছে"
         });
-        return;
       }
 
-      if (userByPhone(phone)) {
-        sendJSON(res, 409, {
-          success: false,
-          message: "এই মোবাইল নম্বর দিয়ে অ্যাকাউন্ট আছে"
+      if (!dataUrlOK(avatar, 350)) {
+        return json(res, 400, {
+          error: "Profile picture খুব বড়"
         });
-        return;
       }
 
       const user = {
-        id: id("user"),
+        id: id(),
         name,
         phone,
+        pin: hash(pin),
         location,
-        pinHash: hashPIN(pin),
+        skills,
         avatar,
-        verified: false,
-        skills: "",
         bio: "",
         cv: "",
-        createdAt: new Date().toISOString()
+        verified: false,
+        rating: 0,
+        createdAt: Date.now()
       };
 
       users.push(user);
+      save(DB.users, users);
 
-      saveJSON(DB.users, users);
-
-      sendJSON(res, 200, {
+      return json(res, 201, {
         success: true,
-        message: "অ্যাকাউন্ট তৈরি হয়েছে",
         user: publicUser(user)
       });
-
-      return;
     }
 
-    /* LOGIN */
-
-    if (req.method === "POST" && req.url === "/api/login") {
-      const body = await readBody(req);
-
-      const phone = clean(body.phone);
-      const pin = clean(body.pin);
-
-      const user = userByPhone(phone);
-
-      if (!user) {
-        sendJSON(res, 401, {
-          success: false,
-          message: "অ্যাকাউন্ট পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      if (!validPIN(pin) || user.pinHash !== hashPIN(pin)) {
-        sendJSON(res, 401, {
-          success: false,
-          message: "ভুল PIN"
-        });
-        return;
-      }
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "লগইন সফল",
-        user: publicUser(user)
-      });
-
-      return;
-    }
-
-    /* PROFILE GET */
+    /* =========================
+       LOGIN
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/profile")
-    ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
-
-      const phone = clean(url.searchParams.get("phone"));
-      const user = userByPhone(phone);
-
-      if (!user) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      const jobCount = jobs.filter(
-        j => j.phone === phone
-      ).length;
-
-      const applicationCount = applications.filter(
-        a => a.applicantPhone === phone
-      ).length;
-
-      sendJSON(res, 200, {
-        success: true,
-        user: publicUser(user),
-        jobCount,
-        applicationCount
-      });
-
-      return;
-    }
-
-    /* PROFILE UPDATE */
-
-    if (
-      req.method === "POST" &&
-      req.url === "/api/profile"
+      pathname === "/api/login" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
 
-      const phone = clean(body.phone);
-      const pin = clean(body.pin);
-
-      const user = userByPhone(phone);
-
-      if (!user) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      if (user.pinHash !== hashPIN(pin)) {
-        sendJSON(res, 401, {
-          success: false,
-          message: "ভুল PIN"
-        });
-        return;
-      }
-
-      if (body.name) user.name = clean(body.name);
-      if (body.location) user.location = clean(body.location);
-      if (body.skills !== undefined) user.skills = clean(body.skills);
-      if (body.bio !== undefined) user.bio = clean(body.bio);
-      if (body.cv !== undefined) user.cv = clean(body.cv);
-
-      if (body.avatar) {
-        if (!imageValid(body.avatar, MAX_AVATAR)) {
-          sendJSON(res, 400, {
-            success: false,
-            message: "ছবির সাইজ বা ফরম্যাট সঠিক নয়"
-          });
-          return;
-        }
-
-        user.avatar = body.avatar;
-      }
-
-      saveJSON(DB.users, users);
-
-      jobs.forEach(job => {
-        if (job.phone === phone) {
-          job.ownerName = user.name;
-          job.ownerAvatar = user.avatar || "";
-        }
-      });
-
-      saveJSON(DB.jobs, jobs);
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "প্রোফাইল আপডেট হয়েছে",
-        user: publicUser(user)
-      });
-
-      return;
-    }
-
-    /* JOB LIST */
-
-    if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/jobs")
-    ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
+      const user = findUser(
+        body.phone,
+        body.pin
       );
 
-      const location = clean(url.searchParams.get("location"));
-      const category = clean(url.searchParams.get("category"));
-      const q = clean(url.searchParams.get("q"));
-      const phone = clean(url.searchParams.get("phone"));
-      const match = url.searchParams.get("match") === "1";
+      if (!user) {
+        return json(res, 401, {
+          error: "ফোন অথবা PIN ভুল"
+        });
+      }
 
+      return json(res, 200, {
+        success: true,
+        user: publicUser(user)
+      });
+    }
+
+    /* =========================
+       PROFILE GET
+    ========================= */
+
+    if (
+      pathname === "/api/profile" &&
+      req.method === "GET"
+    ) {
+      const phone = clean(
+        url.searchParams.get("phone")
+      );
+
+      const user = users.find(
+        u => u.phone === phone
+      );
+
+      if (!user) {
+        return json(res, 404, {
+          error: "User পাওয়া যায়নি"
+        });
+      }
+
+      return json(res, 200, {
+        user: publicUser(user)
+      });
+    }
+
+    /* =========================
+       PROFILE UPDATE
+       INCLUDING PROFILE IMAGE
+    ========================= */
+
+    if (
+      pathname === "/api/profile" &&
+      req.method === "POST"
+    ) {
+      const body = await readBody(req);
+
+      const user = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!user) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
+
+      if (
+        body.avatar !== undefined &&
+        !dataUrlOK(body.avatar, 350)
+      ) {
+        return json(res, 400, {
+          error: "ছবির size বেশি। ছোট ছবি দিন।"
+        });
+      }
+
+      if (body.name !== undefined) {
+        user.name = clean(body.name);
+      }
+
+      if (body.location !== undefined) {
+        user.location = clean(body.location);
+      }
+
+      if (body.skills !== undefined) {
+        user.skills = clean(body.skills);
+      }
+
+      if (body.bio !== undefined) {
+        user.bio = clean(body.bio);
+      }
+
+      if (body.cv !== undefined) {
+        user.cv = clean(body.cv);
+      }
+
+      /* PROFILE PICTURE SAVE */
+
+      if (body.avatar !== undefined) {
+        user.avatar = body.avatar || "";
+      }
+
+      save(DB.users, users);
+
+      return json(res, 200, {
+        success: true,
+        message: "Profile update হয়েছে",
+        user: publicUser(user)
+      });
+    }
+
+    /* =========================
+       JOB LIST
+    ========================= */
+
+    if (
+      pathname === "/api/jobs" &&
+      req.method === "GET"
+    ) {
       let result = [...jobs];
+
+      const q = clean(
+        url.searchParams.get("q")
+      ).toLowerCase();
+
+      const location = clean(
+        url.searchParams.get("location")
+      ).toLowerCase();
+
+      const category = clean(
+        url.searchParams.get("category")
+      ).toLowerCase();
+
+      const match = url.searchParams.get("match");
+      const phone = clean(
+        url.searchParams.get("phone")
+      );
+
+      if (q) {
+        result = result.filter(j =>
+          (
+            j.title +
+            " " +
+            j.description +
+            " " +
+            j.category +
+            " " +
+            j.location
+          )
+            .toLowerCase()
+            .includes(q)
+        );
+      }
 
       if (location) {
         result = result.filter(j =>
-          locationMatch(j.location, location)
+          clean(j.location)
+            .toLowerCase()
+            .includes(location)
         );
       }
 
-      if (category && category !== "সব") {
-        result = result.filter(
-          j => normalize(j.category) === normalize(category)
+      if (category) {
+        result = result.filter(j =>
+          clean(j.category)
+            .toLowerCase()
+            .includes(category)
         );
       }
 
-      if (q) {
-        const search = normalize(q);
+      const user = users.find(
+        u => u.phone === phone
+      );
 
-        result = result.filter(j => {
-          const text = normalize(
-            [
-              j.title,
-              j.location,
-              j.category,
-              j.description,
-              j.ownerName
-            ].join(" ")
-          );
+      result = result.map(j => ({
+        ...j,
+        matchScore:
+          match === "1"
+            ? jobScore(j, user)
+            : 0
+      }));
 
-          return text.includes(search);
-        });
-      }
+      result.sort(
+        (a, b) =>
+          (b.matchScore || 0) -
+          (a.matchScore || 0) ||
+          b.createdAt - a.createdAt
+      );
 
-      if (match && phone) {
-        const user = userByPhone(phone);
-
-        if (user) {
-          result = result.map(j => ({
-            ...j,
-            matchScore: jobScore(j, user)
-          }));
-
-          result.sort(
-            (a, b) => b.matchScore - a.matchScore
-          );
-        }
-      } else {
-        result.sort(
-          (a, b) =>
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
-        );
-      }
-
-      sendJSON(res, 200, {
-        success: true,
-        count: result.length,
+      return json(res, 200, {
         jobs: result
       });
-
-      return;
     }
 
-    /* CREATE JOB */
+    /* =========================
+       CREATE JOB
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/jobs"
+      pathname === "/api/jobs" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
+
+      const user = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!user) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
 
       const title = clean(body.title);
       const location = clean(body.location);
       const salary = clean(body.salary);
       const category = clean(body.category);
       const description = clean(body.description);
-      const phone = clean(body.phone);
-      const pin = clean(body.pin);
       const image = clean(body.image);
 
-      const user = userByPhone(phone);
-
-      if (
-        !title ||
-        !location ||
-        !salary ||
-        !category ||
-        !description ||
-        !phone ||
-        !pin
-      ) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "সব তথ্য পূরণ করুন"
+      if (!title || !location || !description) {
+        return json(res, 400, {
+          error: "Job title, location ও description দিন"
         });
-        return;
       }
 
-      if (!user || user.pinHash !== hashPIN(pin)) {
-        sendJSON(res, 401, {
-          success: false,
-          message: "লগইন তথ্য সঠিক নয়"
+      if (!dataUrlOK(image, 700)) {
+        return json(res, 400, {
+          error: "Job image খুব বড়"
         });
-        return;
-      }
-
-      if (!imageValid(image, MAX_JOB_IMAGE)) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "কাজের ছবির সাইজ বা ফরম্যাট সঠিক নয়"
-        });
-        return;
       }
 
       const job = {
-        id: id("job"),
+        id: id(),
         title,
         location,
         salary,
         category,
         description,
-        phone,
+        image,
+        ownerPhone: user.phone,
         ownerName: user.name,
         ownerAvatar: user.avatar || "",
-        image,
-        createdAt: new Date().toISOString()
+        ownerVerified: !!user.verified,
+        createdAt: Date.now()
       };
 
-      jobs.unshift(job);
+      jobs.push(job);
+      save(DB.jobs, jobs);
 
-      saveJSON(DB.jobs, jobs);
-
-      /* JOB ALERT */
-
-      alerts.forEach(alert => {
-        if (
-          alert.active &&
-          locationMatch(location, alert.location) &&
-          (
-            !alert.category ||
-            alert.category === "সব" ||
-            normalize(alert.category) === normalize(category)
-          )
-        ) {
-          notify(
-            alert.phone,
-            "job",
-            "নতুন কাজ পাওয়া গেছে 🔔",
-            `${title} — ${location}`,
-            phone
-          );
-        }
-      });
-
-      sendJSON(res, 200, {
+      return json(res, 201, {
         success: true,
-        message: "কাজ পোস্ট হয়েছে",
         job
       });
-
-      return;
     }
 
-    /* DELETE JOB */
+    /* =========================
+       DELETE JOB
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/jobs/delete"
+      pathname === "/api/jobs" &&
+      req.method === "DELETE"
     ) {
       const body = await readBody(req);
+
+      const user = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!user) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
+
+      const index = jobs.findIndex(
+        j =>
+          j.id === body.id &&
+          j.ownerPhone === user.phone
+      );
+
+      if (index === -1) {
+        return json(res, 404, {
+          error: "Job পাওয়া যায়নি"
+        });
+      }
+
+      jobs.splice(index, 1);
+      save(DB.jobs, jobs);
+
+      return json(res, 200, {
+        success: true
+      });
+    }
+
+    /* =========================
+       APPLY JOB
+    ========================= */
+
+    if (
+      pathname === "/api/apply" &&
+      req.method === "POST"
+    ) {
+      const body = await readBody(req);
+
+      const applicant = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!applicant) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
 
       const job = jobs.find(
-        j => j.id === clean(body.id)
+        j => j.id === body.jobId
       );
 
-      const user = userByPhone(clean(body.phone));
-
-      if (!job || !user) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "কাজ পাওয়া যায়নি"
+      if (!job) {
+        return json(res, 404, {
+          error: "Job পাওয়া যায়নি"
         });
-        return;
       }
 
-      if (
-        user.pinHash !== hashPIN(clean(body.pin)) ||
-        job.phone !== user.phone
-      ) {
-        sendJSON(res, 403, {
-          success: false,
-          message: "অনুমতি নেই"
+      if (job.ownerPhone === applicant.phone) {
+        return json(res, 400, {
+          error: "নিজের Job-এ আবেদন করা যাবে না"
         });
-        return;
       }
 
-      jobs = jobs.filter(j => j.id !== job.id);
-
-      applications = applications.filter(
-        a => a.jobId !== job.id
-      );
-
-      saved = saved.filter(
-        s => s.jobId !== job.id
-      );
-
-      saveJSON(DB.jobs, jobs);
-      saveJSON(DB.applications, applications);
-      saveJSON(DB.saved, saved);
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "কাজ মুছে ফেলা হয়েছে"
-      });
-
-      return;
-    }
-
-    /* MY JOBS */
-
-    if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/my-jobs")
-    ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
-
-      const phone = clean(url.searchParams.get("phone"));
-
-      const result = jobs
-        .filter(j => j.phone === phone)
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
-        );
-
-      sendJSON(res, 200, {
-        success: true,
-        jobs: result
-      });
-
-      return;
-    }
-
-    /* APPLY */
-
-    if (
-      req.method === "POST" &&
-      req.url === "/api/apply"
-    ) {
-      const body = await readBody(req);
-
-      const jobId = clean(body.jobId);
-      const phone = clean(body.phone);
-      const cv = clean(body.cv);
-      const note = clean(body.note);
-
-      const job = jobs.find(j => j.id === jobId);
-      const applicant = userByPhone(phone);
-
-      if (!job || !applicant) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "কাজ বা ব্যবহারকারী পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      if (job.phone === phone) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "নিজের কাজে আবেদন করা যাবে না"
-        });
-        return;
-      }
-
-      const exists = applications.find(
+      const already = applications.find(
         a =>
-          a.jobId === jobId &&
-          a.applicantPhone === phone
+          a.jobId === job.id &&
+          a.applicantPhone === applicant.phone
       );
 
-      if (exists) {
-        sendJSON(res, 409, {
-          success: false,
-          message: "আপনি আগে আবেদন করেছেন"
+      if (already) {
+        return json(res, 409, {
+          error: "আপনি ইতিমধ্যে আবেদন করেছেন"
         });
-        return;
       }
 
       const application = {
-        id: id("application"),
-        jobId,
-        applicantPhone: phone,
+        id: id(),
+        jobId: job.id,
+        jobTitle: job.title,
+        applicantPhone: applicant.phone,
         applicantName: applicant.name,
         applicantAvatar: applicant.avatar || "",
-        employerPhone: job.phone,
-        jobTitle: job.title,
-        cv: cv || applicant.cv || "",
-        note,
+        employerPhone: job.ownerPhone,
+        cv: applicant.cv || "",
+        note: clean(body.note),
         status: "আবেদন করা হয়েছে",
-        createdAt: new Date().toISOString()
+        createdAt: Date.now()
       };
 
-      applications.unshift(application);
-
-      saveJSON(DB.applications, applications);
+      applications.push(application);
+      save(DB.applications, applications);
 
       notify(
-        job.phone,
-        "application",
-        "নতুন আবেদন 📥",
-        `${applicant.name} আপনার "${job.title}" কাজে আবেদন করেছেন`,
-        phone
+        job.ownerPhone,
+        "নতুন আবেদন",
+        applicant.name +
+          " আপনার \"" +
+          job.title +
+          "\" Job-এ আবেদন করেছেন।"
       );
 
-      sendJSON(res, 200, {
+      return json(res, 201, {
         success: true,
-        message: "আবেদন সফল হয়েছে",
         application
       });
-
-      return;
     }
 
-    /* APPLICATIONS */
+    /* =========================
+       APPLICATIONS
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/applications")
+      pathname === "/api/applications" &&
+      req.method === "GET"
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
+      const phone = clean(
+        url.searchParams.get("phone")
       );
 
-      const phone = clean(url.searchParams.get("phone"));
-      const mode = clean(url.searchParams.get("mode"));
+      const mode = clean(
+        url.searchParams.get("mode")
+      );
 
-      let result = [];
+      let result;
 
       if (mode === "employer") {
         result = applications.filter(
@@ -898,578 +722,328 @@ const server = http.createServer(async (req, res) => {
       }
 
       result.sort(
-        (a, b) =>
-          new Date(b.createdAt) -
-          new Date(a.createdAt)
+        (a, b) => b.createdAt - a.createdAt
       );
 
-      sendJSON(res, 200, {
-        success: true,
+      return json(res, 200, {
         applications: result
       });
-
-      return;
     }
 
-    /* APPLICATION STATUS */
+    /* =========================
+       APPLICATION STATUS
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/application/status"
+      pathname === "/api/application/status" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
 
+      const employer = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!employer) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
+
       const application = applications.find(
-        a => a.id === clean(body.id)
+        a =>
+          a.id === body.id &&
+          a.employerPhone === employer.phone
       );
 
       if (!application) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "আবেদন পাওয়া যায়নি"
+        return json(res, 404, {
+          error: "Application পাওয়া যায়নি"
         });
-        return;
-      }
-
-      const employer = userByPhone(clean(body.phone));
-
-      if (
-        !employer ||
-        employer.phone !== application.employerPhone ||
-        employer.pinHash !== hashPIN(clean(body.pin))
-      ) {
-        sendJSON(res, 403, {
-          success: false,
-          message: "অনুমতি নেই"
-        });
-        return;
       }
 
       application.status = clean(body.status);
 
-      saveJSON(DB.applications, applications);
+      save(DB.applications, applications);
 
       notify(
         application.applicantPhone,
-        "application",
-        "আবেদনের আপডেট 📢",
-        `${application.jobTitle}: ${application.status}`,
-        employer.phone
+        "আবেদনের আপডেট",
+        application.jobTitle +
+          " এর আবেদন: " +
+          application.status
       );
 
-      sendJSON(res, 200, {
+      return json(res, 200, {
         success: true,
-        message: "স্ট্যাটাস পরিবর্তন হয়েছে",
         application
       });
-
-      return;
     }
 
-    /* SAVE JOB */
+    /* =========================
+       SAVE JOB
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/save"
+      pathname === "/api/save" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
 
-      const phone = clean(body.phone);
-      const jobId = clean(body.jobId);
-
-      const exists = saved.find(
-        s => s.phone === phone && s.jobId === jobId
+      const user = findUser(
+        body.phone,
+        body.pin
       );
 
-      if (exists) {
+      if (!user) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
+
+      const existing = saved.find(
+        x =>
+          x.phone === user.phone &&
+          x.jobId === body.jobId
+      );
+
+      if (existing) {
         saved = saved.filter(
-          s => !(s.phone === phone && s.jobId === jobId)
+          x => x !== existing
         );
 
-        saveJSON(DB.saved, saved);
+        save(DB.saved, saved);
 
-        sendJSON(res, 200, {
-          success: true,
-          saved: false,
-          message: "Saved Jobs থেকে সরানো হয়েছে"
+        return json(res, 200, {
+          saved: false
         });
-
-        return;
       }
 
       saved.push({
-        id: id("saved"),
-        phone,
-        jobId,
-        createdAt: new Date().toISOString()
+        id: id(),
+        phone: user.phone,
+        jobId: body.jobId,
+        createdAt: Date.now()
       });
 
-      saveJSON(DB.saved, saved);
+      save(DB.saved, saved);
 
-      sendJSON(res, 200, {
-        success: true,
-        saved: true,
-        message: "কাজটি সংরক্ষণ করা হয়েছে"
+      return json(res, 200, {
+        saved: true
       });
-
-      return;
     }
 
-    /* SAVED JOBS */
+    /* =========================
+       SAVED JOBS
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/saved")
+      pathname === "/api/saved" &&
+      req.method === "GET"
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
+      const phone = clean(
+        url.searchParams.get("phone")
       );
-
-      const phone = clean(url.searchParams.get("phone"));
 
       const ids = saved
-        .filter(s => s.phone === phone)
-        .map(s => s.jobId);
+        .filter(x => x.phone === phone)
+        .map(x => x.jobId);
 
-      const result = jobs.filter(j =>
-        ids.includes(j.id)
+      const result = jobs.filter(
+        j => ids.includes(j.id)
       );
 
-      sendJSON(res, 200, {
-        success: true,
+      return json(res, 200, {
         jobs: result
       });
-
-      return;
     }
 
-    /* RATING */
+    /* =========================
+       SEND MESSAGE
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/rating"
+      pathname === "/api/message" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
 
-      const from = clean(body.from);
+      const user = findUser(
+        body.phone,
+        body.pin
+      );
+
+      if (!user) {
+        return json(res, 401, {
+          error: "Login তথ্য ভুল"
+        });
+      }
+
       const to = clean(body.to);
-      const rating = Number(body.rating);
-      const review = clean(body.review);
+      const message = clean(body.message);
 
-      if (
-        !from ||
-        !to ||
-        rating < 1 ||
-        rating > 5
-      ) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "সঠিক rating দিন"
-        });
-        return;
-      }
-
-      const old = ratings.find(
-        r => r.from === from && r.to === to
-      );
-
-      if (old) {
-        old.rating = rating;
-        old.review = review;
-        old.createdAt = new Date().toISOString();
-      } else {
-        ratings.push({
-          id: id("rating"),
-          from,
-          to,
-          rating,
-          review,
-          createdAt: new Date().toISOString()
+      if (!to || !message) {
+        return json(res, 400, {
+          error: "Message লিখুন"
         });
       }
 
-      saveJSON(DB.ratings, ratings);
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "Rating দেওয়া হয়েছে"
-      });
-
-      return;
-    }
-
-    /* JOB ALERT CREATE */
-
-    if (
-      req.method === "POST" &&
-      req.url === "/api/alerts"
-    ) {
-      const body = await readBody(req);
-
-      const phone = clean(body.phone);
-      const location = clean(body.location);
-      const category = clean(body.category);
-
-      alerts = alerts.filter(
-        a => a.phone !== phone
-      );
-
-      alerts.push({
-        id: id("alert"),
-        phone,
-        location,
-        category,
-        active: true,
-        createdAt: new Date().toISOString()
-      });
-
-      saveJSON(DB.alerts, alerts);
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "Job Alert চালু হয়েছে"
-      });
-
-      return;
-    }
-
-    /* ALERT GET */
-
-    if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/alerts")
-    ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
-
-      const phone = clean(url.searchParams.get("phone"));
-
-      sendJSON(res, 200, {
-        success: true,
-        alert:
-          alerts.find(a => a.phone === phone) || null
-      });
-
-      return;
-    }
-
-    /* INTERVIEW CREATE */
-
-    if (
-      req.method === "POST" &&
-      req.url === "/api/interview"
-    ) {
-      const body = await readBody(req);
-
-      const application = applications.find(
-        a => a.id === clean(body.applicationId)
-      );
-
-      if (!application) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "আবেদন পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      const employer = userByPhone(
-        clean(body.phone)
-      );
-
-      if (
-        !employer ||
-        employer.phone !== application.employerPhone ||
-        employer.pinHash !== hashPIN(clean(body.pin))
-      ) {
-        sendJSON(res, 403, {
-          success: false,
-          message: "অনুমতি নেই"
-        });
-        return;
-      }
-
-      const interview = {
-        id: id("interview"),
-        applicationId: application.id,
-        employerPhone: application.employerPhone,
-        applicantPhone: application.applicantPhone,
-        date: clean(body.date),
-        time: clean(body.time),
-        place: clean(body.place),
-        note: clean(body.note),
-        createdAt: new Date().toISOString()
-      };
-
-      interviews.push(interview);
-
-      saveJSON(DB.interviews, interviews);
-
-      application.status = "সাক্ষাৎকার নির্ধারিত";
-
-      saveJSON(DB.applications, applications);
-
-      notify(
-        application.applicantPhone,
-        "interview",
-        "Interview নির্ধারিত 📅",
-        `${application.jobTitle} — ${interview.date} ${interview.time}`,
-        employer.phone
-      );
-
-      sendJSON(res, 200, {
-        success: true,
-        message: "Interview নির্ধারণ করা হয়েছে",
-        interview
-      });
-
-      return;
-    }
-
-    /* INTERVIEWS */
-
-    if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/interviews")
-    ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
-
-      const phone = clean(url.searchParams.get("phone"));
-
-      const result = interviews.filter(
-        i =>
-          i.applicantPhone === phone ||
-          i.employerPhone === phone
-      );
-
-      sendJSON(res, 200, {
-        success: true,
-        interviews: result
-      });
-
-      return;
-    }
-
-    /* MESSAGES */
-
-    if (
-      req.method === "POST" &&
-      req.url === "/api/messages/send"
-    ) {
-      const body = await readBody(req);
-
-      const from = clean(body.from);
-      const to = clean(body.to);
-      const text = clean(body.text);
-
-      if (!from || !to || !text) {
-        sendJSON(res, 400, {
-          success: false,
-          message: "মেসেজ লিখুন"
-        });
-        return;
-      }
-
-      const sender = userByPhone(from);
-      const receiver = userByPhone(to);
-
-      if (!sender || !receiver) {
-        sendJSON(res, 404, {
-          success: false,
-          message: "ব্যবহারকারী পাওয়া যায়নি"
-        });
-        return;
-      }
-
-      const message = {
-        id: id("message"),
-        from,
+      const item = {
+        id: id(),
+        from: user.phone,
         to,
-        text,
-        createdAt: new Date().toISOString()
+        senderName: user.name,
+        message,
+        createdAt: Date.now()
       };
 
-      messages.push(message);
-
-      if (messages.length > 20000) {
-        messages = messages.slice(-20000);
-      }
-
-      saveJSON(DB.messages, messages);
+      messages.push(item);
+      save(DB.messages, messages);
 
       notify(
         to,
-        "message",
-        "নতুন মেসেজ 💬",
-        `${sender.name} আপনাকে মেসেজ পাঠিয়েছে`,
-        from
+        "নতুন Message",
+        user.name + " আপনাকে Message পাঠিয়েছেন।"
       );
 
-      sendJSON(res, 200, {
+      return json(res, 201, {
         success: true,
-        message
+        message: item
       });
-
-      return;
     }
 
-    /* MESSAGE LIST */
+    /* =========================
+       MESSAGE LIST
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/messages")
+      pathname === "/api/messages" &&
+      req.method === "GET"
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
+      const phone = clean(
+        url.searchParams.get("phone")
       );
 
-      const me = clean(url.searchParams.get("me"));
-      const other = clean(url.searchParams.get("other"));
+      const withPhone = clean(
+        url.searchParams.get("with")
+      );
 
       const result = messages.filter(
         m =>
-          (m.from === me && m.to === other) ||
-          (m.from === other && m.to === me)
+          (
+            m.from === phone &&
+            m.to === withPhone
+          ) ||
+          (
+            m.from === withPhone &&
+            m.to === phone
+          )
       );
 
-      result.sort(
-        (a, b) =>
-          new Date(a.createdAt) -
-          new Date(b.createdAt)
-      );
-
-      sendJSON(res, 200, {
-        success: true,
+      return json(res, 200, {
         messages: result
       });
-
-      return;
     }
 
-    /* NOTIFICATIONS */
+    /* =========================
+       NOTIFICATIONS
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/notifications")
+      pathname === "/api/notifications" &&
+      req.method === "GET"
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
+      const phone = clean(
+        url.searchParams.get("phone")
       );
 
-      const phone = clean(url.searchParams.get("phone"));
-
-      const list = notifications
-        .filter(n => n.phone === phone)
+      const result = notifications
+        .filter(x => x.phone === phone)
         .sort(
-          (a, b) =>
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
+          (a, b) => b.createdAt - a.createdAt
         );
 
-      sendJSON(res, 200, {
-        success: true,
-        unreadCount: list.filter(n => !n.read).length,
-        notifications: list.slice(0, 100)
+      return json(res, 200, {
+        notifications: result
       });
-
-      return;
     }
 
-    /* NOTIFICATION READ */
+    /* =========================
+       READ NOTIFICATIONS
+    ========================= */
 
     if (
-      req.method === "POST" &&
-      req.url === "/api/notifications/read"
+      pathname === "/api/notifications/read" &&
+      req.method === "POST"
     ) {
       const body = await readBody(req);
-      const phone = clean(body.phone);
 
       notifications.forEach(n => {
-        if (n.phone === phone) {
+        if (n.phone === body.phone) {
           n.read = true;
         }
       });
 
-      saveJSON(DB.notifications, notifications);
+      save(DB.notifications, notifications);
 
-      sendJSON(res, 200, {
+      return json(res, 200, {
         success: true
       });
-
-      return;
     }
 
-    /* SEARCH USERS */
+    /* =========================
+       USER SEARCH
+    ========================= */
 
     if (
-      req.method === "GET" &&
-      req.url.startsWith("/api/search")
+      pathname === "/api/search" &&
+      req.method === "GET"
     ) {
-      const url = new URL(
-        req.url,
-        `http://${req.headers.host || "localhost"}`
-      );
-
-      const q = normalize(
+      const q = clean(
         url.searchParams.get("q")
-      );
+      ).toLowerCase();
 
       const result = users
-        .filter(u => {
-          const text = normalize(
-            [
-              u.name,
-              u.phone,
-              u.location,
-              u.skills
-            ].join(" ")
-          );
-
-          return text.includes(q);
-        })
-        .slice(0, 30)
+        .filter(u =>
+          (
+            u.name +
+            " " +
+            u.phone +
+            " " +
+            u.location +
+            " " +
+            u.skills
+          )
+            .toLowerCase()
+            .includes(q)
+        )
         .map(publicUser);
 
-      sendJSON(res, 200, {
-        success: true,
+      return json(res, 200, {
         users: result
       });
-
-      return;
     }
 
-    sendJSON(res, 404, {
-      success: false,
-      message: "Not Found"
+    /* =========================
+       404
+    ========================= */
+
+    return json(res, 404, {
+      error: "Not Found"
     });
 
   } catch (error) {
-    console.error("SERVER ERROR:", error);
+    console.error(error);
 
-    sendJSON(res, 500, {
-      success: false,
-      message:
-        error.message === "REQUEST_TOO_LARGE"
-          ? "ফাইল বা request অনেক বড়"
-          : "Server error"
+    return json(res, 500, {
+      error: error.message || "Server Error"
     });
   }
 });
 
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, () => {
   console.log(
-    `কাজ খুঁজি server started on port ${PORT}`
-  );
-
-  console.log(
-    "Future features enabled"
+    "কাজ খুঁজি server started on port " + PORT
   );
 });
