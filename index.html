@@ -3,30 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#090912">
-<title>💼 কাজ খুঁজি</title>
+<meta name="theme-color" content="#080711">
+<title>কাজ খুঁজি</title>
 
 <style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
 *{
-  box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  box-sizing:border-box;
+  font-family:
+    Arial,
+    "Noto Sans Bengali",
+    sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
-  background:
-    radial-gradient(circle at top,#351d48 0%,#151020 42%,#090912 100%);
-  color:#fff;
   min-height:100vh;
+  color:#fff;
+  background:#080711;
 }
 
-button,input,textarea,select{
+button,
+input,
+textarea,
+select{
   font:inherit;
 }
 
 button{
-  border:0;
+  border:none;
+  outline:none;
   cursor:pointer;
 }
 
@@ -34,162 +49,693 @@ button{
   display:none!important;
 }
 
-/* =========================
-   AUTH
-========================= */
+
+/* =====================================================
+   ANIMATED AUTH BACKGROUND
+===================================================== */
 
 #authPage{
+  position:relative;
   min-height:100vh;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:20px;
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(255,58,137,.22),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(120,70,255,.25),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(0,180,255,.12),
+      transparent 35%
+    ),
+    #080711;
 }
+
+
+/* animated light */
+
+#authPage::before{
+  content:"";
+  position:absolute;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,72,145,.20),
+      transparent 65%
+    );
+  filter:blur(20px);
+  animation:
+    moveLight 9s ease-in-out infinite alternate;
+}
+
+
+#authPage::after{
+  content:"";
+  position:absolute;
+  width:350px;
+  height:350px;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(126,78,255,.20),
+      transparent 65%
+    );
+  filter:blur(20px);
+  animation:
+    moveLight2 11s ease-in-out infinite alternate;
+}
+
+
+@keyframes moveLight{
+  from{
+    transform:
+      translate(-120px,-100px)
+      scale(1);
+  }
+
+  to{
+    transform:
+      translate(180px,130px)
+      scale(1.35);
+  }
+}
+
+
+@keyframes moveLight2{
+  from{
+    transform:
+      translate(140px,120px)
+      scale(1);
+  }
+
+  to{
+    transform:
+      translate(-180px,-80px)
+      scale(1.3);
+  }
+}
+
+
+/* =====================================================
+   FLOATING PARTICLES
+===================================================== */
+
+.particles{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.particle{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.45);
+  box-shadow:
+    0 0 12px rgba(255,255,255,.45);
+
+  animation:
+    floatParticle
+    linear
+    infinite;
+}
+
+
+@keyframes floatParticle{
+
+  from{
+    transform:
+      translateY(110vh)
+      translateX(0);
+    opacity:0;
+  }
+
+  15%{
+    opacity:1;
+  }
+
+  85%{
+    opacity:1;
+  }
+
+  to{
+    transform:
+      translateY(-10vh)
+      translateX(80px);
+    opacity:0;
+  }
+}
+
+
+/* =====================================================
+   AUTH CARD
+===================================================== */
 
 .authBox{
+  position:relative;
+  z-index:10;
+
   width:100%;
   max-width:430px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  backdrop-filter:blur(20px);
-  border-radius:28px;
-  padding:25px;
-  box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+  padding:28px 22px;
+
+  border-radius:32px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.045)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.14);
+
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.10);
+
+  animation:
+    cardEnter .8s cubic-bezier(.2,.8,.2,1);
 }
 
-.logo{
+
+@keyframes cardEnter{
+
+  from{
+    opacity:0;
+    transform:
+      translateY(35px)
+      scale(.94);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.authLogo{
   text-align:center;
-  margin-bottom:22px;
+  margin-bottom:25px;
 }
 
-.logoIcon{
-  width:75px;
-  height:75px;
+
+.logoCircle{
+  position:relative;
+
+  width:82px;
+  height:82px;
+
   margin:auto;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:25px;
-  font-size:36px;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
-  box-shadow:0 12px 30px rgba(255,79,145,.25);
+
+  border-radius:27px;
+
+  font-size:38px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3f89,
+      #9b4dff
+    );
+
+  box-shadow:
+    0 15px 40px rgba(255,63,137,.28);
+
+  animation:
+    logoFloat 3s ease-in-out infinite;
 }
 
-.logo h1{
-  margin-top:14px;
-  font-size:28px;
+
+.logoCircle::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+
+  border-radius:31px;
+
+  border:
+    1px solid rgba(255,255,255,.18);
+
+  animation:
+    logoRing 2.5s ease-in-out infinite;
 }
 
-.logo p{
+
+@keyframes logoFloat{
+
+  0%,
+  100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-7px);
+  }
+}
+
+
+@keyframes logoRing{
+
+  0%,
+  100%{
+    opacity:.3;
+    transform:scale(1);
+  }
+
+  50%{
+    opacity:.8;
+    transform:scale(1.08);
+  }
+}
+
+
+.authLogo h1{
+  margin-top:16px;
+  font-size:29px;
+  letter-spacing:-.5px;
+}
+
+
+.authLogo p{
   margin-top:7px;
-  color:#bbb;
-  font-size:14px;
+  color:#a9a5b5;
+  font-size:13px;
 }
+
+
+/* =====================================================
+   AUTH TABS
+===================================================== */
 
 .authTabs{
-  display:flex;
-  gap:8px;
-  background:rgba(0,0,0,.22);
+  position:relative;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:5px;
+
   padding:5px;
-  border-radius:14px;
-  margin-bottom:20px;
+
+  margin-bottom:22px;
+
+  border-radius:16px;
+
+  background:rgba(0,0,0,.25);
 }
 
-.authTabs button{
-  flex:1;
-  padding:12px;
-  border-radius:10px;
-  color:#aaa;
+
+.authTab{
+  position:relative;
+  z-index:2;
+
+  padding:12px 8px;
+
+  border-radius:12px;
+
+  color:#85818e;
+
   background:transparent;
+
+  transition:.3s;
 }
 
-.authTabs button.active{
+
+.authTab.active{
   color:#fff;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #824cff
+    );
+
+  box-shadow:
+    0 7px 20px rgba(129,76,255,.25);
 }
+
+
+/* =====================================================
+   AUTH FORM ANIMATION
+===================================================== */
+
+.authForm{
+  animation:
+    formEnter .45s ease;
+}
+
+
+@keyframes formEnter{
+
+  from{
+    opacity:0;
+    transform:translateX(18px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
 
 .formGroup{
-  margin-bottom:14px;
+  margin-bottom:15px;
 }
+
 
 .formGroup label{
   display:block;
+
   margin-bottom:7px;
-  color:#ddd;
-  font-size:14px;
+
+  color:#d3d0d9;
+
+  font-size:13px;
 }
 
-.input,
-.textarea,
-.select{
+
+.inputWrap{
+  position:relative;
+}
+
+
+.inputIcon{
+  position:absolute;
+
+  left:14px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  color:#8c8798;
+
+  font-size:17px;
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+
+.input{
   width:100%;
-  padding:14px;
-  border-radius:13px;
-  border:1px solid rgba(255,255,255,.12);
+
+  height:52px;
+
+  padding:
+    0 46px 0 43px;
+
+  border-radius:15px;
+
   outline:none;
-  background:rgba(0,0,0,.25);
+
   color:#fff;
+
+  background:
+    rgba(0,0,0,.23);
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  transition:
+    .25s ease;
 }
 
-.input:focus,
-.textarea:focus,
-.select:focus{
-  border-color:#ff4f91;
+
+.input::placeholder{
+  color:#686473;
 }
 
-.input::placeholder,
-.textarea::placeholder{
-  color:#777;
+
+.input:focus{
+  border-color:#ff4b91;
+
+  background:
+    rgba(255,255,255,.06);
+
+  box-shadow:
+    0 0 0 4px rgba(255,75,145,.08);
 }
 
-.textarea{
-  min-height:100px;
-  resize:vertical;
+
+.input:focus + .inputIcon{
+  color:#ff6fa7;
 }
 
-.mainBtn{
+
+/* eye button */
+
+.passwordEye{
+  position:absolute;
+
+  right:8px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:36px;
+  height:36px;
+
+  border-radius:10px;
+
+  color:#aaa5b4;
+
+  background:transparent;
+}
+
+
+.passwordEye:active{
+  background:rgba(255,255,255,.08);
+}
+
+
+/* =====================================================
+   MAIN AUTH BUTTON
+===================================================== */
+
+.authButton{
+  position:relative;
+
   width:100%;
-  padding:14px;
-  border-radius:14px;
+  height:54px;
+
+  margin-top:7px;
+
+  overflow:hidden;
+
+  border-radius:16px;
+
   color:#fff;
+
   font-weight:bold;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
-  box-shadow:0 10px 25px rgba(129,76,255,.2);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
+
+  box-shadow:
+    0 12px 30px rgba(129,76,255,.25);
+
+  transition:
+    transform .2s,
+    box-shadow .2s;
 }
 
-.mainBtn:active{
-  transform:scale(.98);
+
+.authButton::before{
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:-120%;
+
+  width:80%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.28),
+      transparent
+    );
+
+  transform:skewX(-20deg);
+
+  animation:
+    buttonShine 3.5s infinite;
 }
+
+
+@keyframes buttonShine{
+
+  0%{
+    left:-120%;
+  }
+
+  45%,
+  100%{
+    left:140%;
+  }
+}
+
+
+.authButton:active{
+  transform:scale(.97);
+
+  box-shadow:
+    0 6px 15px rgba(129,76,255,.2);
+}
+
+
+.authButton.loading{
+  pointer-events:none;
+  opacity:.8;
+}
+
+
+.spinner{
+  display:inline-block;
+
+  width:18px;
+  height:18px;
+
+  border:
+    2px solid rgba(255,255,255,.35);
+
+  border-top-color:#fff;
+
+  border-radius:50%;
+
+  animation:
+    spin .7s linear infinite;
+
+  vertical-align:middle;
+}
+
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
 
 .message{
+  min-height:21px;
+
   margin-top:12px;
+
   text-align:center;
-  font-size:14px;
+
   color:#ff9fbd;
-  min-height:20px;
+
+  font-size:13px;
 }
 
-/* =========================
+
+/* =====================================================
+   SMALL TEXT
+===================================================== */
+
+.authHint{
+  margin-top:16px;
+
+  text-align:center;
+
+  color:#777380;
+
+  font-size:11px;
+
+  line-height:1.5;
+}
+
+
+/* =====================================================
    APP
-========================= */
+===================================================== */
 
 #appPage{
   min-height:100vh;
+
   padding-bottom:90px;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #261637,
+      #090912 55%
+    );
 }
+
 
 .header{
   position:sticky;
   top:0;
   z-index:50;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:15px;
-  background:rgba(9,9,18,.82);
+
+  padding:14px 16px;
+
+  background:
+    rgba(8,7,17,.82);
+
   backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.07);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.07);
 }
+
 
 .headerLeft{
   display:flex;
@@ -197,580 +743,1009 @@ button{
   gap:10px;
 }
 
+
 .headerLogo{
-  width:42px;
-  height:42px;
-  border-radius:14px;
+  width:43px;
+  height:43px;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
 }
+
 
 .headerTitle{
   font-weight:bold;
   font-size:18px;
 }
 
+
 .headerLocation{
-  color:#aaa;
-  font-size:11px;
   margin-top:2px;
+  color:#8e8a96;
+  font-size:11px;
 }
 
-.headerRight{
-  display:flex;
-  gap:8px;
-}
 
 .iconBtn{
   position:relative;
+
   width:42px;
   height:42px;
+
   border-radius:13px;
+
   color:#fff;
-  background:rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.08);
 }
+
 
 .badge{
   position:absolute;
+
   top:-3px;
   right:-3px;
+
   min-width:18px;
   height:18px;
+
   padding:0 4px;
-  border-radius:10px;
-  background:#ff3f7f;
-  color:#fff;
-  font-size:10px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  border-radius:10px;
+
+  background:#ff3f7f;
+
+  font-size:10px;
 }
 
-/* =========================
-   CONTENT
-========================= */
 
 .content{
   padding:16px;
+
+  max-width:850px;
+
+  margin:auto;
 }
+
 
 .page{
   display:none;
+
+  animation:
+    pageEnter .35s ease;
 }
+
 
 .page.active{
   display:block;
 }
 
-.hero{
-  padding:20px;
-  border-radius:22px;
-  background:
-    linear-gradient(135deg,rgba(255,79,145,.18),rgba(129,76,255,.18));
-  border:1px solid rgba(255,255,255,.08);
-  margin-bottom:18px;
+
+@keyframes pageEnter{
+
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
+
+
+.hero{
+  padding:21px;
+
+  border-radius:22px;
+
+  margin-bottom:18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,67,140,.17),
+      rgba(129,76,255,.17)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+}
+
 
 .hero h2{
-  font-size:24px;
-  line-height:1.3;
+  font-size:23px;
 }
 
+
 .hero p{
-  color:#bbb;
   margin-top:8px;
-  font-size:14px;
+
+  color:#aaa6b2;
+
+  font-size:13px;
 }
+
 
 .searchBox{
   position:relative;
+
   margin-bottom:17px;
 }
 
+
 .searchBox input{
-  padding-left:44px;
+  padding-left:43px;
 }
+
 
 .searchIcon{
   position:absolute;
-  left:15px;
+
+  left:14px;
   top:50%;
+
   transform:translateY(-50%);
-  color:#aaa;
+
+  color:#888390;
 }
 
-/* =========================
-   CATEGORY
-========================= */
 
 .categories{
   display:flex;
-  gap:9px;
+
+  gap:8px;
+
   overflow-x:auto;
+
   padding-bottom:7px;
+
   margin-bottom:18px;
 }
+
 
 .categories::-webkit-scrollbar{
   display:none;
 }
 
+
 .category{
   flex-shrink:0;
+
   padding:10px 14px;
+
   border-radius:20px;
-  color:#bbb;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.07);
-  font-size:13px;
+
+  color:#aaa6b2;
+
+  background:
+    rgba(255,255,255,.07);
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  font-size:12px;
+
+  transition:.2s;
 }
+
 
 .category.active{
   color:#fff;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
 }
 
-/* =========================
-   SECTION
-========================= */
 
 .sectionTitle{
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   margin:20px 0 12px;
 }
+
 
 .sectionTitle h3{
   font-size:18px;
 }
 
+
 .sectionTitle span{
-  color:#999;
+  color:#88838f;
   font-size:12px;
 }
 
-/* =========================
+
+/* =====================================================
    JOB CARD
-========================= */
+===================================================== */
 
 .jobs{
   display:flex;
+
   flex-direction:column;
+
   gap:12px;
 }
 
+
 .jobCard{
   padding:16px;
+
   border-radius:19px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 8px 25px rgba(0,0,0,.15);
+
+  background:
+    rgba(255,255,255,.065);
+
+  border:
+    1px solid rgba(255,255,255,.075);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.15);
+
+  animation:
+    jobEnter .35s ease;
 }
+
+
+@keyframes jobEnter{
+
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
 
 .jobTop{
   display:flex;
   justify-content:space-between;
+
   gap:10px;
 }
+
 
 .jobTitle{
   font-size:17px;
   font-weight:bold;
 }
 
+
 .jobCategory{
   display:inline-block;
+
   margin-top:7px;
+
   padding:5px 9px;
+
   border-radius:10px;
-  background:rgba(255,79,145,.12);
+
+  background:
+    rgba(255,67,140,.12);
+
   color:#ff9fc2;
+
   font-size:11px;
 }
 
+
 .jobSalary{
   color:#8ff0a4;
+
   font-weight:bold;
+
   white-space:nowrap;
 }
 
+
 .jobDescription{
   margin-top:12px;
-  color:#ccc;
+
+  color:#c5c1ca;
+
   font-size:14px;
+
   line-height:1.5;
 }
+
 
 .jobInfo{
   display:flex;
   flex-wrap:wrap;
+
   gap:8px;
+
   margin-top:13px;
 }
 
+
 .infoTag{
-  color:#aaa;
+  color:#aaa6b1;
+
   font-size:12px;
-  background:rgba(0,0,0,.2);
+
+  background:
+    rgba(0,0,0,.2);
+
   padding:7px 9px;
+
   border-radius:9px;
 }
 
+
 .jobBottom{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   gap:8px;
+
   margin-top:14px;
+
   padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.06);
+
+  border-top:
+    1px solid rgba(255,255,255,.06);
 }
+
 
 .userName{
   font-size:12px;
-  color:#bbb;
+
+  color:#aaa6b1;
 }
+
 
 .jobActions{
   display:flex;
+
   gap:7px;
 }
 
+
 .smallBtn{
   padding:8px 11px;
+
   border-radius:10px;
+
   color:#fff;
-  background:rgba(255,255,255,.09);
+
+  background:
+    rgba(255,255,255,.09);
+
   font-size:12px;
 }
 
+
 .smallBtn.primary{
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
 }
 
+
 .smallBtn.danger{
-  background:rgba(255,50,90,.15);
+  background:
+    rgba(255,50,90,.15);
+
   color:#ff8da8;
 }
 
+
 .empty{
   text-align:center;
+
   padding:35px 15px;
-  color:#888;
+
+  color:#85818c;
 }
 
-/* =========================
-   POST PAGE
-========================= */
+
+/* =====================================================
+   FORM CARD
+===================================================== */
 
 .formCard{
   padding:18px;
+
   border-radius:20px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.065);
+
+  border:
+    1px solid rgba(255,255,255,.08);
 }
+
 
 .formCard h2{
   margin-bottom:18px;
 }
 
-.formActions{
-  display:flex;
-  gap:10px;
+
+.textarea{
+  width:100%;
+
+  min-height:100px;
+
+  padding:14px;
+
+  resize:vertical;
+
+  border-radius:13px;
+
+  outline:none;
+
+  color:#fff;
+
+  background:
+    rgba(0,0,0,.25);
+
+  border:
+    1px solid rgba(255,255,255,.12);
 }
 
-.formActions button{
-  flex:1;
+
+.select{
+  width:100%;
+
+  height:50px;
+
+  padding:0 13px;
+
+  color:#fff;
+
+  border-radius:13px;
+
+  outline:none;
+
+  background:#171421;
+
+  border:
+    1px solid rgba(255,255,255,.12);
 }
 
-/* =========================
+
+.mainBtn{
+  width:100%;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  color:#fff;
+
+  font-weight:bold;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
+}
+
+
+/* =====================================================
    PROFILE
-========================= */
+===================================================== */
 
 .profileCard{
   text-align:center;
+
   padding:25px 18px;
+
   border-radius:22px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.07);
+
+  border:
+    1px solid rgba(255,255,255,.08);
 }
+
 
 .avatar{
   width:78px;
   height:78px;
+
   margin:auto;
-  border-radius:50%;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  border-radius:50%;
+
   font-size:30px;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
 }
+
 
 .profileCard h2{
   margin-top:12px;
 }
 
+
 .profileCard p{
-  color:#aaa;
   margin-top:5px;
+  color:#aaa6b2;
 }
+
 
 .profileInfo{
   margin-top:20px;
   text-align:left;
 }
 
+
 .profileRow{
   display:flex;
+
   justify-content:space-between;
+
   gap:15px;
+
   padding:13px 0;
-  border-bottom:1px solid rgba(255,255,255,.06);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.06);
 }
 
+
 .profileRow span:first-child{
-  color:#999;
+  color:#88838f;
 }
+
 
 .profileRow span:last-child{
   text-align:right;
 }
 
-/* =========================
+
+/* =====================================================
    BOTTOM NAV
-========================= */
+===================================================== */
 
 .bottomNav{
   position:fixed;
+
   z-index:60;
+
   bottom:0;
   left:0;
   right:0;
+
   display:flex;
+
   justify-content:space-around;
-  padding:9px 5px calc(9px + env(safe-area-inset-bottom));
-  background:rgba(9,9,18,.93);
+
+  padding:
+    9px
+    5px
+    calc(9px + env(safe-area-inset-bottom));
+
+  background:
+    rgba(9,9,18,.94);
+
   backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,.08);
+
+  border-top:
+    1px solid rgba(255,255,255,.08);
 }
+
 
 .navItem{
   min-width:55px;
+
   text-align:center;
-  color:#888;
+
+  color:#77727f;
+
   font-size:10px;
+
   background:none;
 }
 
-.navItem .navIcon{
+
+.navIcon{
   display:block;
+
   font-size:20px;
+
   margin-bottom:3px;
 }
 
+
 .navItem.active{
-  color:#ff79a9;
+  color:#ff72a8;
 }
 
-/* =========================
-   FLOAT BUTTON
-========================= */
+
+/* =====================================================
+   FAB
+===================================================== */
 
 .fab{
   position:fixed;
+
   z-index:55;
+
   right:18px;
   bottom:78px;
+
   width:56px;
   height:56px;
+
   border-radius:19px;
+
   color:#fff;
+
   font-size:25px;
-  background:linear-gradient(135deg,#ff4f91,#814cff);
-  box-shadow:0 10px 30px rgba(129,76,255,.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
+
+  box-shadow:
+    0 10px 30px rgba(129,76,255,.35);
+
+  animation:
+    fabPulse 2.5s infinite;
 }
 
-/* =========================
+
+@keyframes fabPulse{
+
+  0%,
+  100%{
+    box-shadow:
+      0 10px 30px rgba(129,76,255,.35);
+  }
+
+  50%{
+    box-shadow:
+      0 10px 40px rgba(255,67,140,.48);
+  }
+}
+
+
+/* =====================================================
    MODAL
-========================= */
+===================================================== */
 
 .modal{
   position:fixed;
+
   z-index:100;
+
   inset:0;
+
   display:none;
+
   align-items:flex-end;
   justify-content:center;
-  background:rgba(0,0,0,.7);
+
   padding:15px;
+
+  background:
+    rgba(0,0,0,.72);
 }
+
 
 .modal.show{
   display:flex;
 }
 
+
 .modalBox{
   width:100%;
+
   max-width:520px;
+
   max-height:90vh;
+
   overflow-y:auto;
-  border-radius:24px 24px 10px 10px;
+
   padding:20px;
-  background:#171422;
-  border:1px solid rgba(255,255,255,.1);
+
+  border-radius:
+    24px
+    24px
+    10px
+    10px;
+
+  background:#171421;
+
+  border:
+    1px solid rgba(255,255,255,.1);
+
+  animation:
+    modalUp .3s ease;
 }
+
+
+@keyframes modalUp{
+
+  from{
+    transform:translateY(50px);
+    opacity:0;
+  }
+
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
 
 .modalHeader{
   display:flex;
+
   align-items:center;
   justify-content:space-between;
+
   margin-bottom:18px;
 }
+
 
 .modalHeader h2{
   font-size:19px;
 }
 
+
 .closeBtn{
   width:35px;
   height:35px;
+
   border-radius:10px;
+
   color:#fff;
-  background:rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.08);
 }
 
-/* =========================
-   NOTIFICATION
-========================= */
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
 
 .notificationItem{
   padding:13px;
+
   border-radius:14px;
+
   margin-bottom:9px;
-  background:rgba(255,255,255,.06);
+
+  background:
+    rgba(255,255,255,.06);
 }
 
+
 .notificationItem.unread{
-  border-left:3px solid #ff4f91;
+  border-left:
+    3px solid #ff438c;
 }
+
 
 .notificationItem p{
   font-size:14px;
   line-height:1.4;
 }
 
+
 .notificationItem small{
   display:block;
+
   margin-top:6px;
-  color:#777;
+
+  color:#77727f;
 }
 
-/* =========================
+
+/* =====================================================
    CHAT
-========================= */
+===================================================== */
 
 .chatMessages{
   min-height:260px;
+
   max-height:50vh;
+
   overflow-y:auto;
+
   padding:8px 0;
 }
 
+
 .messageRow{
   display:flex;
+
   margin:7px 0;
 }
+
 
 .messageRow.me{
   justify-content:flex-end;
 }
 
+
 .chatBubble{
   max-width:78%;
+
   padding:10px 13px;
+
   border-radius:15px;
-  background:rgba(255,255,255,.08);
-  color:#eee;
+
+  background:
+    rgba(255,255,255,.08);
 }
 
+
 .messageRow.me .chatBubble{
-  background:linear-gradient(135deg,#ff4f91,#814cff);
+  background:
+    linear-gradient(
+      135deg,
+      #ff438c,
+      #814cff
+    );
 }
+
 
 .chatTime{
   display:block;
+
   font-size:9px;
+
   opacity:.65;
+
   margin-top:4px;
 }
 
+
 .chatInputArea{
   display:flex;
+
   gap:8px;
+
   margin-top:10px;
 }
+
 
 .chatInputArea input{
   flex:1;
 }
 
-/* =========================
+
+/* =====================================================
    TOAST
-========================= */
+===================================================== */
 
 .toast{
   position:fixed;
+
   z-index:200;
+
   left:50%;
+
   bottom:90px;
-  transform:translateX(-50%) translateY(20px);
-  width:calc(100% - 35px);
+
+  transform:
+    translateX(-50%)
+    translateY(20px);
+
+  width:
+    calc(100% - 35px);
+
   max-width:430px;
+
   padding:13px 16px;
+
   border-radius:13px;
+
   text-align:center;
+
   background:#262231;
-  border:1px solid rgba(255,255,255,.1);
+
+  border:
+    1px solid rgba(255,255,255,.1);
+
   opacity:0;
+
   pointer-events:none;
+
   transition:.25s;
 }
 
+
 .toast.show{
   opacity:1;
-  transform:translateX(-50%) translateY(0);
+
+  transform:
+    translateX(-50%)
+    translateY(0);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
+/* =====================================================
+   DESKTOP
+===================================================== */
 
 @media(min-width:700px){
+
   .content{
-    max-width:800px;
-    margin:auto;
+    max-width:850px;
   }
 
   .bottomNav{
     left:50%;
     right:auto;
+
     transform:translateX(-50%);
+
     width:600px;
-    border-radius:20px 20px 0 0;
+
+    border-radius:
+      20px
+      20px
+      0
+      0;
   }
 
   .fab{
-    right:calc(50% - 380px);
+    right:
+      calc(50% - 380px);
   }
+
 }
+
 </style>
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      AUTH PAGE
@@ -778,123 +1753,321 @@ button{
 
 <section id="authPage">
 
+  <!-- floating particles -->
+
+  <div class="particles">
+
+    <span
+      class="particle"
+      style="left:8%;animation-duration:12s;animation-delay:0s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:20%;animation-duration:15s;animation-delay:2s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:35%;animation-duration:11s;animation-delay:4s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:50%;animation-duration:17s;animation-delay:1s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:65%;animation-duration:13s;animation-delay:5s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:80%;animation-duration:16s;animation-delay:3s">
+    </span>
+
+    <span
+      class="particle"
+      style="left:92%;animation-duration:12s;animation-delay:7s">
+    </span>
+
+  </div>
+
+
   <div class="authBox">
 
-    <div class="logo">
-      <div class="logoIcon">💼</div>
+
+    <!-- LOGO -->
+
+    <div class="authLogo">
+
+      <div class="logoCircle">
+        💼
+      </div>
+
       <h1>কাজ খুঁজি</h1>
-      <p>কাজ খুঁজুন অথবা কাজের মানুষ খুঁজুন</p>
+
+      <p>
+        আপনার কাজ, আপনার সুযোগ
+      </p>
+
     </div>
+
+
+    <!-- TABS -->
 
     <div class="authTabs">
-      <button id="loginTab" class="active" onclick="showLogin()">
-        লগইন
-      </button>
 
-      <button id="registerTab" onclick="showRegister()">
-        রেজিস্টার
-      </button>
-    </div>
-
-    <!-- LOGIN -->
-
-    <div id="loginForm">
-
-      <div class="formGroup">
-        <label>মোবাইল নম্বর</label>
-
-        <input
-          id="loginPhone"
-          class="input"
-          type="tel"
-          inputmode="numeric"
-          placeholder="01XXXXXXXXX"
-        >
-      </div>
-
-      <div class="formGroup">
-        <label>৬ সংখ্যার PIN</label>
-
-        <input
-          id="loginPin"
-          class="input"
-          type="password"
-          inputmode="numeric"
-          maxlength="6"
-          pattern="[0-9]{6}"
-          placeholder="৬ সংখ্যার PIN"
-        >
-      </div>
-
-      <button class="mainBtn" onclick="login()">
+      <button
+        id="loginTab"
+        class="authTab active"
+        onclick="showLogin()"
+      >
         🔐 লগইন
       </button>
 
-      <div id="loginMessage" class="message"></div>
+      <button
+        id="registerTab"
+        class="authTab"
+        onclick="showRegister()"
+      >
+        ✨ রেজিস্টার
+      </button>
 
     </div>
 
 
-    <!-- REGISTER -->
+    <!-- =================================================
+         LOGIN
+    ================================================= -->
 
-    <div id="registerForm" class="hidden">
-
-      <div class="formGroup">
-        <label>আপনার নাম</label>
-
-        <input
-          id="registerName"
-          class="input"
-          type="text"
-          maxlength="50"
-          placeholder="আপনার নাম"
-        >
-      </div>
+    <div
+      id="loginForm"
+      class="authForm"
+    >
 
       <div class="formGroup">
-        <label>মোবাইল নম্বর</label>
 
-        <input
-          id="registerPhone"
-          class="input"
-          type="tel"
-          inputmode="numeric"
-          maxlength="11"
-          placeholder="01XXXXXXXXX"
-        >
+        <label>
+          মোবাইল নম্বর
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="loginPhone"
+            class="input"
+            type="tel"
+            inputmode="numeric"
+            maxlength="11"
+            placeholder="01XXXXXXXXX"
+          >
+
+          <span class="inputIcon">
+            📱
+          </span>
+
+        </div>
+
       </div>
+
 
       <div class="formGroup">
-        <label>আপনার এলাকা</label>
 
-        <input
-          id="registerLocation"
-          class="input"
-          type="text"
-          maxlength="80"
-          placeholder="যেমন: টাংগাইল, ঢাকা"
-        >
+        <label>
+          ৬ সংখ্যার PIN
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="loginPin"
+            class="input"
+            type="password"
+            inputmode="numeric"
+            maxlength="6"
+            pattern="[0-9]{6}"
+            placeholder="আপনার PIN"
+          >
+
+          <span class="inputIcon">
+            🔒
+          </span>
+
+          <button
+            class="passwordEye"
+            type="button"
+            onclick="togglePassword('loginPin',this)"
+          >
+            👁️
+          </button>
+
+        </div>
+
       </div>
 
-      <div class="formGroup">
-        <label>PIN</label>
 
-        <input
-          id="registerPin"
-          class="input"
-          type="password"
-          inputmode="numeric"
-          maxlength="6"
-          pattern="[0-9]{6}"
-          placeholder="৬ সংখ্যার PIN"
-        >
-      </div>
-
-      <button class="mainBtn" onclick="register()">
-        ✨ নতুন অ্যাকাউন্ট তৈরি
+      <button
+        id="loginButton"
+        class="authButton"
+        onclick="login()"
+      >
+        <span>লগইন করুন →</span>
       </button>
 
-      <div id="registerMessage" class="message"></div>
+
+      <div
+        id="loginMessage"
+        class="message"
+      ></div>
+
+
+      <div class="authHint">
+        আপনার অ্যাকাউন্টে প্রবেশ করতে মোবাইল নম্বর ও ৬ সংখ্যার PIN ব্যবহার করুন।
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         REGISTER
+    ================================================= -->
+
+    <div
+      id="registerForm"
+      class="authForm hidden"
+    >
+
+      <div class="formGroup">
+
+        <label>
+          আপনার নাম
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="registerName"
+            class="input"
+            type="text"
+            maxlength="50"
+            placeholder="আপনার নাম লিখুন"
+          >
+
+          <span class="inputIcon">
+            👤
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="formGroup">
+
+        <label>
+          মোবাইল নম্বর
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="registerPhone"
+            class="input"
+            type="tel"
+            inputmode="numeric"
+            maxlength="11"
+            placeholder="01XXXXXXXXX"
+          >
+
+          <span class="inputIcon">
+            📱
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="formGroup">
+
+        <label>
+          আপনার এলাকা
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="registerLocation"
+            class="input"
+            type="text"
+            maxlength="80"
+            placeholder="যেমন: টাংগাইল সদর"
+          >
+
+          <span class="inputIcon">
+            📍
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="formGroup">
+
+        <label>
+          ৬ সংখ্যার PIN
+        </label>
+
+        <div class="inputWrap">
+
+          <input
+            id="registerPin"
+            class="input"
+            type="password"
+            inputmode="numeric"
+            maxlength="6"
+            pattern="[0-9]{6}"
+            placeholder="নতুন PIN তৈরি করুন"
+          >
+
+          <span class="inputIcon">
+            🔐
+          </span>
+
+          <button
+            class="passwordEye"
+            type="button"
+            onclick="togglePassword('registerPin',this)"
+          >
+            👁️
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="registerButton"
+        class="authButton"
+        onclick="register()"
+      >
+        <span>অ্যাকাউন্ট তৈরি করুন ✨</span>
+      </button>
+
+
+      <div
+        id="registerMessage"
+        class="message"
+      ></div>
+
+
+      <div class="authHint">
+        আপনার তথ্য দিয়ে নতুন কাজ খুঁজি অ্যাকাউন্ট তৈরি করুন।
+      </div>
 
     </div>
 
@@ -909,408 +2082,516 @@ button{
 
 <section id="appPage" class="hidden">
 
-  <!-- HEADER -->
 
-  <header class="header">
+<header class="header">
 
-    <div class="headerLeft">
+  <div class="headerLeft">
 
-      <div class="headerLogo">
-        💼
+    <div class="headerLogo">
+      💼
+    </div>
+
+    <div>
+
+      <div class="headerTitle">
+        কাজ খুঁজি
       </div>
 
-      <div>
-        <div class="headerTitle">
-          কাজ খুঁজি
-        </div>
-
-        <div id="headerLocation" class="headerLocation">
-          বাংলাদেশ
-        </div>
+      <div
+        id="headerLocation"
+        class="headerLocation"
+      >
+        বাংলাদেশ
       </div>
 
     </div>
 
-    <div class="headerRight">
+  </div>
 
-      <button class="iconBtn" onclick="openNotifications()">
-        🔔
-        <span id="notificationBadge" class="badge hidden">0</span>
-      </button>
+
+  <div>
+
+    <button
+      class="iconBtn"
+      onclick="openNotifications()"
+    >
+      🔔
+
+      <span
+        id="notificationBadge"
+        class="badge hidden"
+      >
+        0
+      </span>
+
+    </button>
+
+  </div>
+
+</header>
+
+
+<main class="content">
+
+
+<!-- HOME -->
+
+<section
+  id="homePage"
+  class="page active"
+>
+
+  <div class="hero">
+
+    <h2>
+      আজকের কাজ খুঁজে নিন 🔎
+    </h2>
+
+    <p>
+      আপনার এলাকার কাজ এবং কাজের মানুষ সহজেই খুঁজুন।
+    </p>
+
+  </div>
+
+
+  <div class="searchBox">
+
+    <span class="searchIcon">
+      🔎
+    </span>
+
+    <input
+      id="searchInput"
+      class="input"
+      type="search"
+      placeholder="কাজ, লোকেশন বা ক্যাটাগরি খুঁজুন..."
+      oninput="searchJobs()"
+    >
+
+  </div>
+
+
+  <div class="categories">
+
+    <button
+      class="category active"
+      onclick="filterCategory('সব',this)"
+    >
+      সব
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('রাজমিস্ত্রি',this)"
+    >
+      🧱 রাজমিস্ত্রি
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('ইলেকট্রিশিয়ান',this)"
+    >
+      ⚡ ইলেকট্রিশিয়ান
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('ড্রাইভার',this)"
+    >
+      🚗 ড্রাইভার
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('ডেলিভারি',this)"
+    >
+      📦 ডেলিভারি
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('দোকান',this)"
+    >
+      🏪 দোকান
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('কম্পিউটার',this)"
+    >
+      💻 কম্পিউটার
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('টিউশনি',this)"
+    >
+      📚 টিউশনি
+    </button>
+
+    <button
+      class="category"
+      onclick="filterCategory('অন্যান্য',this)"
+    >
+      📌 অন্যান্য
+    </button>
+
+  </div>
+
+
+  <div class="sectionTitle">
+
+    <h3>
+      সাম্প্রতিক কাজ
+    </h3>
+
+    <span id="jobCount">
+      0টি কাজ
+    </span>
+
+  </div>
+
+
+  <div
+    id="jobsList"
+    class="jobs"
+  >
+
+    <div class="empty">
+      কাজ খোঁজা হচ্ছে...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- MY JOBS -->
+
+<section
+  id="myJobsPage"
+  class="page"
+>
+
+  <div class="sectionTitle">
+
+    <h3>
+      আমার পোস্ট করা কাজ
+    </h3>
+
+  </div>
+
+  <div
+    id="myJobsList"
+    class="jobs"
+  >
+
+    <div class="empty">
+      আপনার পোস্ট করা কাজ এখানে দেখা যাবে।
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- POST -->
+
+<section
+  id="postPage"
+  class="page"
+>
+
+  <div class="formCard">
+
+    <h2>
+      📝 নতুন কাজ পোস্ট করুন
+    </h2>
+
+
+    <div class="formGroup">
+
+      <label>
+        কাজের নাম
+      </label>
+
+      <input
+        id="jobTitle"
+        class="input"
+        maxlength="100"
+        placeholder="যেমন: একজন ইলেকট্রিশিয়ান প্রয়োজন"
+      >
 
     </div>
 
-  </header>
+
+    <div class="formGroup">
+
+      <label>
+        ক্যাটাগরি
+      </label>
+
+      <select
+        id="jobCategory"
+        class="select"
+      >
+
+        <option value="রাজমিস্ত্রি">
+          রাজমিস্ত্রি
+        </option>
+
+        <option value="ইলেকট্রিশিয়ান">
+          ইলেকট্রিশিয়ান
+        </option>
+
+        <option value="ড্রাইভার">
+          ড্রাইভার
+        </option>
+
+        <option value="ডেলিভারি">
+          ডেলিভারি
+        </option>
+
+        <option value="দোকান">
+          দোকান
+        </option>
+
+        <option value="কম্পিউটার">
+          কম্পিউটার
+        </option>
+
+        <option value="টিউশনি">
+          টিউশনি
+        </option>
+
+        <option value="অন্যান্য">
+          অন্যান্য
+        </option>
+
+      </select>
+
+    </div>
 
 
-  <main class="content">
+    <div class="formGroup">
 
-    <!-- ================= HOME ================= -->
+      <label>
+        কাজের বিবরণ
+      </label>
 
-    <section id="homePage" class="page active">
+      <textarea
+        id="jobDescription"
+        class="textarea"
+        maxlength="1000"
+        placeholder="কাজ সম্পর্কে বিস্তারিত লিখুন..."
+      ></textarea>
 
-      <div class="hero">
-
-        <h2>
-          আজকের কাজ খুঁজে নিন 🔎
-        </h2>
-
-        <p>
-          আপনার এলাকার কাজ এবং কাজের মানুষ সহজেই খুঁজুন।
-        </p>
-
-      </div>
+    </div>
 
 
-      <div class="searchBox">
+    <div class="formGroup">
 
-        <span class="searchIcon">🔎</span>
+      <label>
+        বেতন / পারিশ্রমিক
+      </label>
 
-        <input
-          id="searchInput"
-          class="input"
-          type="search"
-          placeholder="কাজ, লোকেশন বা ক্যাটাগরি খুঁজুন..."
-          oninput="searchJobs()"
-        >
+      <input
+        id="jobSalary"
+        class="input"
+        maxlength="50"
+        placeholder="যেমন: ১৫,০০০ টাকা"
+      >
 
-      </div>
-
-
-      <div class="categories">
-
-        <button
-          class="category active"
-          onclick="filterCategory('সব',this)"
-        >
-          সব
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('রাজমিস্ত্রি',this)"
-        >
-          🧱 রাজমিস্ত্রি
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('ইলেকট্রিশিয়ান',this)"
-        >
-          ⚡ ইলেকট্রিশিয়ান
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('ড্রাইভার',this)"
-        >
-          🚗 ড্রাইভার
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('ডেলিভারি',this)"
-        >
-          📦 ডেলিভারি
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('দোকান',this)"
-        >
-          🏪 দোকান
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('কম্পিউটার',this)"
-        >
-          💻 কম্পিউটার
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('টিউশনি',this)"
-        >
-          📚 টিউশনি
-        </button>
-
-        <button
-          class="category"
-          onclick="filterCategory('অন্যান্য',this)"
-        >
-          📌 অন্যান্য
-        </button>
-
-      </div>
+    </div>
 
 
-      <div class="sectionTitle">
+    <div class="formGroup">
 
-        <h3>সাম্প্রতিক কাজ</h3>
+      <label>
+        কাজের লোকেশন
+      </label>
 
-        <span id="jobCount">
-          0টি কাজ
+      <input
+        id="jobLocation"
+        class="input"
+        maxlength="100"
+        placeholder="যেমন: টাংগাইল সদর"
+      >
+
+    </div>
+
+
+    <button
+      class="mainBtn"
+      onclick="createJob()"
+    >
+      🚀 কাজ পোস্ট করুন
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section
+  id="profilePage"
+  class="page"
+>
+
+  <div class="profileCard">
+
+    <div
+      id="profileAvatar"
+      class="avatar"
+    >
+      👤
+    </div>
+
+    <h2 id="profileName">
+      -
+    </h2>
+
+    <p id="profilePhone">
+      -
+    </p>
+
+
+    <div class="profileInfo">
+
+      <div class="profileRow">
+
+        <span>
+          📍 এলাকা
+        </span>
+
+        <span id="profileLocation">
+          -
         </span>
 
       </div>
 
 
-      <div id="jobsList" class="jobs">
+      <div class="profileRow">
 
-        <div class="empty">
-          কাজ খোঁজা হচ্ছে...
-        </div>
+        <span>
+          💼 পোস্ট করা কাজ
+        </span>
 
-      </div>
-
-    </section>
-
-
-    <!-- ================= MY JOBS ================= -->
-
-    <section id="myJobsPage" class="page">
-
-      <div class="sectionTitle">
-
-        <h3>আমার পোস্ট করা কাজ</h3>
+        <span id="profileJobCount">
+          0
+        </span>
 
       </div>
 
-      <div id="myJobsList" class="jobs">
 
-        <div class="empty">
-          আপনার পোস্ট করা কাজ এখানে দেখা যাবে।
-        </div>
+      <div class="profileRow">
 
-      </div>
+        <span>
+          👤 অ্যাকাউন্ট
+        </span>
 
-    </section>
-
-
-    <!-- ================= POST ================= -->
-
-    <section id="postPage" class="page">
-
-      <div class="formCard">
-
-        <h2>
-          📝 নতুন কাজ পোস্ট করুন
-        </h2>
-
-        <div class="formGroup">
-
-          <label>কাজের নাম</label>
-
-          <input
-            id="jobTitle"
-            class="input"
-            maxlength="100"
-            placeholder="যেমন: একজন ইলেকট্রিশিয়ান প্রয়োজন"
-          >
-
-        </div>
-
-
-        <div class="formGroup">
-
-          <label>ক্যাটাগরি</label>
-
-          <select id="jobCategory" class="select">
-
-            <option value="রাজমিস্ত্রি">রাজমিস্ত্রি</option>
-            <option value="ইলেকট্রিশিয়ান">ইলেকট্রিশিয়ান</option>
-            <option value="ড্রাইভার">ড্রাইভার</option>
-            <option value="ডেলিভারি">ডেলিভারি</option>
-            <option value="দোকান">দোকান</option>
-            <option value="কম্পিউটার">কম্পিউটার</option>
-            <option value="টিউশনি">টিউশনি</option>
-            <option value="অন্যান্য">অন্যান্য</option>
-
-          </select>
-
-        </div>
-
-
-        <div class="formGroup">
-
-          <label>কাজের বিবরণ</label>
-
-          <textarea
-            id="jobDescription"
-            class="textarea"
-            maxlength="1000"
-            placeholder="কাজ সম্পর্কে বিস্তারিত লিখুন..."
-          ></textarea>
-
-        </div>
-
-
-        <div class="formGroup">
-
-          <label>বেতন / পারিশ্রমিক</label>
-
-          <input
-            id="jobSalary"
-            class="input"
-            maxlength="50"
-            placeholder="যেমন: ১৫,০০০ টাকা"
-          >
-
-        </div>
-
-
-        <div class="formGroup">
-
-          <label>কাজের লোকেশন</label>
-
-          <input
-            id="jobLocation"
-            class="input"
-            maxlength="100"
-            placeholder="যেমন: টাংগাইল সদর"
-          >
-
-        </div>
-
-
-        <button
-          class="mainBtn"
-          onclick="createJob()"
-        >
-          🚀 কাজ পোস্ট করুন
-        </button>
+        <span>
+          সক্রিয়
+        </span>
 
       </div>
 
-    </section>
+    </div>
 
 
-    <!-- ================= PROFILE ================= -->
+    <br>
 
-    <section id="profilePage" class="page">
+    <button
+      class="mainBtn"
+      onclick="logout()"
+    >
+      🚪 লগআউট
+    </button>
 
-      <div class="profileCard">
+  </div>
 
-        <div id="profileAvatar" class="avatar">
-          👤
-        </div>
-
-        <h2 id="profileName">
-          -
-        </h2>
-
-        <p id="profilePhone">
-          -
-        </p>
+</section>
 
 
-        <div class="profileInfo">
-
-          <div class="profileRow">
-
-            <span>📍 এলাকা</span>
-
-            <span id="profileLocation">
-              -
-            </span>
-
-          </div>
+</main>
 
 
-          <div class="profileRow">
+<!-- FAB -->
 
-            <span>💼 পোস্ট করা কাজ</span>
-
-            <span id="profileJobCount">
-              0
-            </span>
-
-          </div>
-
-
-          <div class="profileRow">
-
-            <span>👤 অ্যাকাউন্ট</span>
-
-            <span>
-              সক্রিয়
-            </span>
-
-          </div>
-
-        </div>
-
-        <br>
-
-        <button
-          class="mainBtn"
-          onclick="logout()"
-        >
-          🚪 লগআউট
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
+<button
+  class="fab"
+  onclick="showPage('postPage',$('navPost'))"
+>
+  +
+</button>
 
 
-  <!-- FLOATING POST BUTTON -->
+<!-- NAV -->
+
+<nav class="bottomNav">
 
   <button
-    class="fab"
-    onclick="showPage('postPage')"
+    id="navHome"
+    class="navItem active"
+    onclick="showPage('homePage',this)"
   >
-    +
+
+    <span class="navIcon">
+      🏠
+    </span>
+
+    হোম
+
   </button>
 
 
-  <!-- ================= BOTTOM NAV ================= -->
+  <button
+    id="navMyJobs"
+    class="navItem"
+    onclick="showPage('myJobsPage',this);loadMyJobs()"
+  >
 
-  <nav class="bottomNav">
+    <span class="navIcon">
+      💼
+    </span>
 
-    <button
-      id="navHome"
-      class="navItem active"
-      onclick="showPage('homePage',this)"
-    >
-      <span class="navIcon">🏠</span>
-      হোম
-    </button>
+    আমার কাজ
 
-
-    <button
-      id="navMyJobs"
-      class="navItem"
-      onclick="showPage('myJobsPage',this);loadMyJobs()"
-    >
-      <span class="navIcon">💼</span>
-      আমার কাজ
-    </button>
+  </button>
 
 
-    <button
-      id="navPost"
-      class="navItem"
-      onclick="showPage('postPage',this)"
-    >
-      <span class="navIcon">➕</span>
-      পোস্ট
-    </button>
+  <button
+    id="navPost"
+    class="navItem"
+    onclick="showPage('postPage',this)"
+  >
+
+    <span class="navIcon">
+      ➕
+    </span>
+
+    পোস্ট
+
+  </button>
 
 
-    <button
-      id="navProfile"
-      class="navItem"
-      onclick="showPage('profilePage',this);loadProfile()"
-    >
-      <span class="navIcon">👤</span>
-      প্রোফাইল
-    </button>
+  <button
+    id="navProfile"
+    class="navItem"
+    onclick="showPage('profilePage',this);loadProfile()"
+  >
 
-  </nav>
+    <span class="navIcon">
+      👤
+    </span>
+
+    প্রোফাইল
+
+  </button>
+
+</nav>
 
 </section>
 
@@ -1319,13 +2600,18 @@ button{
      NOTIFICATION MODAL
 ===================================================== -->
 
-<div id="notificationModal" class="modal">
+<div
+  id="notificationModal"
+  class="modal"
+>
 
   <div class="modalBox">
 
     <div class="modalHeader">
 
-      <h2>🔔 নোটিফিকেশন</h2>
+      <h2>
+        🔔 নোটিফিকেশন
+      </h2>
 
       <button
         class="closeBtn"
@@ -1353,7 +2639,10 @@ button{
      CHAT MODAL
 ===================================================== -->
 
-<div id="chatModal" class="modal">
+<div
+  id="chatModal"
+  class="modal"
+>
 
   <div class="modalBox">
 
@@ -1373,7 +2662,10 @@ button{
     </div>
 
 
-    <div id="chatMessages" class="chatMessages">
+    <div
+      id="chatMessages"
+      class="chatMessages"
+    >
 
       <div class="empty">
         কোনো মেসেজ নেই।
@@ -1407,7 +2699,10 @@ button{
 
 <!-- TOAST -->
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
 
 
 <script>
@@ -1416,7 +2711,8 @@ button{
    GLOBAL
 ===================================================== */
 
-const API = window.location.origin;
+const API =
+  window.location.origin;
 
 let currentUser = null;
 
@@ -1430,7 +2726,7 @@ let toastTimer = null;
 
 
 /* =====================================================
-   HELPERS
+   HELPER
 ===================================================== */
 
 function $(id){
@@ -1444,6 +2740,7 @@ function clean(value){
 
 
 function showMessage(id,message){
+
   const el = $(id);
 
   if(el){
@@ -1462,9 +2759,10 @@ function showToast(message){
 
   clearTimeout(toastTimer);
 
-  toastTimer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },2500);
+  toastTimer =
+    setTimeout(()=>{
+      toast.classList.remove("show");
+    },2500);
 }
 
 
@@ -1479,38 +2777,75 @@ function escapeHTML(value){
 }
 
 
+function escapeJS(value){
+
+  return String(value ?? "")
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll('"','\\"')
+    .replaceAll("\n","\\n")
+    .replaceAll("\r","\\r");
+}
+
+
+/* =====================================================
+   API
+===================================================== */
+
 async function apiFetch(url,options={}){
 
   try{
 
-    const response = await fetch(API + url,{
-      ...options,
-      headers:{
-        "Content-Type":"application/json",
-        ...(options.headers || {})
-      }
-    });
+    const response =
+      await fetch(
+        API + url,
+        {
+          ...options,
 
-    const text = await response.text();
+          headers:{
+            "Content-Type":
+              "application/json",
+
+            ...(options.headers || {})
+          }
+        }
+      );
+
+
+    const text =
+      await response.text();
+
 
     let data={};
 
+
     try{
-      data = text ? JSON.parse(text) : {};
+
+      data =
+        text
+        ? JSON.parse(text)
+        : {};
+
     }catch{
-      data = {
+
+      data={
         success:false,
-        message:text || "সার্ভার থেকে সঠিক উত্তর পাওয়া যায়নি"
+        message:
+          text ||
+          "সার্ভার থেকে সঠিক উত্তর পাওয়া যায়নি"
       };
     }
+
 
     if(!response.ok){
 
       throw new Error(
         data.message ||
-        "Server error: " + response.status
+        "Server error: " +
+        response.status
       );
     }
+
 
     return data;
 
@@ -1524,32 +2859,88 @@ async function apiFetch(url,options={}){
 
 
 /* =====================================================
-   AUTH TABS
+   PASSWORD SHOW / HIDE
+===================================================== */
+
+function togglePassword(id,button){
+
+  const input = $(id);
+
+  if(!input) return;
+
+
+  if(input.type === "password"){
+
+    input.type = "text";
+
+    button.textContent = "🙈";
+
+  }else{
+
+    input.type = "password";
+
+    button.textContent = "👁️";
+  }
+}
+
+
+/* =====================================================
+   AUTH SWITCH
 ===================================================== */
 
 function showLogin(){
 
-  $("loginForm").classList.remove("hidden");
-  $("registerForm").classList.add("hidden");
+  $("loginForm")
+    .classList.remove("hidden");
 
-  $("loginTab").classList.add("active");
-  $("registerTab").classList.remove("active");
+  $("registerForm")
+    .classList.add("hidden");
 
-  showMessage("loginMessage","");
-  showMessage("registerMessage","");
+
+  $("loginTab")
+    .classList.add("active");
+
+  $("registerTab")
+    .classList.remove("active");
+
+
+  showMessage(
+    "loginMessage",
+    ""
+  );
+
+  showMessage(
+    "registerMessage",
+    ""
+  );
 }
 
 
 function showRegister(){
 
-  $("loginForm").classList.add("hidden");
-  $("registerForm").classList.remove("hidden");
+  $("loginForm")
+    .classList.add("hidden");
 
-  $("loginTab").classList.remove("active");
-  $("registerTab").classList.add("active");
+  $("registerForm")
+    .classList.remove("hidden");
 
-  showMessage("loginMessage","");
-  showMessage("registerMessage","");
+
+  $("loginTab")
+    .classList.remove("active");
+
+  $("registerTab")
+    .classList.add("active");
+
+
+  showMessage(
+    "loginMessage",
+    ""
+  );
+
+  showMessage(
+    "registerMessage",
+    ""
+  );
 }
 
 
@@ -1559,10 +2950,17 @@ function showRegister(){
 
 async function register(){
 
-  const name = clean($("registerName").value);
-  const phone = clean($("registerPhone").value);
-  const location = clean($("registerLocation").value);
-  const pin = clean($("registerPin").value);
+  const name =
+    clean($("registerName").value);
+
+  const phone =
+    clean($("registerPhone").value);
+
+  const location =
+    clean($("registerLocation").value);
+
+  const pin =
+    clean($("registerPin").value);
 
 
   if(name.length < 2){
@@ -1609,34 +3007,40 @@ async function register(){
   }
 
 
-  showMessage(
-    "registerMessage",
-    "অ্যাকাউন্ট তৈরি হচ্ছে..."
-  );
+  const button =
+    $("registerButton");
+
+
+  button.classList.add("loading");
+
+  button.innerHTML =
+    `<span class="spinner"></span> অ্যাকাউন্ট তৈরি হচ্ছে...`;
 
 
   try{
 
-    const data = await apiFetch(
-      "/api/register",
-      {
-        method:"POST",
+    const data =
+      await apiFetch(
+        "/api/register",
+        {
+          method:"POST",
 
-        body:JSON.stringify({
-          name,
-          phone,
-          location,
-          pin
-        })
-      }
-    );
+          body:JSON.stringify({
+            name,
+            phone,
+            location,
+            pin
+          })
+        }
+      );
 
 
     if(!data.success){
 
       showMessage(
         "registerMessage",
-        data.message || "রেজিস্টার করা যায়নি"
+        data.message ||
+        "রেজিস্টার করা যায়নি"
       );
 
       return;
@@ -1645,28 +3049,41 @@ async function register(){
 
     showMessage(
       "registerMessage",
-      "অ্যাকাউন্ট তৈরি হয়েছে। লগইন করুন।"
+      "অ্যাকাউন্ট তৈরি হয়েছে ✓"
     );
 
 
-    showToast("অ্যাকাউন্ট তৈরি সফল হয়েছে ✅");
+    showToast(
+      "অ্যাকাউন্ট তৈরি সফল হয়েছে 🎉"
+    );
 
 
-    $("loginPhone").value = phone;
-    $("loginPin").value = pin;
+    $("loginPhone").value =
+      phone;
+
+    $("loginPin").value =
+      pin;
 
 
     setTimeout(()=>{
       showLogin();
-    },700);
+    },900);
 
 
   }catch(error){
 
     showMessage(
       "registerMessage",
-      error.message || "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
+      error.message ||
+      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
+
+  }finally{
+
+    button.classList.remove("loading");
+
+    button.innerHTML =
+      `<span>অ্যাকাউন্ট তৈরি করুন ✨</span>`;
   }
 }
 
@@ -1677,8 +3094,11 @@ async function register(){
 
 async function login(){
 
-  const phone = clean($("loginPhone").value);
-  const pin = clean($("loginPin").value);
+  const phone =
+    clean($("loginPhone").value);
+
+  const pin =
+    clean($("loginPin").value);
 
 
   if(!/^01\d{9}$/.test(phone)){
@@ -1703,39 +3123,46 @@ async function login(){
   }
 
 
-  showMessage(
-    "loginMessage",
-    "লগইন হচ্ছে..."
-  );
+  const button =
+    $("loginButton");
+
+
+  button.classList.add("loading");
+
+  button.innerHTML =
+    `<span class="spinner"></span> লগইন হচ্ছে...`;
 
 
   try{
 
-    const data = await apiFetch(
-      "/api/login",
-      {
-        method:"POST",
+    const data =
+      await apiFetch(
+        "/api/login",
+        {
+          method:"POST",
 
-        body:JSON.stringify({
-          phone,
-          pin
-        })
-      }
-    );
+          body:JSON.stringify({
+            phone,
+            pin
+          })
+        }
+      );
 
 
     if(!data.success){
 
       showMessage(
         "loginMessage",
-        data.message || "লগইন ব্যর্থ হয়েছে"
+        data.message ||
+        "লগইন ব্যর্থ হয়েছে"
       );
 
       return;
     }
 
 
-    currentUser = data.user || data;
+    currentUser =
+      data.user || data;
 
 
     localStorage.setItem(
@@ -1744,15 +3171,30 @@ async function login(){
     );
 
 
-    openApp();
+    showToast(
+      "স্বাগতম 👋"
+    );
+
+
+    setTimeout(()=>{
+      openApp();
+    },300);
 
 
   }catch(error){
 
     showMessage(
       "loginMessage",
-      error.message || "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
+      error.message ||
+      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
+
+  }finally{
+
+    button.classList.remove("loading");
+
+    button.innerHTML =
+      `<span>লগইন করুন →</span>`;
   }
 }
 
@@ -1763,9 +3205,11 @@ async function login(){
 
 function openApp(){
 
-  $("authPage").classList.add("hidden");
+  $("authPage")
+    .classList.add("hidden");
 
-  $("appPage").classList.remove("hidden");
+  $("appPage")
+    .classList.remove("hidden");
 
 
   updateHeader();
@@ -1774,8 +3218,10 @@ function openApp(){
 
   loadNotifications();
 
-
-  showPage("homePage",$("navHome"));
+  showPage(
+    "homePage",
+    $("navHome")
+  );
 }
 
 
@@ -1784,8 +3230,10 @@ function updateHeader(){
   if(!currentUser) return;
 
 
-  $("headerLocation").textContent =
-    currentUser.location || "বাংলাদেশ";
+  $("headerLocation")
+    .textContent =
+      currentUser.location ||
+      "বাংলাদেশ";
 }
 
 
@@ -1798,12 +3246,16 @@ function loadSavedUser(){
   try{
 
     const saved =
-      localStorage.getItem("kajkhuji_user");
+      localStorage.getItem(
+        "kajkhuji_user"
+      );
+
 
     if(!saved) return;
 
 
-    currentUser = JSON.parse(saved);
+    currentUser =
+      JSON.parse(saved);
 
 
     if(
@@ -1815,8 +3267,6 @@ function loadSavedUser(){
     }
 
   }catch(error){
-
-    console.error(error);
 
     localStorage.removeItem(
       "kajkhuji_user"
@@ -1839,24 +3289,34 @@ function logout(){
 
   allJobs = [];
 
-  $("appPage").classList.add("hidden");
 
-  $("authPage").classList.remove("hidden");
+  $("appPage")
+    .classList.add("hidden");
+
+  $("authPage")
+    .classList.remove("hidden");
+
 
   showLogin();
 
   $("loginPhone").value = "";
   $("loginPin").value = "";
 
-  showToast("লগআউট হয়েছে");
+
+  showToast(
+    "লগআউট হয়েছে"
+  );
 }
 
 
 /* =====================================================
-   PAGE NAVIGATION
+   PAGE
 ===================================================== */
 
-function showPage(pageId,navButton){
+function showPage(
+  pageId,
+  navButton
+){
 
   document
     .querySelectorAll(".page")
@@ -1865,7 +3325,9 @@ function showPage(pageId,navButton){
     });
 
 
-  const page = $(pageId);
+  const page =
+    $(pageId);
+
 
   if(page){
     page.classList.add("active");
@@ -1892,23 +3354,31 @@ function showPage(pageId,navButton){
 
 
 /* =====================================================
-   JOBS
+   JOB LOAD
 ===================================================== */
 
 async function loadJobs(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/jobs"
-    );
+    const data =
+      await apiFetch(
+        "/api/jobs"
+      );
 
 
     if(Array.isArray(data)){
+
       allJobs = data;
-    }else if(Array.isArray(data.jobs)){
+
+    }else if(
+      Array.isArray(data.jobs)
+    ){
+
       allJobs = data.jobs;
+
     }else{
+
       allJobs = [];
     }
 
@@ -1917,15 +3387,18 @@ async function loadJobs(){
 
   }catch(error){
 
-    console.error(error);
-
     $("jobsList").innerHTML = `
       <div class="empty">
         কাজ লোড করা যাচ্ছে না।
         <br><br>
-        <button class="smallBtn primary" onclick="loadJobs()">
+
+        <button
+          class="smallBtn primary"
+          onclick="loadJobs()"
+        >
           আবার চেষ্টা করুন
         </button>
+
       </div>
     `;
   }
@@ -1933,50 +3406,63 @@ async function loadJobs(){
 
 
 /* =====================================================
-   RENDER JOBS
+   RENDER
 ===================================================== */
 
 function renderJobs(){
 
-  const container = $("jobsList");
+  const container =
+    $("jobsList");
+
 
   const search =
-    clean($("searchInput").value).toLowerCase();
+    clean(
+      $("searchInput").value
+    ).toLowerCase();
 
 
-  let jobs = [...allJobs];
+  let jobs =
+    [...allJobs];
 
 
   if(currentCategory !== "সব"){
 
-    jobs = jobs.filter(job =>
-      clean(job.category) === currentCategory
-    );
+    jobs =
+      jobs.filter(
+        job =>
+          clean(job.category)
+          === currentCategory
+      );
   }
 
 
   if(search){
 
-    jobs = jobs.filter(job => {
+    jobs =
+      jobs.filter(job=>{
 
-      const text = [
-        job.title,
-        job.description,
-        job.category,
-        job.location,
-        job.name,
-        job.userName
-      ]
-      .join(" ")
-      .toLowerCase();
+        const text = [
 
-      return text.includes(search);
-    });
+          job.title,
+          job.description,
+          job.category,
+          job.location,
+          job.name,
+          job.userName
+
+        ]
+        .join(" ")
+        .toLowerCase();
+
+
+        return text.includes(search);
+      });
   }
 
 
-  $("jobCount").textContent =
-    jobs.length + "টি কাজ";
+  $("jobCount")
+    .textContent =
+      jobs.length + "টি কাজ";
 
 
   if(!jobs.length){
@@ -1994,7 +3480,9 @@ function renderJobs(){
 
 
   container.innerHTML =
-    jobs.map(job => jobCardHTML(job)).join("");
+    jobs
+      .map(job=>jobCardHTML(job))
+      .join("");
 }
 
 
@@ -2054,116 +3542,108 @@ function jobCardHTML(job){
 
   return `
 
-    <div class="jobCard">
+  <div class="jobCard">
 
-      <div class="jobTop">
+    <div class="jobTop">
 
-        <div>
+      <div>
 
-          <div class="jobTitle">
-            ${escapeHTML(title)}
-          </div>
-
-          <div class="jobCategory">
-            ${escapeHTML(category)}
-          </div>
-
+        <div class="jobTitle">
+          ${escapeHTML(title)}
         </div>
 
-        <div class="jobSalary">
-          ${escapeHTML(salary)}
+        <div class="jobCategory">
+          ${escapeHTML(category)}
         </div>
 
       </div>
 
+      <div class="jobSalary">
+        ${escapeHTML(salary)}
+      </div>
 
-      <div class="jobDescription">
-        ${escapeHTML(description)}
+    </div>
+
+
+    <div class="jobDescription">
+      ${escapeHTML(description)}
+    </div>
+
+
+    <div class="jobInfo">
+
+      <span class="infoTag">
+        📍 ${escapeHTML(location)}
+      </span>
+
+      <span class="infoTag">
+        👤 ${escapeHTML(name)}
+      </span>
+
+    </div>
+
+
+    <div class="jobBottom">
+
+      <div class="userName">
+        📱 ${escapeHTML(phone)}
       </div>
 
 
-      <div class="jobInfo">
+      <div class="jobActions">
 
-        <span class="infoTag">
-          📍 ${escapeHTML(location)}
-        </span>
+        ${
+          !isMine && phone
+          ?
+          `
 
-        <span class="infoTag">
-          👤 ${escapeHTML(name)}
-        </span>
+          <button
+            class="smallBtn"
+            onclick="callUser('${escapeJS(phone)}')"
+          >
+            📞 কল
+          </button>
 
-      </div>
+          <button
+            class="smallBtn primary"
+            onclick="openChat(
+              '${escapeJS(phone)}',
+              '${escapeJS(name)}'
+            )"
+          >
+            💬 মেসেজ
+          </button>
 
-
-      <div class="jobBottom">
-
-        <div class="userName">
-          📱 ${escapeHTML(phone)}
-        </div>
-
-
-        <div class="jobActions">
-
-          ${
-            !isMine && phone
-            ?
-            `
-            <button
-              class="smallBtn"
-              onclick="callUser('${escapeJS(phone)}')"
-            >
-              📞 কল
-            </button>
-
-            <button
-              class="smallBtn primary"
-              onclick="openChat('${escapeJS(phone)}','${escapeJS(name)}')"
-            >
-              💬 মেসেজ
-            </button>
-            `
-            :
-            ""
-          }
+          `
+          :
+          ""
+        }
 
 
-          ${
-            isMine
-            ?
-            `
-            <button
-              class="smallBtn danger"
-              onclick="deleteJob('${escapeJS(id)}')"
-            >
-              🗑️ মুছুন
-            </button>
-            `
-            :
-            ""
-          }
+        ${
+          isMine
+          ?
+          `
 
-        </div>
+          <button
+            class="smallBtn danger"
+            onclick="deleteJob('${escapeJS(id)}')"
+          >
+            🗑️ মুছুন
+          </button>
+
+          `
+          :
+          ""
+        }
 
       </div>
 
     </div>
 
+  </div>
+
   `;
-}
-
-
-/* =====================================================
-   ESCAPE JS
-===================================================== */
-
-function escapeJS(value){
-
-  return String(value ?? "")
-    .replaceAll("\\","\\\\")
-    .replaceAll("'","\\'")
-    .replaceAll('"','\\"')
-    .replaceAll("\n","\\n")
-    .replaceAll("\r","\\r");
 }
 
 
@@ -2172,18 +3652,21 @@ function escapeJS(value){
 ===================================================== */
 
 function searchJobs(){
-
   renderJobs();
 }
 
 
 /* =====================================================
-   CATEGORY FILTER
+   CATEGORY
 ===================================================== */
 
-function filterCategory(category,button){
+function filterCategory(
+  category,
+  button
+){
 
-  currentCategory = category;
+  currentCategory =
+    category;
 
 
   document
@@ -2210,7 +3693,9 @@ async function createJob(){
 
   if(!currentUser){
 
-    showToast("আগে লগইন করুন");
+    showToast(
+      "আগে লগইন করুন"
+    );
 
     return;
   }
@@ -2234,7 +3719,9 @@ async function createJob(){
 
   if(title.length < 3){
 
-    showToast("কাজের নাম লিখুন");
+    showToast(
+      "কাজের নাম লিখুন"
+    );
 
     return;
   }
@@ -2242,7 +3729,9 @@ async function createJob(){
 
   if(description.length < 5){
 
-    showToast("কাজের বিবরণ লিখুন");
+    showToast(
+      "কাজের বিবরণ লিখুন"
+    );
 
     return;
   }
@@ -2250,14 +3739,18 @@ async function createJob(){
 
   if(!location){
 
-    showToast("কাজের লোকেশন লিখুন");
+    showToast(
+      "কাজের লোকেশন লিখুন"
+    );
 
     return;
   }
 
 
   const pin =
-    prompt("আপনার ৬ সংখ্যার PIN দিন");
+    prompt(
+      "আপনার ৬ সংখ্যার PIN দিন"
+    );
 
 
   if(pin === null) return;
@@ -2265,7 +3758,9 @@ async function createJob(){
 
   if(!/^\d{6}$/.test(pin)){
 
-    showToast("PIN অবশ্যই ৬ সংখ্যার হতে হবে");
+    showToast(
+      "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+    );
 
     return;
   }
@@ -2273,43 +3768,48 @@ async function createJob(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/jobs",
-      {
-        method:"POST",
+    const data =
+      await apiFetch(
+        "/api/jobs",
+        {
+          method:"POST",
 
-        body:JSON.stringify({
+          body:JSON.stringify({
 
-          phone:currentUser.phone,
+            phone:
+              currentUser.phone,
 
-          pin:pin,
+            pin,
 
-          title:title,
+            title,
 
-          category:category,
+            category,
 
-          description:description,
+            description,
 
-          salary:salary,
+            salary,
 
-          location:location
+            location
 
-        })
-      }
-    );
+          })
+        }
+      );
 
 
     if(!data.success){
 
       showToast(
-        data.message || "কাজ পোস্ট করা যায়নি"
+        data.message ||
+        "কাজ পোস্ট করা যায়নি"
       );
 
       return;
     }
 
 
-    showToast("কাজ সফলভাবে পোস্ট হয়েছে ✅");
+    showToast(
+      "কাজ সফলভাবে পোস্ট হয়েছে 🎉"
+    );
 
 
     $("jobTitle").value = "";
@@ -2332,7 +3832,8 @@ async function createJob(){
   }catch(error){
 
     showToast(
-      error.message || "সার্ভারের সমস্যা হয়েছে"
+      error.message ||
+      "সার্ভারের সমস্যা হয়েছে"
     );
   }
 }
@@ -2360,19 +3861,27 @@ async function loadMyJobs(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/my-jobs?phone=" +
-      encodeURIComponent(currentUser.phone)
-    );
+    const data =
+      await apiFetch(
+        "/api/my-jobs?phone=" +
+        encodeURIComponent(
+          currentUser.phone
+        )
+      );
 
 
-    let jobs = [];
+    let jobs=[];
 
 
     if(Array.isArray(data)){
-      jobs = data;
-    }else if(Array.isArray(data.jobs)){
-      jobs = data.jobs;
+
+      jobs=data;
+
+    }else if(
+      Array.isArray(data.jobs)
+    ){
+
+      jobs=data.jobs;
     }
 
 
@@ -2389,7 +3898,9 @@ async function loadMyJobs(){
 
 
     container.innerHTML =
-      jobs.map(job=>jobCardHTML(job)).join("");
+      jobs
+        .map(job=>jobCardHTML(job))
+        .join("");
 
 
   }catch(error){
@@ -2404,27 +3915,35 @@ async function loadMyJobs(){
 
 
 /* =====================================================
-   DELETE JOB
+   DELETE
 ===================================================== */
 
 async function deleteJob(jobId){
 
   if(!currentUser){
 
-    showToast("আগে লগইন করুন");
+    showToast(
+      "আগে লগইন করুন"
+    );
 
     return;
   }
 
 
-  if(!confirm("আপনি কি এই কাজটি মুছে ফেলতে চান?")){
+  if(
+    !confirm(
+      "আপনি কি এই কাজটি মুছে ফেলতে চান?"
+    )
+  ){
 
     return;
   }
 
 
   const pin =
-    prompt("আপনার ৬ সংখ্যার PIN দিন");
+    prompt(
+      "আপনার ৬ সংখ্যার PIN দিন"
+    );
 
 
   if(pin === null) return;
@@ -2432,7 +3951,9 @@ async function deleteJob(jobId){
 
   if(!/^\d{6}$/.test(pin)){
 
-    showToast("PIN অবশ্যই ৬ সংখ্যার হতে হবে");
+    showToast(
+      "PIN অবশ্যই ৬ সংখ্যার হতে হবে"
+    );
 
     return;
   }
@@ -2440,59 +3961,68 @@ async function deleteJob(jobId){
 
   try{
 
-    const data = await apiFetch(
-      "/api/jobs/delete",
-      {
-        method:"POST",
+    const data =
+      await apiFetch(
+        "/api/jobs/delete",
+        {
+          method:"POST",
 
-        body:JSON.stringify({
+          body:JSON.stringify({
 
-          phone:currentUser.phone,
+            phone:
+              currentUser.phone,
 
-          pin:pin,
+            pin,
 
-          id:jobId
+            id:jobId
 
-        })
-      }
-    );
+          })
+        }
+      );
 
 
     if(!data.success){
 
       showToast(
-        data.message || "কাজ মুছে ফেলা যায়নি"
+        data.message ||
+        "কাজ মুছে ফেলা যায়নি"
       );
 
       return;
     }
 
 
-    showToast("কাজ মুছে ফেলা হয়েছে 🗑️");
+    showToast(
+      "কাজ মুছে ফেলা হয়েছে 🗑️"
+    );
 
 
     await loadJobs();
 
     await loadMyJobs();
 
+
   }catch(error){
 
     showToast(
-      error.message || "সার্ভারের সমস্যা হয়েছে"
+      error.message ||
+      "সার্ভারের সমস্যা হয়েছে"
     );
   }
 }
 
 
 /* =====================================================
-   CALL USER
+   CALL
 ===================================================== */
 
 function callUser(phone){
 
   if(!phone){
 
-    showToast("মোবাইল নম্বর পাওয়া যায়নি");
+    showToast(
+      "মোবাইল নম্বর পাওয়া যায়নি"
+    );
 
     return;
   }
@@ -2512,34 +4042,46 @@ async function loadProfile(){
   if(!currentUser) return;
 
 
-  $("profileName").textContent =
-    currentUser.name || "ব্যবহারকারী";
+  $("profileName")
+    .textContent =
+      currentUser.name ||
+      "ব্যবহারকারী";
 
 
-  $("profilePhone").textContent =
-    currentUser.phone || "-";
+  $("profilePhone")
+    .textContent =
+      currentUser.phone ||
+      "-";
 
 
-  $("profileLocation").textContent =
-    currentUser.location || "-";
+  $("profileLocation")
+    .textContent =
+      currentUser.location ||
+      "-";
 
 
   const jobs =
-    allJobs.filter(job =>
-      job.phone === currentUser.phone
+    allJobs.filter(
+      job =>
+        job.phone ===
+        currentUser.phone
     );
 
 
-  $("profileJobCount").textContent =
-    jobs.length;
+  $("profileJobCount")
+    .textContent =
+      jobs.length;
 
 
   const name =
     currentUser.name || "";
 
 
-  $("profileAvatar").textContent =
-    name ? name.charAt(0).toUpperCase() : "👤";
+  $("profileAvatar")
+    .textContent =
+      name
+      ? name.charAt(0).toUpperCase()
+      : "👤";
 }
 
 
@@ -2554,25 +4096,36 @@ async function loadNotifications(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/notifications?phone=" +
-      encodeURIComponent(currentUser.phone)
-    );
+    const data =
+      await apiFetch(
+        "/api/notifications?phone=" +
+        encodeURIComponent(
+          currentUser.phone
+        )
+      );
 
 
-    let notifications = [];
+    let notifications=[];
 
 
     if(Array.isArray(data)){
-      notifications = data;
-    }else if(Array.isArray(data.notifications)){
-      notifications = data.notifications;
+
+      notifications=data;
+
+    }else if(
+      Array.isArray(
+        data.notifications
+      )
+    ){
+
+      notifications =
+        data.notifications;
     }
 
 
     const unread =
       notifications.filter(
-        item => !item.read
+        item=>!item.read
       ).length;
 
 
@@ -2583,13 +4136,19 @@ async function loadNotifications(){
     if(unread > 0){
 
       badge.textContent =
-        unread > 99 ? "99+" : unread;
+        unread > 99
+        ? "99+"
+        : unread;
 
-      badge.classList.remove("hidden");
+      badge.classList.remove(
+        "hidden"
+      );
 
     }else{
 
-      badge.classList.add("hidden");
+      badge.classList.add(
+        "hidden"
+      );
     }
 
 
@@ -2623,19 +4182,30 @@ async function openNotifications(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/notifications?phone=" +
-      encodeURIComponent(currentUser.phone)
-    );
+    const data =
+      await apiFetch(
+        "/api/notifications?phone=" +
+        encodeURIComponent(
+          currentUser.phone
+        )
+      );
 
 
-    let notifications = [];
+    let notifications=[];
 
 
     if(Array.isArray(data)){
-      notifications = data;
-    }else if(Array.isArray(data.notifications)){
-      notifications = data.notifications;
+
+      notifications=data;
+
+    }else if(
+      Array.isArray(
+        data.notifications
+      )
+    ){
+
+      notifications =
+        data.notifications;
     }
 
 
@@ -2651,11 +4221,15 @@ async function openNotifications(){
 
       container.innerHTML =
         notifications
-        .map(notification => `
+          .map(notification=>`
 
-          <div class="notificationItem ${
-            notification.read ? "" : "unread"
-          }">
+          <div
+            class="notificationItem ${
+              notification.read
+              ? ""
+              : "unread"
+            }"
+          >
 
             <p>
               ${escapeHTML(
@@ -2681,7 +4255,9 @@ async function openNotifications(){
 
 
     $("notificationBadge")
-      .classList.add("hidden");
+      .classList.add(
+        "hidden"
+      );
 
 
     try{
@@ -2692,7 +4268,8 @@ async function openNotifications(){
           method:"POST",
 
           body:JSON.stringify({
-            phone:currentUser.phone
+            phone:
+              currentUser.phone
           })
         }
       );
@@ -2715,7 +4292,7 @@ async function openNotifications(){
 
 
 /* =====================================================
-   DATE FORMAT
+   DATE
 ===================================================== */
 
 function formatDate(value){
@@ -2739,11 +4316,16 @@ function formatDate(value){
    CHAT
 ===================================================== */
 
-async function openChat(phone,name){
+async function openChat(
+  phone,
+  name
+){
 
   if(!currentUser){
 
-    showToast("আগে লগইন করুন");
+    showToast(
+      "আগে লগইন করুন"
+    );
 
     return;
   }
@@ -2751,17 +4333,22 @@ async function openChat(phone,name){
 
   if(!phone){
 
-    showToast("ব্যবহারকারীর নম্বর পাওয়া যায়নি");
+    showToast(
+      "ব্যবহারকারীর নম্বর পাওয়া যায়নি"
+    );
 
     return;
   }
 
 
-  chatPhone = phone;
+  chatPhone =
+    phone;
 
 
-  $("chatTitle").textContent =
-    "💬 " + (name || phone);
+  $("chatTitle")
+    .textContent =
+      "💬 " +
+      (name || phone);
 
 
   $("chatModal")
@@ -2778,7 +4365,10 @@ async function openChat(phone,name){
 
 async function loadMessages(){
 
-  if(!currentUser || !chatPhone) return;
+  if(
+    !currentUser ||
+    !chatPhone
+  ) return;
 
 
   const container =
@@ -2787,24 +4377,31 @@ async function loadMessages(){
 
   try{
 
-    const url =
-      "/api/messages?phone=" +
-      encodeURIComponent(currentUser.phone) +
-      "&with=" +
-      encodeURIComponent(chatPhone);
-
-
     const data =
-      await apiFetch(url);
+      await apiFetch(
+        "/api/messages?phone=" +
+        encodeURIComponent(
+          currentUser.phone
+        ) +
+        "&with=" +
+        encodeURIComponent(
+          chatPhone
+        )
+      );
 
 
-    let messages = [];
+    let messages=[];
 
 
     if(Array.isArray(data)){
-      messages = data;
-    }else if(Array.isArray(data.messages)){
-      messages = data.messages;
+
+      messages=data;
+
+    }else if(
+      Array.isArray(data.messages)
+    ){
+
+      messages=data.messages;
     }
 
 
@@ -2821,23 +4418,27 @@ async function loadMessages(){
 
 
     container.innerHTML =
-      messages.map(message => {
+      messages
+        .map(message=>{
 
-        const sender =
-          message.from ||
-          message.sender ||
-          message.phone;
-
-
-        const isMe =
-          sender === currentUser.phone;
+          const sender =
+            message.from ||
+            message.sender ||
+            message.phone;
 
 
-        return `
+          const isMe =
+            sender ===
+            currentUser.phone;
 
-          <div class="messageRow ${
-            isMe ? "me" : ""
-          }">
+
+          return `
+
+          <div
+            class="messageRow ${
+              isMe ? "me" : ""
+            }"
+          >
 
             <div class="chatBubble">
 
@@ -2858,9 +4459,10 @@ async function loadMessages(){
 
           </div>
 
-        `;
+          `;
 
-      }).join("");
+        })
+        .join("");
 
 
     container.scrollTop =
@@ -2884,7 +4486,10 @@ async function loadMessages(){
 
 async function sendMessage(){
 
-  if(!currentUser || !chatPhone) return;
+  if(
+    !currentUser ||
+    !chatPhone
+  ) return;
 
 
   const input =
@@ -2900,66 +4505,74 @@ async function sendMessage(){
 
   try{
 
-    const data = await apiFetch(
-      "/api/messages/send",
-      {
-        method:"POST",
+    const data =
+      await apiFetch(
+        "/api/messages/send",
+        {
+          method:"POST",
 
-        body:JSON.stringify({
+          body:JSON.stringify({
 
-          from:currentUser.phone,
+            from:
+              currentUser.phone,
 
-          to:chatPhone,
+            to:
+              chatPhone,
 
-          message:text,
+            message:text,
 
-          text:text
+            text:text
 
-        })
-      }
-    );
+          })
+        }
+      );
 
 
     if(!data.success){
 
       showToast(
-        data.message || "মেসেজ পাঠানো যায়নি"
+        data.message ||
+        "মেসেজ পাঠানো যায়নি"
       );
 
       return;
     }
 
 
-    input.value = "";
+    input.value="";
+
 
     await loadMessages();
+
 
   }catch(error){
 
     showToast(
-      error.message || "মেসেজ পাঠানো যায়নি"
+      error.message ||
+      "মেসেজ পাঠানো যায়নি"
     );
   }
 }
 
 
 /* =====================================================
-   MODAL CLOSE
+   MODAL
 ===================================================== */
 
 function closeModal(id){
 
-  const modal = $(id);
+  const modal =
+    $(id);
+
 
   if(modal){
-    modal.classList.remove("show");
+
+    modal.classList.remove(
+      "show"
+    );
   }
 }
 
-
-/* =====================================================
-   CLOSE MODAL OUTSIDE
-===================================================== */
 
 document
   .querySelectorAll(".modal")
@@ -2969,10 +4582,16 @@ document
       "click",
       function(event){
 
-        if(event.target === modal){
+        if(
+          event.target ===
+          modal
+        ){
 
-          modal.classList.remove("show");
+          modal.classList.remove(
+            "show"
+          );
         }
+
       }
     );
 
@@ -2980,57 +4599,56 @@ document
 
 
 /* =====================================================
-   ENTER KEY LOGIN
+   ENTER KEY
 ===================================================== */
 
-$("loginPin").addEventListener(
-  "keydown",
-  function(event){
+$("loginPin")
+  .addEventListener(
+    "keydown",
+    function(event){
 
-    if(event.key === "Enter"){
-      login();
+      if(event.key === "Enter"){
+        login();
+      }
+
     }
+  );
 
-  }
-);
+
+$("registerPin")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(event.key === "Enter"){
+        register();
+      }
+
+    }
+  );
 
 
 /* =====================================================
-   ENTER KEY REGISTER
-===================================================== */
-
-$("registerPin").addEventListener(
-  "keydown",
-  function(event){
-
-    if(event.key === "Enter"){
-      register();
-    }
-
-  }
-);
-
-
-/* =====================================================
-   AUTO POLLING
+   NOTIFICATION POLLING
 ===================================================== */
 
 setInterval(()=>{
 
   if(
     currentUser &&
-    !$("appPage").classList.contains("hidden")
+    !$("appPage")
+      .classList
+      .contains("hidden")
   ){
 
     loadNotifications();
-
   }
 
 },30000);
 
 
 /* =====================================================
-   START
+   START APP
 ===================================================== */
 
 loadSavedUser();
