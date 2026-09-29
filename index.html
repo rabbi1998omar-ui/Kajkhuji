@@ -11,6 +11,12 @@
 
 <meta name="theme-color" content="#090912">
 
+<link rel="manifest" href="/manifest.json">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <title>কাজ খুঁজি</title>
 
 <style>
@@ -778,10 +784,6 @@ select:focus{
 
 <body>
 
-<!-- =========================
-     AUTH
-========================= -->
-
 <section id="auth">
 
   <div class="authBox">
@@ -872,14 +874,12 @@ select:focus{
         placeholder="৬ সংখ্যার PIN"
       >
 
-      <label
-        style="
-          display:block;
-          margin:8px 0;
-          opacity:.7;
-          font-size:13px;
-        "
-      >
+      <label style="
+        display:block;
+        margin:8px 0;
+        opacity:.7;
+        font-size:13px;
+      ">
         Profile Picture
       </label>
 
@@ -915,11 +915,6 @@ select:focus{
 
 </section>
 
-
-<!-- =========================
-     APP
-========================= -->
-
 <section
   id="app"
   class="hidden"
@@ -951,10 +946,7 @@ select:focus{
 
   </header>
 
-
   <main class="container">
-
-    <!-- HOME -->
 
     <section id="homePage">
 
@@ -976,7 +968,6 @@ select:focus{
 
       </div>
 
-
       <div class="searchRow">
 
         <input
@@ -993,7 +984,6 @@ select:focus{
         </button>
 
       </div>
-
 
       <div class="categories">
 
@@ -1041,7 +1031,6 @@ select:focus{
 
       </div>
 
-
       <div class="sectionTitle">
 
         <h2>
@@ -1064,9 +1053,6 @@ select:focus{
 
     </section>
 
-
-    <!-- SAVED -->
-
     <section
       id="savedPage"
       class="hidden"
@@ -1083,9 +1069,6 @@ select:focus{
 
     </section>
 
-
-    <!-- APPLICATIONS -->
-
     <section
       id="applicationsPage"
       class="hidden"
@@ -1098,9 +1081,6 @@ select:focus{
       <div id="applicationsList"></div>
 
     </section>
-
-
-    <!-- MY JOBS -->
 
     <section
       id="myJobsPage"
@@ -1117,9 +1097,6 @@ select:focus{
       ></div>
 
     </section>
-
-
-    <!-- PROFILE -->
 
     <section
       id="profilePage"
@@ -1143,8 +1120,6 @@ select:focus{
           </div>
 
         </div>
-
-        <!-- REAL PROFILE IMAGE UPLOAD -->
 
         <button
           class="changePhoto"
@@ -1170,7 +1145,6 @@ select:focus{
           class="meta"
         ></p>
 
-
         <div class="stats">
 
           <div class="stat">
@@ -1189,7 +1163,6 @@ select:focus{
           </div>
 
         </div>
-
 
         <input
           id="editName"
@@ -1245,18 +1218,12 @@ select:focus{
 
   </main>
 
-
-  <!-- FAB -->
-
   <button
     class="fab"
     onclick="postJob()"
   >
     ＋
   </button>
-
-
-  <!-- BOTTOM NAV -->
 
   <nav class="bottomNav">
 
@@ -1308,11 +1275,6 @@ select:focus{
 
 </section>
 
-
-<!-- =========================
-     MODAL
-========================= -->
-
 <div
   id="modal"
   class="modal hidden"
@@ -1341,12 +1303,10 @@ select:focus{
 
 </div>
 
-
 <div
   id="toast"
   class="toast"
 ></div>
-
 
 <script>
 
@@ -1360,11 +1320,6 @@ let user =
 
 let currentJob = null;
 let selectedCategory = "";
-
-
-/* =========================
-   BASIC HELPERS
-========================= */
 
 function $(id){
   return document.getElementById(id);
@@ -1390,16 +1345,12 @@ function toast(message){
 }
 
 function saveUser(){
+
   localStorage.setItem(
     "kajkhuji_user",
     JSON.stringify(user)
   );
 }
-
-
-/* =========================
-   AUTH
-========================= */
 
 function showLogin(){
 
@@ -1423,11 +1374,6 @@ function showRegister(){
   $("authMsg").textContent="";
 }
 
-
-/* =========================
-   IMAGE TO BASE64
-========================= */
-
 function imageToBase64(file,maxSizeMB=1){
 
   return new Promise((resolve,reject)=>{
@@ -1438,9 +1384,11 @@ function imageToBase64(file,maxSizeMB=1){
     }
 
     if(!file.type.startsWith("image/")){
+
       reject(
         new Error("শুধু Image নির্বাচন করুন")
       );
+
       return;
     }
 
@@ -1448,11 +1396,13 @@ function imageToBase64(file,maxSizeMB=1){
       file.size >
       maxSizeMB * 1024 * 1024
     ){
+
       reject(
         new Error(
           "ছবির size 1MB-এর কম হতে হবে"
         )
       );
+
       return;
     }
 
@@ -1472,11 +1422,6 @@ function imageToBase64(file,maxSizeMB=1){
     reader.readAsDataURL(file);
   });
 }
-
-
-/* =========================
-   REGISTER PHOTO PREVIEW
-========================= */
 
 async function previewRegisterPhoto(event){
 
@@ -1503,11 +1448,6 @@ async function previewRegisterPhoto(event){
     event.target.value="";
   }
 }
-
-
-/* =========================
-   REGISTER
-========================= */
 
 async function register(){
 
@@ -1603,11 +1543,6 @@ async function register(){
   }
 }
 
-
-/* =========================
-   LOGIN
-========================= */
-
 async function login(){
 
   const phone =
@@ -1667,11 +1602,6 @@ async function login(){
   }
 }
 
-
-/* =========================
-   START APP
-========================= */
-
 function startApp(){
 
   $("auth")
@@ -1688,11 +1618,6 @@ function startApp(){
 
   loadJobs();
 }
-
-
-/* =========================
-   PAGE CONTROL
-========================= */
 
 function hidePages(){
 
@@ -1736,11 +1661,6 @@ function homePage(el){
 function goHome(el){
   homePage(el);
 }
-
-
-/* =========================
-   LOAD JOBS
-========================= */
 
 async function loadJobs(
   q="",
@@ -1791,11 +1711,6 @@ async function loadJobs(
       "<p>Job load করা যাচ্ছে না</p>";
   }
 }
-
-
-/* =========================
-   RENDER JOB
-========================= */
 
 function jobCard(job){
 
@@ -1899,7 +1814,6 @@ function jobCard(job){
   `;
 }
 
-
 function renderJobs(list){
 
   if(!list.length){
@@ -1922,11 +1836,6 @@ function renderJobs(list){
     list.map(jobCard).join("");
 }
 
-
-/* =========================
-   FIND JOB BY ID
-========================= */
-
 async function getJob(id){
 
   const response =
@@ -1940,11 +1849,6 @@ async function getJob(id){
   return (data.jobs || [])
     .find(j=>j.id===id);
 }
-
-
-/* =========================
-   OPEN JOB
-========================= */
 
 async function openJobById(id){
 
@@ -2013,11 +1917,6 @@ async function openJobById(id){
   openModal();
 }
 
-
-/* =========================
-   APPLY
-========================= */
-
 async function applyById(id){
 
   const job =
@@ -2029,7 +1928,6 @@ async function applyById(id){
 
   openApplyModal();
 }
-
 
 function openApplyModal(){
 
@@ -2064,10 +1962,16 @@ function openApplyModal(){
   openModal();
 }
 
-
 async function sendApplication(){
 
   if(!user) return;
+
+  const pin =
+    prompt(
+      "আপনার ৬ সংখ্যার PIN দিন"
+    );
+
+  if(!pin) return;
 
   try{
 
@@ -2084,10 +1988,7 @@ async function sendApplication(){
 
             phone:user.phone,
 
-            pin:
-              prompt(
-                "আপনার ৬ সংখ্যার PIN দিন"
-              ),
+            pin,
 
             jobId:
               currentJob.id,
@@ -2123,11 +2024,6 @@ async function sendApplication(){
   }
 }
 
-
-/* =========================
-   SEARCH
-========================= */
-
 let searchTimer;
 
 function searchJobs(){
@@ -2150,7 +2046,6 @@ function searchJobs(){
     },300);
 }
 
-
 function categorySearch(
   category,
   element
@@ -2172,7 +2067,6 @@ function categorySearch(
   );
 }
 
-
 function matchJobs(){
 
   loadJobs(
@@ -2185,11 +2079,6 @@ function matchJobs(){
     "আপনার Profile অনুযায়ী Job Match করা হচ্ছে ✨"
   );
 }
-
-
-/* =========================
-   VOICE SEARCH
-========================= */
 
 function voiceSearch(){
 
@@ -2226,11 +2115,6 @@ function voiceSearch(){
       searchJobs();
     };
 }
-
-
-/* =========================
-   SAVED
-========================= */
 
 async function saveJob(id){
 
@@ -2278,7 +2162,6 @@ async function saveJob(id){
   );
 }
 
-
 async function savedPage(el){
 
   hidePages();
@@ -2312,11 +2195,6 @@ async function savedPage(el){
       "<p>Saved jobs load হয়নি</p>";
   }
 }
-
-
-/* =========================
-   APPLICATIONS
-========================= */
 
 async function applicationsPage(el){
 
@@ -2356,7 +2234,8 @@ async function applicationsPage(el){
   $("applicationsList").innerHTML =
     list.map(a=>`
 
-      <div class="job"
+      <div
+        class="job"
         style="
           padding:18px;
           margin-bottom:12px;
@@ -2368,10 +2247,12 @@ async function applicationsPage(el){
         </h3>
 
         <p class="meta">
-          ${esc(a.createdAt
-            ? new Date(a.createdAt)
-              .toLocaleString("bn-BD")
-            : "")}
+          ${esc(
+            a.createdAt
+              ? new Date(a.createdAt)
+                .toLocaleString("bn-BD")
+              : ""
+          )}
         </p>
 
         <span class="badge">
@@ -2382,11 +2263,6 @@ async function applicationsPage(el){
 
     `).join("");
 }
-
-
-/* =========================
-   MY JOBS
-========================= */
 
 async function myJobsPage(el){
 
@@ -2472,7 +2348,6 @@ async function myJobsPage(el){
     `).join("");
 }
 
-
 async function deleteJob(id){
 
   const pin =
@@ -2517,11 +2392,6 @@ async function deleteJob(id){
   myJobsPage();
 }
 
-
-/* =========================
-   PROFILE LOAD
-========================= */
-
 async function loadProfile(){
 
   if(!user) return;
@@ -2549,7 +2419,6 @@ async function loadProfile(){
 
   }catch(e){}
 }
-
 
 function updateProfileUI(){
 
@@ -2606,11 +2475,6 @@ function updateProfileUI(){
   }
 }
 
-
-/* =========================
-   PROFILE PAGE
-========================= */
-
 async function profilePage(el){
 
   hidePages();
@@ -2663,11 +2527,6 @@ async function profilePage(el){
 
   }catch(e){}
 }
-
-
-/* =========================
-   PROFILE PHOTO UPLOAD
-========================= */
 
 async function uploadProfilePhoto(event){
 
@@ -2755,11 +2614,6 @@ async function uploadProfilePhoto(event){
     event.target.value="";
   }
 }
-
-
-/* =========================
-   PROFILE SAVE
-========================= */
 
 async function saveProfile(){
 
@@ -2852,11 +2706,6 @@ async function saveProfile(){
   }
 }
 
-
-/* =========================
-   POST JOB
-========================= */
-
 function postJob(){
 
   $("modalTitle").textContent =
@@ -2885,29 +2734,12 @@ function postJob(){
         Category নির্বাচন করুন
       </option>
 
-      <option>
-        Driver
-      </option>
-
-      <option>
-        Electrician
-      </option>
-
-      <option>
-        Delivery
-      </option>
-
-      <option>
-        Shop
-      </option>
-
-      <option>
-        Computer
-      </option>
-
-      <option>
-        Other
-      </option>
+      <option>Driver</option>
+      <option>Electrician</option>
+      <option>Delivery</option>
+      <option>Shop</option>
+      <option>Computer</option>
+      <option>Other</option>
 
     </select>
 
@@ -2916,13 +2748,11 @@ function postJob(){
       placeholder="Job সম্পর্কে বিস্তারিত লিখুন"
     ></textarea>
 
-    <label
-      style="
-        display:block;
-        opacity:.7;
-        margin:8px 0;
-      "
-    >
+    <label style="
+      display:block;
+      opacity:.7;
+      margin:8px 0;
+    ">
       Job-এর ছবি
     </label>
 
@@ -2943,7 +2773,6 @@ function postJob(){
 
   openModal();
 }
-
 
 async function createJob(){
 
@@ -3049,11 +2878,6 @@ async function createJob(){
   }
 }
 
-
-/* =========================
-   NOTIFICATIONS
-========================= */
-
 async function showNotifications(){
 
   const response =
@@ -3124,11 +2948,6 @@ async function showNotifications(){
   );
 }
 
-
-/* =========================
-   MODAL
-========================= */
-
 function openModal(){
 
   $("modal")
@@ -3143,11 +2962,6 @@ function closeModal(){
     .add("hidden");
 }
 
-
-/* =========================
-   LOGOUT
-========================= */
-
 function logout(){
 
   localStorage.removeItem(
@@ -3157,6 +2971,38 @@ function logout(){
   location.reload();
 }
 
+/* =========================
+   PWA SERVICE WORKER
+========================= */
+
+if("serviceWorker" in navigator){
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(() => {
+
+          console.log(
+            "কাজ খুঁজি PWA Ready"
+          );
+
+        })
+        .catch(error => {
+
+          console.error(
+            "Service Worker Error:",
+            error
+          );
+
+        });
+
+    }
+  );
+
+}
 
 /* =========================
    AUTO LOGIN
