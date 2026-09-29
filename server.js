@@ -5,105 +5,88 @@ const crypto = require("crypto");
 
 const PORT = process.env.PORT || 10000;
 
-const USERS_FILE = path.join(__dirname, "users.json");
-const JOBS_FILE = path.join(__dirname, "jobs.json");
-
-let users = {};
-let jobs = [];
+const DB_USERS = path.join(__dirname, "users.json");
+const DB_JOBS = path.join(__dirname, "jobs.json");
+const DB_MESSAGES = path.join(__dirname, "messages.json");
 
 
 /* =========================================
-   DATABASE LOAD
+   BASIC HELPERS
 ========================================= */
 
 function loadJSON(file, fallback) {
+
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(
+      file,
+      JSON.stringify(fallback, null, 2)
+    );
+
+    return fallback;
+  }
+
   try {
-    if (!fs.existsSync(file)) {
-      fs.writeFileSync(file, JSON.stringify(fallback, null, 2));
-      return fallback;
-    }
 
-    const data = fs.readFileSync(file, "utf8");
+    const data =
+      fs.readFileSync(file, "utf8");
 
-    if (!data.trim()) return fallback;
-
-    return JSON.parse(data);
+    return data
+      ? JSON.parse(data)
+      : fallback;
 
   } catch (error) {
-    console.log("Database load error:", error.message);
+
     return fallback;
+
   }
 }
 
-users = loadJSON(USERS_FILE, {});
-jobs = loadJSON(JOBS_FILE, []);
 
+function saveJSON(file, data) {
 
-/* =========================================
-   DATABASE SAVE
-========================================= */
-
-function saveUsers() {
   fs.writeFileSync(
-    USERS_FILE,
-    JSON.stringify(users, null, 2)
+    file,
+    JSON.stringify(data, null, 2)
   );
-}
 
-function saveJobs() {
-  fs.writeFileSync(
-    JOBS_FILE,
-    JSON.stringify(jobs, null, 2)
-  );
 }
 
 
-/* =========================================
-   PASSWORD HASH
-========================================= */
-
-function hashPIN(pin) {
-  return crypto
-    .createHash("sha256")
-    .update(String(pin))
-    .digest("hex");
-}
-
-
-/* =========================================
-   ID
-========================================= */
-
-function createID() {
-  return (
-    Date.now().toString(36) +
-    crypto.randomBytes(5).toString("hex")
-  );
-}
-
-
-/* =========================================
-   JSON RESPONSE
-========================================= */
-
-function json(res, status, data) {
+function sendJSON(res, status, data) {
 
   res.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
+    "Content-Type":
+      "application/json; charset=utf-8",
+
     "Access-Control-Allow-Origin": "*",
+
     "Access-Control-Allow-Methods":
       "GET,POST,OPTIONS",
+
     "Access-Control-Allow-Headers":
       "Content-Type"
   });
 
-  res.end(JSON.stringify(data));
+  res.end(
+    JSON.stringify(data)
+  );
+
 }
 
 
-/* =========================================
-   READ REQUEST BODY
-========================================= */
+function sendHTML(res, html) {
+
+  res.writeHead(200, {
+    "Content-Type":
+      "text/html; charset=utf-8",
+
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  res.end(html);
+
+}
+
 
 function readBody(req) {
 
@@ -115,14 +98,6 @@ function readBody(req) {
 
       body += chunk;
 
-      if (body.length > 1024 * 1024) {
-        req.destroy();
-
-        reject(
-          new Error("Request body too large")
-        );
-      }
-
     });
 
     req.on("end", () => {
@@ -130,14 +105,14 @@ function readBody(req) {
       try {
 
         resolve(
-          body ? JSON.parse(body) : {}
+          body
+            ? JSON.parse(body)
+            : {}
         );
 
       } catch (error) {
 
-        reject(
-          new Error("Invalid JSON")
-        );
+        reject(error);
 
       }
 
@@ -150,740 +125,1039 @@ function readBody(req) {
 }
 
 
+function createID() {
+
+  return (
+    Date.now().toString(36) +
+    Math.random()
+      .toString(36)
+      .substring(2, 9)
+  );
+
+}
+
+
+function hashPIN(pin) {
+
+  return crypto
+    .createHash("sha256")
+    .update(String(pin))
+    .digest("hex");
+
+}
+
+
 /* =========================================
-   SERVE FILE
+   DATABASE
 ========================================= */
 
-function serveFile(res, fileName) {
+let users =
+  loadJSON(DB_USERS, {});
 
-  const filePath =
-    path.join(__dirname, fileName);
+let jobs =
+  loadJSON(DB_JOBS, []);
 
-  if (!fs.existsSync(filePath)) {
-
-    res.writeHead(404, {
-      "Content-Type": "text/plain"
-    });
-
-    res.end("File Not Found");
-
-    return;
-  }
-
-  const ext =
-    path.extname(filePath).toLowerCase();
-
-  const types = {
-
-    ".html":
-      "text/html; charset=utf-8",
-
-    ".css":
-      "text/css; charset=utf-8",
-
-    ".js":
-      "application/javascript; charset=utf-8",
-
-    ".json":
-      "application/json; charset=utf-8",
-
-    ".png":
-      "image/png",
-
-    ".jpg":
-      "image/jpeg",
-
-    ".jpeg":
-      "image/jpeg",
-
-    ".svg":
-      "image/svg+xml",
-
-    ".ico":
-      "image/x-icon"
-
-  };
-
-  res.writeHead(200, {
-    "Content-Type":
-      types[ext] ||
-      "application/octet-stream"
-  });
-
-  fs.createReadStream(filePath)
-    .pipe(res);
-}
+let messages =
+  loadJSON(DB_MESSAGES, []);
 
 
 /* =========================================
    SERVER
 ========================================= */
 
-const server = http.createServer(
-  async (req, res) => {
+const server =
+  http.createServer(
+    async (req, res) => {
 
-    try {
+      try {
 
-      /* OPTIONS */
+        /* =================================
+           CORS PREFLIGHT
+        ================================= */
 
-      if (req.method === "OPTIONS") {
+        if (req.method === "OPTIONS") {
 
-        res.writeHead(204, {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods":
-            "GET,POST,OPTIONS",
-          "Access-Control-Allow-Headers":
-            "Content-Type"
-        });
+          res.writeHead(204, {
 
-        res.end();
+            "Access-Control-Allow-Origin":
+              "*",
 
-        return;
-      }
+            "Access-Control-Allow-Methods":
+              "GET,POST,OPTIONS",
 
+            "Access-Control-Allow-Headers":
+              "Content-Type"
 
-      const url =
-        new URL(
-          req.url,
-          `http://${req.headers.host}`
-        );
-
-      const pathname =
-        url.pathname;
-
-
-      /* =====================================
-         HOME
-      ===================================== */
-
-      if (
-        req.method === "GET" &&
-        pathname === "/"
-      ) {
-
-        serveFile(
-          res,
-          "index.html"
-        );
-
-        return;
-      }
-
-
-      /* =====================================
-         HEALTH
-      ===================================== */
-
-      if (
-        req.method === "GET" &&
-        pathname === "/health"
-      ) {
-
-        json(res, 200, {
-          success: true,
-          app: "কাজ খুঁজি",
-          status: "online",
-          time: new Date().toISOString()
-        });
-
-        return;
-      }
-
-
-      /* =====================================
-         REGISTER
-      ===================================== */
-
-      if (
-        req.method === "POST" &&
-        pathname === "/api/register"
-      ) {
-
-        const body =
-          await readBody(req);
-
-        const phone =
-          String(body.phone || "").trim();
-
-        const pin =
-          String(body.pin || "").trim();
-
-        const name =
-          String(body.name || "").trim();
-
-        const location =
-          String(body.location || "").trim();
-
-
-        if (!phone || !pin || !name) {
-
-          json(res, 400, {
-            success: false,
-            message:
-              "নাম, ফোন ও PIN প্রয়োজন।"
           });
 
+          res.end();
+
           return;
+
         }
 
 
-        if (pin.length < 4) {
+        const url =
+          new URL(
+            req.url,
+            `http://${req.headers.host}`
+          );
 
-          json(res, 400, {
-            success: false,
-            message:
-              "PIN কমপক্ষে ৪ সংখ্যার হতে হবে।"
-          });
+        const pathname =
+          url.pathname;
+
+
+        /* =================================
+           HOME
+        ================================= */
+
+        if (
+          req.method === "GET" &&
+          pathname === "/"
+        ) {
+
+          const file =
+            path.join(
+              __dirname,
+              "index.html"
+            );
+
+
+          if (!fs.existsSync(file)) {
+
+            sendJSON(res, 404, {
+
+              success: false,
+
+              message:
+                "index.html পাওয়া যায়নি।"
+
+            });
+
+            return;
+
+          }
+
+
+          const html =
+            fs.readFileSync(
+              file,
+              "utf8"
+            );
+
+
+          sendHTML(res, html);
 
           return;
+
         }
 
 
-        if (users[phone]) {
+        /* =================================
+           HEALTH CHECK
+        ================================= */
 
-          json(res, 409, {
-            success: false,
-            message:
-              "এই ফোন নম্বর দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে।"
+        if (
+          req.method === "GET" &&
+          pathname === "/health"
+        ) {
+
+          sendJSON(res, 200, {
+
+            success: true,
+
+            status: "online",
+
+            app: "কাজ খুঁজি",
+
+            users:
+              Object.keys(users).length,
+
+            jobs:
+              jobs.length,
+
+            messages:
+              messages.length
+
           });
 
           return;
+
         }
 
 
-        users[phone] = {
+        /* =================================
+           REGISTER
+        ================================= */
 
-          id: createID(),
+        if (
+          req.method === "POST" &&
+          pathname === "/api/register"
+        ) {
 
-          phone,
-
-          name,
-
-          location,
-
-          pinHash: hashPIN(pin),
-
-          createdAt:
-            new Date().toISOString()
-
-        };
+          const body =
+            await readBody(req);
 
 
-        saveUsers();
+          const name =
+            String(
+              body.name || ""
+            ).trim();
 
 
-        json(res, 201, {
+          const phone =
+            String(
+              body.phone || ""
+            ).trim();
 
-          success: true,
 
-          message:
-            "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।",
+          const location =
+            String(
+              body.location || ""
+            ).trim();
 
-          user: {
 
-            id: users[phone].id,
+          const pin =
+            String(
+              body.pin || ""
+            ).trim();
+
+
+          if (
+            !name ||
+            !phone ||
+            !location ||
+            !pin
+          ) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "সব তথ্য পূরণ করুন।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (pin.length < 4) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "PIN কমপক্ষে ৪ সংখ্যার হতে হবে।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (users[phone]) {
+
+            sendJSON(res, 409, {
+
+              success: false,
+
+              message:
+                "এই ফোন নম্বর দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।"
+
+            });
+
+            return;
+
+          }
+
+
+          const user = {
+
+            id:
+              createID(),
 
             phone,
 
             name,
 
-            location
+            location,
 
-          }
+            pinHash:
+              hashPIN(pin),
 
-        });
+            createdAt:
+              new Date().toISOString()
 
-        return;
-      }
-
-
-      /* =====================================
-         LOGIN
-      ===================================== */
-
-      if (
-        req.method === "POST" &&
-        pathname === "/api/login"
-      ) {
-
-        const body =
-          await readBody(req);
-
-        const phone =
-          String(body.phone || "").trim();
-
-        const pin =
-          String(body.pin || "").trim();
+          };
 
 
-        if (!phone || !pin) {
+          users[phone] =
+            user;
 
-          json(res, 400, {
-            success: false,
+
+          saveJSON(
+            DB_USERS,
+            users
+          );
+
+
+          sendJSON(res, 201, {
+
+            success: true,
+
             message:
-              "ফোন ও PIN দিন।"
+              "অ্যাকাউন্ট তৈরি হয়েছে।",
+
+            user: {
+
+              id:
+                user.id,
+
+              phone:
+                user.phone,
+
+              name:
+                user.name,
+
+              location:
+                user.location
+
+            }
+
           });
 
           return;
+
         }
 
 
-        const user =
-          users[phone];
-
-
-        if (!user) {
-
-          json(res, 404, {
-            success: false,
-            message:
-              "এই ফোন নম্বরের কোনো অ্যাকাউন্ট পাওয়া যায়নি।"
-          });
-
-          return;
-        }
-
+        /* =================================
+           LOGIN
+        ================================= */
 
         if (
-          user.pinHash !==
-          hashPIN(pin)
+          req.method === "POST" &&
+          pathname === "/api/login"
         ) {
 
-          json(res, 401, {
-            success: false,
-            message:
-              "PIN সঠিক নয়।"
-          });
-
-          return;
-        }
+          const body =
+            await readBody(req);
 
 
-        json(res, 200, {
-
-          success: true,
-
-          message:
-            "লগইন সফল হয়েছে।",
-
-          user: {
-
-            id: user.id,
-
-            phone: user.phone,
-
-            name: user.name,
-
-            location:
-              user.location || ""
-
-          }
-
-        });
-
-        return;
-      }
+          const phone =
+            String(
+              body.phone || ""
+            ).trim();
 
 
-      /* =====================================
-         PROFILE
-      ===================================== */
-
-      if (
-        req.method === "POST" &&
-        pathname === "/api/profile"
-      ) {
-
-        const body =
-          await readBody(req);
-
-        const phone =
-          String(body.phone || "").trim();
-
-        const user =
-          users[phone];
+          const pin =
+            String(
+              body.pin || ""
+            ).trim();
 
 
-        if (!user) {
+          if (!phone || !pin) {
 
-          json(res, 404, {
-            success: false,
-            message:
-              "ব্যবহারকারী পাওয়া যায়নি।"
-          });
+            sendJSON(res, 400, {
 
-          return;
-        }
+              success: false,
 
-
-        if (body.name !== undefined) {
-          user.name =
-            String(body.name).trim();
-        }
-
-        if (body.location !== undefined) {
-          user.location =
-            String(body.location).trim();
-        }
-
-
-        saveUsers();
-
-
-        json(res, 200, {
-
-          success: true,
-
-          user: {
-
-            id: user.id,
-
-            phone: user.phone,
-
-            name: user.name,
-
-            location:
-              user.location || ""
-
-          }
-
-        });
-
-        return;
-      }
-
-
-      /* =====================================
-         GET JOBS
-      ===================================== */
-
-      if (
-        req.method === "GET" &&
-        pathname === "/api/jobs"
-      ) {
-
-        const search =
-          String(
-            url.searchParams.get("search") || ""
-          )
-          .toLowerCase()
-          .trim();
-
-        const category =
-          String(
-            url.searchParams.get("category") || ""
-          )
-          .trim();
-
-
-        let result =
-          [...jobs].reverse();
-
-
-        if (search) {
-
-          result =
-            result.filter(job => {
-
-              const text = (
-
-                job.title +
-                " " +
-                job.location +
-                " " +
-                job.category +
-                " " +
-                job.description
-
-              ).toLowerCase();
-
-              return text.includes(search);
+              message:
+                "ফোন ও PIN দিন।"
 
             });
 
+            return;
+
+          }
+
+
+          const user =
+            users[phone];
+
+
+          if (!user) {
+
+            sendJSON(res, 404, {
+
+              success: false,
+
+              message:
+                "এই ফোন নম্বরে কোনো অ্যাকাউন্ট নেই।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (
+            user.pinHash !==
+            hashPIN(pin)
+          ) {
+
+            sendJSON(res, 401, {
+
+              success: false,
+
+              message:
+                "PIN সঠিক নয়।"
+
+            });
+
+            return;
+
+          }
+
+
+          sendJSON(res, 200, {
+
+            success: true,
+
+            message:
+              "লগইন সফল হয়েছে।",
+
+            user: {
+
+              id:
+                user.id,
+
+              phone:
+                user.phone,
+
+              name:
+                user.name,
+
+              location:
+                user.location
+
+            }
+
+          });
+
+          return;
+
         }
 
 
-        if (category) {
+        /* =================================
+           PROFILE
+        ================================= */
 
-          result =
-            result.filter(
-              job =>
-                job.category === category
+        if (
+          req.method === "POST" &&
+          pathname === "/api/profile"
+        ) {
+
+          const body =
+            await readBody(req);
+
+
+          const phone =
+            String(
+              body.phone || ""
+            ).trim();
+
+
+          const user =
+            users[phone];
+
+
+          if (!user) {
+
+            sendJSON(res, 404, {
+
+              success: false,
+
+              message:
+                "ব্যবহারকারী পাওয়া যায়নি।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (body.name) {
+
+            user.name =
+              String(
+                body.name
+              ).trim();
+
+          }
+
+
+          if (body.location) {
+
+            user.location =
+              String(
+                body.location
+              ).trim();
+
+          }
+
+
+          saveJSON(
+            DB_USERS,
+            users
+          );
+
+
+          sendJSON(res, 200, {
+
+            success: true,
+
+            user: {
+
+              id:
+                user.id,
+
+              phone:
+                user.phone,
+
+              name:
+                user.name,
+
+              location:
+                user.location
+
+            }
+
+          });
+
+          return;
+
+        }
+
+
+        /* =================================
+           GET ALL JOBS
+        ================================= */
+
+        if (
+          req.method === "GET" &&
+          pathname === "/api/jobs"
+        ) {
+
+          const sortedJobs =
+            [...jobs].sort(
+              (a, b) =>
+                new Date(b.createdAt) -
+                new Date(a.createdAt)
             );
 
-        }
 
+          sendJSON(res, 200, {
 
-        json(res, 200, {
+            success: true,
 
-          success: true,
-
-          jobs: result
-
-        });
-
-        return;
-      }
-
-
-      /* =====================================
-         CREATE JOB
-      ===================================== */
-
-      if (
-        req.method === "POST" &&
-        pathname === "/api/jobs"
-      ) {
-
-        const body =
-          await readBody(req);
-
-
-        const phone =
-          String(body.phone || "").trim();
-
-        const title =
-          String(body.title || "").trim();
-
-        const location =
-          String(body.location || "").trim();
-
-        const salary =
-          String(body.salary || "").trim();
-
-        const category =
-          String(body.category || "").trim();
-
-        const description =
-          String(
-            body.description || ""
-          ).trim();
-
-
-        if (!phone || !title ||
-            !location || !salary ||
-            !category) {
-
-          json(res, 400, {
-
-            success: false,
-
-            message:
-              "প্রয়োজনীয় সব তথ্য পূরণ করুন।"
+            jobs:
+              sortedJobs
 
           });
 
           return;
+
         }
 
 
-        if (!users[phone]) {
+        /* =================================
+           CREATE JOB
+        ================================= */
 
-          json(res, 401, {
+        if (
+          req.method === "POST" &&
+          pathname === "/api/jobs"
+        ) {
 
-            success: false,
-
-            message:
-              "আগে লগইন করুন।"
-
-          });
-
-          return;
-        }
+          const body =
+            await readBody(req);
 
 
-        const job = {
-
-          id: createID(),
-
-          title,
-
-          location,
-
-          salary,
-
-          category,
-
-          description,
-
-          phone,
-
-          ownerName:
-            users[phone].name,
-
-          createdAt:
-            new Date().toISOString()
-
-        };
+          const title =
+            String(
+              body.title || ""
+            ).trim();
 
 
-        jobs.push(job);
-
-        saveJobs();
-
-
-        json(res, 201, {
-
-          success: true,
-
-          message:
-            "কাজ সফলভাবে পোস্ট হয়েছে।",
-
-          job
-
-        });
-
-        return;
-      }
+          const location =
+            String(
+              body.location || ""
+            ).trim();
 
 
-      /* =====================================
-         DELETE JOB
-      ===================================== */
-
-      if (
-        req.method === "POST" &&
-        pathname === "/api/jobs/delete"
-      ) {
-
-        const body =
-          await readBody(req);
-
-        const phone =
-          String(body.phone || "").trim();
-
-        const jobId =
-          String(body.jobId || "").trim();
+          const salary =
+            String(
+              body.salary || ""
+            ).trim();
 
 
-        const index =
-          jobs.findIndex(
-            job =>
-              job.id === jobId &&
-              job.phone === phone
+          const category =
+            String(
+              body.category || ""
+            ).trim();
+
+
+          const description =
+            String(
+              body.description || ""
+            ).trim();
+
+
+          const phone =
+            String(
+              body.phone || ""
+            ).trim();
+
+
+          const ownerName =
+            String(
+              body.ownerName || ""
+            ).trim();
+
+
+          if (
+            !title ||
+            !location ||
+            !category ||
+            !description ||
+            !phone
+          ) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "কাজের প্রয়োজনীয় তথ্য পূরণ করুন।"
+
+            });
+
+            return;
+
+          }
+
+
+          const job = {
+
+            id:
+              createID(),
+
+            title,
+
+            location,
+
+            salary,
+
+            category,
+
+            description,
+
+            phone,
+
+            ownerName,
+
+            createdAt:
+              new Date().toISOString()
+
+          };
+
+
+          jobs.push(job);
+
+
+          saveJSON(
+            DB_JOBS,
+            jobs
           );
 
 
-        if (index === -1) {
+          sendJSON(res, 201, {
 
-          json(res, 404, {
-
-            success: false,
+            success: true,
 
             message:
-              "কাজটি পাওয়া যায়নি।"
+              "কাজ পোস্ট হয়েছে।",
+
+            job
 
           });
 
           return;
+
         }
 
 
-        jobs.splice(index, 1);
+        /* =================================
+           MY JOBS
+        ================================= */
 
-        saveJobs();
+        if (
+          req.method === "GET" &&
+          pathname === "/api/my-jobs"
+        ) {
 
-
-        json(res, 200, {
-
-          success: true,
-
-          message:
-            "কাজ মুছে ফেলা হয়েছে।"
-
-        });
-
-        return;
-      }
-
-
-      /* =====================================
-         MY JOBS
-      ===================================== */
-
-      if (
-        req.method === "GET" &&
-        pathname === "/api/my-jobs"
-      ) {
-
-        const phone =
-          String(
-            url.searchParams.get("phone") || ""
-          ).trim();
+          const phone =
+            String(
+              url.searchParams.get(
+                "phone"
+              ) || ""
+            ).trim();
 
 
-        if (!phone) {
+          const myJobs =
+            jobs.filter(
+              job =>
+                job.phone === phone
+            );
 
-          json(res, 400, {
 
-            success: false,
+          sendJSON(res, 200, {
 
-            message:
-              "ফোন নম্বর প্রয়োজন।"
+            success: true,
+
+            jobs:
+              myJobs
 
           });
 
           return;
+
         }
 
 
-        const result =
-          jobs.filter(
-            job =>
-              job.phone === phone
+        /* =================================
+           DELETE JOB
+        ================================= */
+
+        if (
+          req.method === "POST" &&
+          pathname === "/api/jobs/delete"
+        ) {
+
+          const body =
+            await readBody(req);
+
+
+          const jobId =
+            String(
+              body.id || ""
+            ).trim();
+
+
+          const phone =
+            String(
+              body.phone || ""
+            ).trim();
+
+
+          const index =
+            jobs.findIndex(
+              job =>
+                job.id === jobId &&
+                job.phone === phone
+            );
+
+
+          if (index === -1) {
+
+            sendJSON(res, 404, {
+
+              success: false,
+
+              message:
+                "কাজ পাওয়া যায়নি।"
+
+            });
+
+            return;
+
+          }
+
+
+          jobs.splice(
+            index,
+            1
           );
 
 
-        json(res, 200, {
+          saveJSON(
+            DB_JOBS,
+            jobs
+          );
 
-          success: true,
 
-          jobs: result.reverse()
+          sendJSON(res, 200, {
+
+            success: true,
+
+            message:
+              "কাজ মুছে ফেলা হয়েছে।"
+
+          });
+
+          return;
+
+        }
+
+
+        /* =================================
+           SEND CHAT MESSAGE
+        ================================= */
+
+        if (
+          req.method === "POST" &&
+          pathname === "/api/messages/send"
+        ) {
+
+          const body =
+            await readBody(req);
+
+
+          const from =
+            String(
+              body.from || ""
+            ).trim();
+
+
+          const to =
+            String(
+              body.to || ""
+            ).trim();
+
+
+          const text =
+            String(
+              body.text || ""
+            ).trim();
+
+
+          if (
+            !from ||
+            !to ||
+            !text
+          ) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "বার্তা সম্পূর্ণ করুন।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (!users[from]) {
+
+            sendJSON(res, 401, {
+
+              success: false,
+
+              message:
+                "প্রেরক ব্যবহারকারী পাওয়া যায়নি।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (!users[to]) {
+
+            sendJSON(res, 404, {
+
+              success: false,
+
+              message:
+                "যাকে বার্তা পাঠাচ্ছেন তাকে পাওয়া যায়নি।"
+
+            });
+
+            return;
+
+          }
+
+
+          if (text.length > 2000) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "বার্তা সর্বোচ্চ ২০০০ অক্ষরের হতে পারে।"
+
+            });
+
+            return;
+
+          }
+
+
+          const message = {
+
+            id:
+              createID(),
+
+            from,
+
+            to,
+
+            text,
+
+            createdAt:
+              new Date().toISOString()
+
+          };
+
+
+          messages.push(message);
+
+
+          saveJSON(
+            DB_MESSAGES,
+            messages
+          );
+
+
+          sendJSON(res, 201, {
+
+            success: true,
+
+            message
+
+          });
+
+          return;
+
+        }
+
+
+        /* =================================
+           GET CHAT MESSAGES
+        ================================= */
+
+        if (
+          req.method === "GET" &&
+          pathname === "/api/messages"
+        ) {
+
+          const me =
+            String(
+              url.searchParams.get(
+                "me"
+              ) || ""
+            ).trim();
+
+
+          const other =
+            String(
+              url.searchParams.get(
+                "other"
+              ) || ""
+            ).trim();
+
+
+          if (
+            !me ||
+            !other
+          ) {
+
+            sendJSON(res, 400, {
+
+              success: false,
+
+              message:
+                "দুইজন ব্যবহারকারী নির্বাচন করুন।"
+
+            });
+
+            return;
+
+          }
+
+
+          const chat =
+            messages.filter(
+              message =>
+
+                (
+                  message.from === me &&
+                  message.to === other
+                )
+
+                ||
+
+                (
+                  message.from === other &&
+                  message.to === me
+                )
+
+            );
+
+
+          sendJSON(res, 200, {
+
+            success: true,
+
+            messages:
+              chat
+
+          });
+
+          return;
+
+        }
+
+
+        /* =================================
+           404
+        ================================= */
+
+        sendJSON(res, 404, {
+
+          success: false,
+
+          message:
+            "Not Found"
 
         });
 
-        return;
+      } catch (error) {
+
+        console.error(
+          "SERVER ERROR:",
+          error
+        );
+
+
+        sendJSON(res, 500, {
+
+          success: false,
+
+          message:
+            "Server error হয়েছে।"
+
+        });
+
       }
-
-
-      /* =====================================
-         404
-      ===================================== */
-
-      json(res, 404, {
-
-        success: false,
-
-        message:
-          "API endpoint পাওয়া যায়নি।",
-
-        path: pathname
-
-      });
-
-
-    } catch (error) {
-
-      console.error(
-        "Server error:",
-        error
-      );
-
-
-      json(res, 500, {
-
-        success: false,
-
-        message:
-          "সার্ভারে সমস্যা হয়েছে।"
-
-      });
 
     }
-
-  }
-);
+  );
 
 
 /* =========================================
@@ -892,40 +1166,10 @@ const server = http.createServer(
 
 server.listen(
   PORT,
-  "0.0.0.0",
   () => {
 
     console.log(
       `কাজ খুঁজি server started on port ${PORT}`
-    );
-
-  }
-);
-
-
-/* =========================================
-   ERROR HANDLING
-========================================= */
-
-process.on(
-  "uncaughtException",
-  error => {
-
-    console.error(
-      "Uncaught Exception:",
-      error
-    );
-
-  }
-);
-
-process.on(
-  "unhandledRejection",
-  error => {
-
-    console.error(
-      "Unhandled Rejection:",
-      error
     );
 
   }
