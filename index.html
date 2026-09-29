@@ -1,29 +1,13 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0b12">
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
->
-
-<meta
-  name="theme-color"
-  content="#111827"
->
-
-<title>কাজ খুঁজি 💼</title>
-
+<title>কাজ খুঁজি</title>
 
 <style>
-
-/* ==============================
-   RESET
-============================== */
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -31,1122 +15,681 @@
 }
 
 body{
-
   font-family:
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-
-  background:
-    linear-gradient(
-      135deg,
-      #080b14,
-      #111827,
-      #172033
-    );
-
+  background:#090910;
   color:#fff;
-
   min-height:100vh;
-
 }
 
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
 
-/* ==============================
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
    AUTH
-============================== */
+========================= */
 
-.auth{
-
+#authPage{
   min-height:100vh;
-
   display:flex;
-
-  align-items:center;
-
   justify-content:center;
-
+  align-items:center;
   padding:20px;
-
-}
-
-
-.auth-box{
-
-  width:100%;
-
-  max-width:420px;
-
   background:
-    rgba(255,255,255,.07);
-
-  border:
-    1px solid
-    rgba(255,255,255,.1);
-
-  border-radius:25px;
-
-  padding:25px;
-
-  backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 20px 60px
-    rgba(0,0,0,.35);
-
+    radial-gradient(
+      circle at top,
+      #382052 0,
+      #15111d 38%,
+      #090910 75%
+    );
 }
 
+.authBox{
+  width:100%;
+  max-width:430px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;
+  padding:28px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 25px 70px rgba(0,0,0,.4);
+}
 
 .logo{
-
   text-align:center;
-
-  font-size:36px;
-
-  margin-bottom:8px;
-
-}
-
-
-.auth-title{
-
-  text-align:center;
-
-  font-size:25px;
-
+  font-size:34px;
   font-weight:800;
-
+  margin-bottom:8px;
 }
 
-
-.auth-subtitle{
-
+.tagline{
   text-align:center;
-
-  color:#9ca3af;
-
-  margin-top:6px;
-
+  color:#aaa;
   margin-bottom:25px;
-
 }
-
 
 .tabs{
-
   display:flex;
-
   gap:8px;
-
   margin-bottom:20px;
-
 }
-
 
 .tab{
-
   flex:1;
-
-  border:none;
-
-  padding:12px;
-
-  border-radius:12px;
-
-  background:#1f2937;
-
-  color:#9ca3af;
-
-  font-size:15px;
-
-  cursor:pointer;
-
+  border:0;
+  padding:13px;
+  border-radius:13px;
+  background:#171720;
+  color:#aaa;
 }
-
 
 .tab.active{
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
+  background:linear-gradient(135deg,#ff4f91,#814cff);
   color:#fff;
-
 }
 
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
 
 .input{
-
   width:100%;
-
-  padding:14px;
-
-  border-radius:13px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.1);
-
-  background:
-    rgba(255,255,255,.06);
-
+  border:1px solid rgba(255,255,255,.1);
+  background:#111119;
   color:#fff;
-
+  padding:14px 15px;
+  border-radius:13px;
   outline:none;
-
-  margin-bottom:12px;
-
-  font-size:15px;
-
 }
-
-
-.input::placeholder{
-
-  color:#8b93a3;
-
-}
-
 
 .input:focus{
-
-  border-color:#8b5cf6;
-
+  border-color:#a75cff;
 }
 
-
-.primary{
-
-  width:100%;
-
-  border:none;
-
-  border-radius:13px;
-
+.primaryBtn{
+  border:0;
   padding:14px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
+  border-radius:14px;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
   color:#fff;
-
-  font-size:16px;
-
   font-weight:700;
-
-  cursor:pointer;
-
+  margin-top:4px;
 }
-
 
 .message{
-
   margin-top:12px;
-
+  padding:11px;
+  border-radius:10px;
+  background:#191923;
+  color:#ddd;
   text-align:center;
-
   font-size:14px;
-
-  color:#fca5a5;
-
 }
 
-
-/* ==============================
+/* =========================
    APP
-============================== */
+========================= */
 
-#app{
-
-  display:none;
-
+#appPage{
   min-height:100vh;
-
   padding-bottom:85px;
-
 }
-
-
-.container{
-
-  width:100%;
-
-  max-width:900px;
-
-  margin:auto;
-
-  padding:15px;
-
-}
-
-
-/* ==============================
-   HEADER
-============================== */
 
 .header{
-
+  position:sticky;
+  top:0;
+  z-index:20;
   display:flex;
-
+  align-items:center;
   justify-content:space-between;
-
-  align-items:center;
-
-  padding:12px 0 20px;
-
+  padding:15px 16px;
+  background:rgba(9,9,16,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
 
-
-.brand{
-
-  font-size:25px;
-
-  font-weight:900;
-
+.headerTitle{
+  font-size:22px;
+  font-weight:800;
 }
 
-
-.brand span{
-
-  color:#a78bfa;
-
-}
-
-
-.header-user{
-
-  width:42px;
-
-  height:42px;
-
-  border-radius:50%;
-
+.headerRight{
   display:flex;
-
   align-items:center;
-
-  justify-content:center;
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
-  cursor:pointer;
-
-}
-
-
-/* ==============================
-   SEARCH
-============================== */
-
-.search{
-
-  display:flex;
-
-  align-items:center;
-
   gap:10px;
-
-  background:
-    rgba(255,255,255,.07);
-
-  border:
-    1px solid
-    rgba(255,255,255,.08);
-
-  border-radius:15px;
-
-  padding:0 15px;
-
-  margin-bottom:20px;
-
 }
 
-
-.search input{
-
-  flex:1;
-
-  border:none;
-
-  outline:none;
-
-  background:transparent;
-
+.iconBtn{
+  position:relative;
+  width:42px;
+  height:42px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#15151e;
   color:#fff;
-
-  padding:14px 0;
-
-  font-size:15px;
-
-}
-
-
-.search span{
-
+  border-radius:13px;
   font-size:20px;
-
 }
 
-
-/* ==============================
-   SECTION
-============================== */
-
-.section-title{
-
+.badge{
+  position:absolute;
+  top:-4px;
+  right:-4px;
+  min-width:19px;
+  height:19px;
+  padding:0 5px;
   display:flex;
-
+  justify-content:center;
   align-items:center;
-
-  justify-content:space-between;
-
-  margin:20px 0 12px;
-
+  border-radius:20px;
+  background:#ff3f79;
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+  border:2px solid #090910;
 }
 
-
-.section-title h2{
-
-  font-size:19px;
-
+.container{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  padding:18px 15px;
 }
 
+/* =========================
+   SEARCH
+========================= */
 
-.section-title button{
-
-  background:none;
-
-  border:none;
-
-  color:#a78bfa;
-
-  cursor:pointer;
-
+.searchBox{
+  display:flex;
+  gap:8px;
+  margin-bottom:18px;
 }
 
+.searchBox input{
+  flex:1;
+}
 
-/* ==============================
+.searchBtn{
+  width:50px;
+  border:0;
+  border-radius:13px;
+  background:#1a1824;
+  color:#fff;
+}
+
+/* =========================
    CATEGORIES
-============================== */
+========================= */
+
+.sectionTitle{
+  font-size:18px;
+  font-weight:800;
+  margin:20px 0 12px;
+}
 
 .categories{
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
+  display:flex;
   gap:9px;
-
+  overflow-x:auto;
+  padding-bottom:4px;
 }
 
+.categories::-webkit-scrollbar{
+  display:none;
+}
 
 .category{
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.08);
+  background:#13131c;
+  color:#ddd;
+  border-radius:30px;
+  padding:10px 15px;
+  white-space:nowrap;
+}
 
-  border:none;
-
-  border-radius:15px;
-
-  background:
-    rgba(255,255,255,.06);
-
-  border:
-    1px solid
-    rgba(255,255,255,.07);
-
+.category.active{
+  background:linear-gradient(135deg,#ff4f91,#814cff);
   color:#fff;
-
-  padding:13px 5px;
-
-  cursor:pointer;
-
 }
 
-
-.category-icon{
-
-  font-size:23px;
-
-  display:block;
-
-  margin-bottom:5px;
-
-}
-
-
-.category-name{
-
-  font-size:11px;
-
-}
-
-
-/* ==============================
+/* =========================
    JOB CARD
-============================== */
+========================= */
 
 .jobs{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:12px;
-
+  display:grid;
+  grid-template-columns:1fr;
+  gap:13px;
 }
 
-
-.job{
-
-  background:
-    rgba(255,255,255,.06);
-
-  border:
-    1px solid
-    rgba(255,255,255,.08);
-
+.jobCard{
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.065),
+    rgba(255,255,255,.025)
+  );
+  border:1px solid rgba(255,255,255,.08);
   border-radius:20px;
-
   padding:17px;
-
 }
 
-
-.job-top{
-
+.jobTop{
   display:flex;
-
   justify-content:space-between;
-
   gap:10px;
-
 }
 
-
-.job-title{
-
+.jobTitle{
   font-size:18px;
-
   font-weight:800;
-
 }
 
-
-.job-category{
-
+.jobCategory{
   display:inline-block;
-
-  margin-top:7px;
-
-  padding:5px 9px;
-
-  border-radius:8px;
-
-  background:
-    rgba(139,92,246,.18);
-
-  color:#c4b5fd;
-
-  font-size:11px;
-
-}
-
-
-.job-info{
-
-  color:#b8c0ce;
-
-  font-size:13px;
-
-  margin-top:10px;
-
-  line-height:1.7;
-
-}
-
-
-.job-description{
-
-  color:#d1d5db;
-
-  font-size:14px;
-
-  margin-top:10px;
-
-  line-height:1.6;
-
-}
-
-
-.job-actions{
-
-  display:flex;
-
-  gap:8px;
-
-  margin-top:14px;
-
-}
-
-
-.btn{
-
-  flex:1;
-
-  border:none;
-
-  border-radius:11px;
-
-  padding:10px;
-
-  cursor:pointer;
-
-  font-weight:700;
-
-}
-
-
-.chat-btn{
-
-  background:#312e81;
-
-  color:#c4b5fd;
-
-}
-
-
-.call-btn{
-
-  background:#064e3b;
-
-  color:#6ee7b7;
-
-}
-
-
-.delete-btn{
-
-  background:#450a0a;
-
-  color:#fca5a5;
-
-}
-
-
-/* ==============================
-   PROFILE
-============================== */
-
-.profile-card{
-
-  background:
-    rgba(255,255,255,.06);
-
-  border-radius:20px;
-
-  padding:20px;
-
-  text-align:center;
-
-}
-
-
-.avatar{
-
-  width:75px;
-
-  height:75px;
-
-  border-radius:50%;
-
-  margin:auto;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  font-size:35px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
-}
-
-
-.profile-name{
-
-  font-size:21px;
-
-  font-weight:800;
-
-  margin-top:10px;
-
-}
-
-
-.profile-phone{
-
-  color:#9ca3af;
-
-  margin-top:4px;
-
-}
-
-
-.profile-location{
-
-  color:#c4b5fd;
-
   margin-top:6px;
-
+  color:#ff7eab;
+  font-size:12px;
 }
 
-
-/* ==============================
-   BOTTOM NAV
-============================== */
-
-.bottom-nav{
-
-  position:fixed;
-
-  bottom:0;
-
-  left:0;
-
-  right:0;
-
-  height:70px;
-
-  background:
-    rgba(10,14,25,.94);
-
-  border-top:
-    1px solid
-    rgba(255,255,255,.08);
-
+.jobInfo{
   display:flex;
-
-  justify-content:center;
-
-  z-index:100;
-
+  flex-wrap:wrap;
+  gap:10px;
+  margin:12px 0;
+  color:#aaa;
+  font-size:13px;
 }
 
+.jobDescription{
+  color:#c8c8ce;
+  line-height:1.6;
+  font-size:14px;
+}
 
-.nav-inner{
+.jobOwner{
+  color:#aaa;
+  font-size:12px;
+  margin-top:12px;
+}
 
-  width:100%;
-
-  max-width:700px;
-
+.jobActions{
   display:flex;
-
-  justify-content:space-around;
-
+  gap:8px;
+  margin-top:15px;
 }
 
-
-.nav-btn{
-
+.actionBtn{
   flex:1;
-
-  background:none;
-
-  border:none;
-
-  color:#8b93a3;
-
-  cursor:pointer;
-
-  font-size:11px;
-
-}
-
-
-.nav-icon{
-
-  display:block;
-
-  font-size:22px;
-
-  margin-bottom:3px;
-
-}
-
-
-.nav-btn.active{
-
-  color:#c4b5fd;
-
-}
-
-
-/* ==============================
-   FLOAT BUTTON
-============================== */
-
-.floating{
-
-  position:fixed;
-
-  right:20px;
-
-  bottom:85px;
-
-  width:58px;
-
-  height:58px;
-
-  border:none;
-
-  border-radius:50%;
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
+  border:0;
+  border-radius:12px;
+  padding:11px 8px;
+  background:#1b1b27;
   color:#fff;
-
-  font-size:28px;
-
-  box-shadow:
-    0 10px 30px
-    rgba(0,0,0,.4);
-
-  cursor:pointer;
-
-  z-index:90;
-
 }
 
+.chatBtn{
+  background:linear-gradient(135deg,#814cff,#5c5cff);
+}
 
-/* ==============================
+.callBtn{
+  background:#173b2c;
+  color:#7cffb0;
+}
+
+.deleteBtn{
+  background:#391b24;
+  color:#ff789d;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profileCard{
+  background:#12121b;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:22px;
+}
+
+.profileAvatar{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:14px;
+}
+
+.profileName{
+  font-size:22px;
+  font-weight:800;
+}
+
+.profileInfo{
+  color:#aaa;
+  margin-top:7px;
+}
+
+.logoutBtn{
+  width:100%;
+  margin-top:20px;
+  padding:13px;
+  border:0;
+  border-radius:13px;
+  background:#341923;
+  color:#ff789d;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottomNav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:30;
+  height:72px;
+  display:flex;
+  justify-content:center;
+  background:rgba(10,10,16,.94);
+  backdrop-filter:blur(18px);
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.navInner{
+  width:100%;
+  max-width:600px;
+  display:flex;
+}
+
+.navBtn{
+  flex:1;
+  border:0;
+  background:transparent;
+  color:#777;
+  font-size:12px;
+}
+
+.navBtn span{
+  display:block;
+  font-size:22px;
+  margin-bottom:3px;
+}
+
+.navBtn.active{
+  color:#ff65a0;
+}
+
+/* =========================
+   FLOAT BUTTON
+========================= */
+
+.floatingBtn{
+  position:fixed;
+  right:18px;
+  bottom:88px;
+  z-index:25;
+  width:57px;
+  height:57px;
+  border:0;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  color:#fff;
+  font-size:28px;
+  box-shadow:0 10px 35px rgba(129,76,255,.35);
+}
+
+/* =========================
    MODAL
-============================== */
+========================= */
 
 .modal{
-
-  display:none;
-
   position:fixed;
-
   inset:0;
-
-  background:
-    rgba(0,0,0,.7);
-
-  z-index:200;
-
-  padding:15px;
-
-  overflow:auto;
-
+  z-index:100;
+  background:rgba(0,0,0,.7);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
 }
 
-
-.modal-box{
-
+.modalBox{
   width:100%;
-
-  max-width:520px;
-
-  margin:50px auto;
-
-  background:#111827;
-
-  border:
-    1px solid
-    rgba(255,255,255,.1);
-
-  border-radius:22px;
-
+  max-width:650px;
+  max-height:90vh;
+  overflow:auto;
+  background:#11111a;
+  border-radius:25px 25px 0 0;
   padding:20px;
-
+  border:1px solid rgba(255,255,255,.08);
 }
 
-
-.modal-head{
-
+.modalHeader{
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
   margin-bottom:18px;
-
 }
 
-
-.modal-head h2{
-
-  font-size:21px;
-
+.modalTitle{
+  font-size:20px;
+  font-weight:800;
 }
 
-
-.close{
-
-  border:none;
-
-  background:#1f2937;
-
+.closeBtn{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:11px;
+  background:#20202b;
   color:#fff;
-
-  width:35px;
-
-  height:35px;
-
-  border-radius:50%;
-
-  font-size:22px;
-
-  cursor:pointer;
-
+  font-size:18px;
 }
 
+/* =========================
+   NOTIFICATIONS
+========================= */
 
-/* ==============================
-   CHAT
-============================== */
+.notificationList{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-.chat-messages{
-
-  height:380px;
-
-  overflow-y:auto;
-
-  padding:8px;
-
-  background:
-    rgba(0,0,0,.18);
-
+.notificationItem{
+  display:flex;
+  gap:12px;
+  padding:14px;
   border-radius:15px;
-
+  background:#191923;
+  border:1px solid rgba(255,255,255,.05);
 }
 
-
-.chat-empty{
-
-  text-align:center;
-
-  color:#8b93a3;
-
-  padding:100px 10px;
-
+.notificationItem.unread{
+  background:#211827;
+  border-color:rgba(255,79,145,.2);
 }
 
-
-.chat-row{
-
-  display:flex;
-
-  margin:8px 0;
-
-}
-
-
-.chat-row.mine{
-
-  justify-content:flex-end;
-
-}
-
-
-.chat-bubble{
-
-  max-width:78%;
-
-  padding:10px 13px;
-
-  border-radius:16px;
-
-  background:#26324a;
-
-  word-break:break-word;
-
-}
-
-
-.chat-row.mine
-.chat-bubble{
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
-}
-
-
-.chat-time{
-
-  font-size:9px;
-
-  opacity:.65;
-
-  margin-top:4px;
-
-  text-align:right;
-
-}
-
-
-.chat-input-row{
-
-  display:flex;
-
-  gap:8px;
-
-  margin-top:10px;
-
-}
-
-
-.chat-input-row .input{
-
-  margin:0;
-
-}
-
-
-.send-btn{
-
-  width:58px;
-
-  border:none;
-
+.notificationIcon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
   border-radius:13px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #ec4899
-    );
-
-  color:#fff;
-
-  font-size:22px;
-
-  cursor:pointer;
-
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  font-size:19px;
 }
 
-
-/* ==============================
-   LOADING
-============================== */
-
-.loading{
-
-  text-align:center;
-
-  color:#9ca3af;
-
-  padding:30px;
-
+.notificationText{
+  flex:1;
 }
 
+.notificationTitle{
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.notificationBody{
+  color:#aaa;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.notificationTime{
+  color:#777;
+  font-size:11px;
+  margin-top:5px;
+}
 
 .empty{
-
+  padding:35px 15px;
   text-align:center;
-
-  color:#9ca3af;
-
-  padding:30px;
-
+  color:#777;
 }
 
+/* =========================
+   CHAT
+========================= */
 
-/* ==============================
+.chatModal{
+  align-items:stretch;
+}
+
+.chatBox{
+  max-width:700px;
+  height:100%;
+  max-height:none;
+  border-radius:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.chatMessages{
+  flex:1;
+  overflow:auto;
+  padding:10px 0;
+}
+
+.chatBubbleWrap{
+  display:flex;
+  margin:7px 0;
+}
+
+.chatBubbleWrap.mine{
+  justify-content:flex-end;
+}
+
+.chatBubble{
+  max-width:78%;
+  padding:10px 13px;
+  border-radius:16px;
+  background:#242431;
+  color:#eee;
+  line-height:1.45;
+}
+
+.mine .chatBubble{
+  background:linear-gradient(135deg,#814cff,#ff4f91);
+}
+
+.chatTime{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  opacity:.65;
+}
+
+.chatInputArea{
+  display:flex;
+  gap:8px;
+  padding-top:10px;
+}
+
+.chatInputArea input{
+  flex:1;
+}
+
+.sendBtn{
+  width:52px;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#ff4f91,#814cff);
+  color:#fff;
+}
+
+/* =========================
    RESPONSIVE
-============================== */
+========================= */
 
-@media(max-width:500px){
-
-  .categories{
-
-    grid-template-columns:
-      repeat(4,1fr);
-
+@media(min-width:700px){
+  .jobs{
+    grid-template-columns:1fr 1fr;
   }
 
-  .category{
-
-    padding:10px 3px;
-
+  .modal{
+    align-items:center;
+    padding:20px;
   }
 
-  .category-icon{
-
-    font-size:20px;
-
+  .modalBox{
+    border-radius:25px;
+    max-height:85vh;
   }
 
+  .chatBox{
+    height:80vh;
+  }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
+<!-- =========================
+     AUTH PAGE
+========================= -->
 
-<!-- =================================
-     AUTH
-================================= -->
+<section id="authPage">
 
-<div
-  id="auth"
-  class="auth"
->
-
-  <div class="auth-box">
+  <div class="authBox">
 
     <div class="logo">
-      💼
+      💼 কাজ খুঁজি
     </div>
 
-    <div class="auth-title">
-      কাজ খুঁজি
-    </div>
-
-    <div class="auth-subtitle">
+    <div class="tagline">
       কাজ খুঁজুন, কাজ দিন
     </div>
 
-
     <div class="tabs">
-
       <button
         id="loginTab"
         class="tab active"
@@ -1162,31 +705,29 @@ body{
       >
         রেজিস্টার
       </button>
-
     </div>
 
 
     <!-- LOGIN -->
 
-    <div id="loginForm">
+    <div id="loginForm" class="form">
 
       <input
         id="loginPhone"
         class="input"
         type="tel"
-        placeholder="📱 ফোন নম্বর"
+        placeholder="মোবাইল নম্বর"
       >
 
       <input
         id="loginPin"
         class="input"
         type="password"
-        inputmode="numeric"
-        placeholder="🔐 PIN"
+        placeholder="PIN"
       >
 
       <button
-        class="primary"
+        class="primaryBtn"
         onclick="login()"
       >
         লগইন
@@ -1199,38 +740,39 @@ body{
 
     <div
       id="registerForm"
-      style="display:none"
+      class="form hidden"
     >
 
       <input
         id="registerName"
         class="input"
-        placeholder="👤 আপনার নাম"
+        type="text"
+        placeholder="আপনার নাম"
       >
 
       <input
         id="registerPhone"
         class="input"
         type="tel"
-        placeholder="📱 ফোন নম্বর"
+        placeholder="মোবাইল নম্বর"
       >
 
       <input
         id="registerLocation"
         class="input"
-        placeholder="📍 আপনার এলাকা"
+        type="text"
+        placeholder="আপনার এলাকা"
       >
 
       <input
         id="registerPin"
         class="input"
         type="password"
-        inputmode="numeric"
-        placeholder="🔐 ৪+ সংখ্যার PIN"
+        placeholder="৪-২০ সংখ্যার PIN"
       >
 
       <button
-        class="primary"
+        class="primaryBtn"
         onclick="register()"
       >
         অ্যাকাউন্ট তৈরি করুন
@@ -1238,509 +780,500 @@ body{
 
     </div>
 
-
     <div
       id="authMessage"
-      class="message"
+      class="message hidden"
     ></div>
 
   </div>
 
-</div>
+</section>
 
 
+<!-- =========================
+     APP PAGE
+========================= -->
 
-<!-- =================================
-     MAIN APP
-================================= -->
+<section
+  id="appPage"
+  class="hidden"
+>
 
-<div id="app">
+  <header class="header">
 
-  <div class="container">
+    <div class="headerTitle">
+      💼 কাজ খুঁজি
+    </div>
 
+    <div class="headerRight">
 
-    <!-- HEADER -->
-
-    <div class="header">
-
-      <div class="brand">
-        💼 <span>কাজ খুঁজি</span>
-      </div>
-
-      <div
-        class="header-user"
-        onclick="showProfile()"
+      <button
+        class="iconBtn"
+        onclick="openNotifications()"
+        aria-label="Notifications"
       >
-        👤
-      </div>
+        🔔
+
+        <span
+          id="notificationBadge"
+          class="badge hidden"
+        >
+          0
+        </span>
+
+      </button>
 
     </div>
 
+  </header>
 
-    <!-- SEARCH -->
 
-    <div class="search">
-
-      <span>🔍</span>
-
-      <input
-        id="searchInput"
-        placeholder="কাজ খুঁজুন..."
-        oninput="searchJobs()"
-      >
-
-    </div>
-
+  <main class="container">
 
     <!-- HOME -->
 
-    <div id="homePage">
+    <section id="homeSection">
 
+      <div class="searchBox">
 
-      <div class="section-title">
+        <input
+          id="searchInput"
+          class="input"
+          type="search"
+          placeholder="কাজ খুঁজুন..."
+          oninput="searchJobs()"
+        >
 
-        <h2>
-          কাজের ধরন
-        </h2>
+        <button
+          class="searchBtn"
+          onclick="searchJobs()"
+        >
+          🔍
+        </button>
 
       </div>
 
+
+      <div class="sectionTitle">
+        কাজের ধরন
+      </div>
 
       <div class="categories">
 
         <button
-          class="category"
-          onclick="filterCategory('রাজমিস্ত্রি')"
+          class="category active"
+          onclick="filterCategory('সব',this)"
         >
-          <span class="category-icon">
-            🧱
-          </span>
-          <span class="category-name">
-            রাজমিস্ত্রি
-          </span>
+          সব
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('ইলেকট্রিশিয়ান')"
+          onclick="filterCategory('রাজমিস্ত্রি',this)"
         >
-          <span class="category-icon">
-            ⚡
-          </span>
-          <span class="category-name">
-            ইলেকট্রিশিয়ান
-          </span>
+          🧱 রাজমিস্ত্রি
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('ড্রাইভার')"
+          onclick="filterCategory('ইলেকট্রিশিয়ান',this)"
         >
-          <span class="category-icon">
-            🚗
-          </span>
-          <span class="category-name">
-            ড্রাইভার
-          </span>
+          ⚡ ইলেকট্রিশিয়ান
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('ডেলিভারি')"
+          onclick="filterCategory('ড্রাইভার',this)"
         >
-          <span class="category-icon">
-            📦
-          </span>
-          <span class="category-name">
-            ডেলিভারি
-          </span>
+          🚗 ড্রাইভার
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('দোকান')"
+          onclick="filterCategory('ডেলিভারি',this)"
         >
-          <span class="category-icon">
-            🏪
-          </span>
-          <span class="category-name">
-            দোকান
-          </span>
+          📦 ডেলিভারি
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('কম্পিউটার')"
+          onclick="filterCategory('দোকান',this)"
         >
-          <span class="category-icon">
-            💻
-          </span>
-          <span class="category-name">
-            কম্পিউটার
-          </span>
+          🏪 দোকান
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('টিউশনি')"
+          onclick="filterCategory('কম্পিউটার',this)"
         >
-          <span class="category-icon">
-            📚
-          </span>
-          <span class="category-name">
-            টিউশনি
-          </span>
+          💻 কম্পিউটার
         </button>
-
 
         <button
           class="category"
-          onclick="filterCategory('অন্যান্য')"
+          onclick="filterCategory('টিউশনি',this)"
         >
-          <span class="category-icon">
-            🔧
-          </span>
-          <span class="category-name">
-            অন্যান্য
-          </span>
+          📚 টিউশনি
+        </button>
+
+        <button
+          class="category"
+          onclick="filterCategory('অন্যান্য',this)"
+        >
+          🛠️ অন্যান্য
         </button>
 
       </div>
 
 
-      <div class="section-title">
-
-        <h2>
-          🆕 নতুন কাজ
-        </h2>
-
-        <button
-          onclick="showJobs()"
-        >
-          সব দেখুন
-        </button>
-
+      <div class="sectionTitle">
+        সাম্প্রতিক কাজ
       </div>
-
 
       <div
         id="homeJobs"
         class="jobs"
-      >
+      ></div>
 
-        <div class="loading">
-          কাজ লোড হচ্ছে...
-        </div>
-
-      </div>
-
-    </div>
+    </section>
 
 
+    <!-- ALL JOBS -->
 
-    <!-- JOBS PAGE -->
-
-    <div
-      id="jobsPage"
-      style="display:none"
+    <section
+      id="jobsSection"
+      class="hidden"
     >
 
-      <div class="section-title">
-
-        <h2>
-          🔎 সব কাজ
-        </h2>
-
+      <div class="sectionTitle">
+        সব কাজ
       </div>
-
 
       <div
         id="allJobs"
         class="jobs"
       ></div>
 
-    </div>
+    </section>
 
 
+    <!-- POST -->
 
-    <!-- PROFILE PAGE -->
-
-    <div
-      id="profilePage"
-      style="display:none"
+    <section
+      id="postSection"
+      class="hidden"
     >
 
-      <div class="section-title">
+      <div class="sectionTitle">
+        নতুন কাজ পোস্ট করুন
+      </div>
 
-        <h2>
-          👤 আমার প্রোফাইল
-        </h2>
+      <div class="profileCard">
+
+        <div class="form">
+
+          <input
+            id="jobTitle"
+            class="input"
+            placeholder="কাজের নাম"
+          >
+
+          <input
+            id="jobLocation"
+            class="input"
+            placeholder="কাজের জায়গা"
+          >
+
+          <input
+            id="jobSalary"
+            class="input"
+            placeholder="বেতন / পারিশ্রমিক"
+          >
+
+          <select
+            id="jobCategory"
+            class="input"
+          >
+            <option value="">কাজের ধরন নির্বাচন করুন</option>
+            <option>রাজমিস্ত্রি</option>
+            <option>ইলেকট্রিশিয়ান</option>
+            <option>ড্রাইভার</option>
+            <option>ডেলিভারি</option>
+            <option>দোকান</option>
+            <option>কম্পিউটার</option>
+            <option>টিউশনি</option>
+            <option>অন্যান্য</option>
+          </select>
+
+          <textarea
+            id="jobDescription"
+            class="input"
+            rows="5"
+            placeholder="কাজের বিস্তারিত"
+          ></textarea>
+
+          <button
+            class="primaryBtn"
+            onclick="createJob()"
+          >
+            কাজ পোস্ট করুন
+          </button>
+
+          <div
+            id="jobMessage"
+            class="message hidden"
+          ></div>
+
+        </div>
 
       </div>
 
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section
+      id="profileSection"
+      class="hidden"
+    >
+
+      <div class="sectionTitle">
+        আমার প্রোফাইল
+      </div>
 
       <div
         id="profileContent"
+        class="profileCard"
       ></div>
 
-
-      <div class="section-title">
-
-        <h2>
-          📌 আমার পোস্ট
-        </h2>
-
+      <div class="sectionTitle">
+        আমার পোস্ট করা কাজ
       </div>
-
 
       <div
         id="myJobs"
         class="jobs"
       ></div>
 
+    </section>
 
-      <button
-        class="primary"
-        style="
-          margin-top:20px;
-          background:#450a0a;
-          color:#fca5a5;
-        "
-        onclick="logout()"
-      >
-        লগআউট
-      </button>
-
-    </div>
-
-  </div>
+  </main>
 
 
-
-  <!-- FLOATING BUTTON -->
+  <!-- FLOATING POST BUTTON -->
 
   <button
-    class="floating"
-    onclick="openPostModal()"
+    class="floatingBtn"
+    onclick="openPost()"
   >
     +
   </button>
 
 
-
   <!-- BOTTOM NAV -->
 
-  <div class="bottom-nav">
+  <nav class="bottomNav">
 
-    <div class="nav-inner">
+    <div class="navInner">
 
       <button
         id="navHome"
-        class="nav-btn active"
-        onclick="showHome()"
+        class="navBtn active"
+        onclick="showSection('home')"
       >
-
-        <span class="nav-icon">
-          🏠
-        </span>
-
+        <span>🏠</span>
         হোম
-
       </button>
-
 
       <button
         id="navJobs"
-        class="nav-btn"
-        onclick="showJobs()"
+        class="navBtn"
+        onclick="showSection('jobs')"
       >
-
-        <span class="nav-icon">
-          🔎
-        </span>
-
+        <span>💼</span>
         কাজ
-
       </button>
-
 
       <button
-        class="nav-btn"
-        onclick="openPostModal()"
+        id="navPost"
+        class="navBtn"
+        onclick="showSection('post')"
       >
-
-        <span class="nav-icon">
-          ➕
-        </span>
-
+        <span>➕</span>
         পোস্ট
-
       </button>
-
 
       <button
         id="navProfile"
-        class="nav-btn"
-        onclick="showProfile()"
+        class="navBtn"
+        onclick="showSection('profile')"
       >
-
-        <span class="nav-icon">
-          👤
-        </span>
-
+        <span>👤</span>
         প্রোফাইল
-
       </button>
 
     </div>
 
-  </div>
+  </nav>
 
-</div>
+</section>
 
 
-
-<!-- =================================
+<!-- =========================
      POST MODAL
-================================= -->
+========================= -->
 
 <div
   id="postModal"
-  class="modal"
+  class="modal hidden"
+  onclick="closeModalOutside(event,'postModal')"
 >
 
-  <div class="modal-box">
+  <div class="modalBox">
 
-    <div class="modal-head">
+    <div class="modalHeader">
 
-      <h2>
-        📢 নতুন কাজ পোস্ট
-      </h2>
+      <div class="modalTitle">
+        নতুন কাজ পোস্ট করুন
+      </div>
 
       <button
-        class="close"
-        onclick="closePostModal()"
+        class="closeBtn"
+        onclick="closePost()"
       >
-        ×
+        ✕
       </button>
 
     </div>
 
+    <div class="form">
 
-    <input
-      id="jobTitle"
-      class="input"
-      placeholder="কাজের নাম"
-    >
+      <input
+        id="modalJobTitle"
+        class="input"
+        placeholder="কাজের নাম"
+      >
 
+      <input
+        id="modalJobLocation"
+        class="input"
+        placeholder="কাজের জায়গা"
+      >
 
-    <input
-      id="jobLocation"
-      class="input"
-      placeholder="📍 কাজের জায়গা"
-    >
+      <input
+        id="modalJobSalary"
+        class="input"
+        placeholder="বেতন / পারিশ্রমিক"
+      >
 
+      <select
+        id="modalJobCategory"
+        class="input"
+      >
+        <option value="">কাজের ধরন</option>
+        <option>রাজমিস্ত্রি</option>
+        <option>ইলেকট্রিশিয়ান</option>
+        <option>ড্রাইভার</option>
+        <option>ডেলিভারি</option>
+        <option>দোকান</option>
+        <option>কম্পিউটার</option>
+        <option>টিউশনি</option>
+        <option>অন্যান্য</option>
+      </select>
 
-    <input
-      id="jobSalary"
-      class="input"
-      placeholder="💰 বেতন / পারিশ্রমিক"
-    >
+      <textarea
+        id="modalJobDescription"
+        class="input"
+        rows="5"
+        placeholder="কাজের বিস্তারিত"
+      ></textarea>
 
+      <button
+        class="primaryBtn"
+        onclick="createJobFromModal()"
+      >
+        পোস্ট করুন
+      </button>
 
-    <select
-      id="jobCategory"
-      class="input"
-    >
+      <div
+        id="modalJobMessage"
+        class="message hidden"
+      ></div>
 
-      <option value="">
-        কাজের ধরন নির্বাচন করুন
-      </option>
-
-      <option>
-        রাজমিস্ত্রি
-      </option>
-
-      <option>
-        ইলেকট্রিশিয়ান
-      </option>
-
-      <option>
-        ড্রাইভার
-      </option>
-
-      <option>
-        ডেলিভারি
-      </option>
-
-      <option>
-        দোকান
-      </option>
-
-      <option>
-        কম্পিউটার
-      </option>
-
-      <option>
-        টিউশনি
-      </option>
-
-      <option>
-        অন্যান্য
-      </option>
-
-    </select>
-
-
-    <textarea
-      id="jobDescription"
-      class="input"
-      rows="5"
-      placeholder="কাজ সম্পর্কে বিস্তারিত লিখুন..."
-    ></textarea>
-
-
-    <button
-      class="primary"
-      onclick="createJob()"
-    >
-      কাজ পোস্ট করুন
-    </button>
+    </div>
 
   </div>
 
 </div>
 
 
+<!-- =========================
+     NOTIFICATION MODAL
+========================= -->
 
-<!-- =================================
+<div
+  id="notificationModal"
+  class="modal hidden"
+  onclick="closeModalOutside(event,'notificationModal')"
+>
+
+  <div class="modalBox">
+
+    <div class="modalHeader">
+
+      <div class="modalTitle">
+        🔔 Notifications
+      </div>
+
+      <button
+        class="closeBtn"
+        onclick="closeNotifications()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div
+      id="notificationList"
+      class="notificationList"
+    >
+      <div class="empty">
+        Notification লোড হচ্ছে...
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
      CHAT MODAL
-================================= -->
+========================= -->
 
 <div
   id="chatModal"
-  class="modal"
+  class="modal chatModal hidden"
 >
 
-  <div class="modal-box">
+  <div class="modalBox chatBox">
 
-    <div class="modal-head">
+    <div class="modalHeader">
 
-      <h2 id="chatTitle">
-        💬 Chat
-      </h2>
+      <div
+        id="chatTitle"
+        class="modalTitle"
+      >
+        Chat
+      </div>
 
       <button
-        class="close"
+        class="closeBtn"
         onclick="closeChat()"
       >
-        ×
+        ✕
       </button>
 
     </div>
@@ -1748,30 +1281,23 @@ body{
 
     <div
       id="chatMessages"
-      class="chat-messages"
-    >
-
-      <div class="loading">
-        Chat লোড হচ্ছে...
-      </div>
-
-    </div>
+      class="chatMessages"
+    ></div>
 
 
-    <div class="chat-input-row">
+    <div class="chatInputArea">
 
       <input
         id="chatInput"
         class="input"
-        placeholder="বার্তা লিখুন..."
-        onkeydown="
-          if(event.key==='Enter')
-          sendMessage()
-        "
+        type="text"
+        maxlength="2000"
+        placeholder="মেসেজ লিখুন..."
+        onkeydown="chatKey(event)"
       >
 
       <button
-        class="send-btn"
+        class="sendBtn"
         onclick="sendMessage()"
       >
         ➤
@@ -1784,195 +1310,167 @@ body{
 </div>
 
 
-
 <script>
 
-/* =================================
-   CONFIG
-================================= */
+/* =========================================
+   GLOBAL
+========================================= */
 
-const API =
-  window.location.origin;
+const API = window.location.origin;
 
+let currentUser = null;
+let allJobs = [];
+let currentCategory = "সব";
 
-let currentUser =
-  null;
+let chatUser = null;
+let chatTimer = null;
 
-let allJobs =
-  [];
-
-let chatUser =
-  null;
-
-let chatTimer =
-  null;
+let notificationTimer = null;
 
 
-/* =================================
-   AUTH ELEMENTS
-================================= */
+/* =========================================
+   HELPERS
+========================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function showMessage(id,text){
+  const el = $(id);
+
+  if(!el) return;
+
+  el.textContent = text;
+  el.classList.remove("hidden");
+}
+
+
+function hideMessage(id){
+  const el = $(id);
+
+  if(el){
+    el.classList.add("hidden");
+  }
+}
+
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function escapeAttr(value){
+  return escapeHtml(value);
+}
+
+
+function formatDate(date){
+  try{
+    return new Date(date).toLocaleString(
+      "bn-BD",
+      {
+        day:"numeric",
+        month:"short",
+        hour:"numeric",
+        minute:"2-digit"
+      }
+    );
+  }catch{
+    return "";
+  }
+}
+
+
+/* =========================================
+   AUTH TABS
+========================================= */
 
 function showLogin(){
 
-  document
-    .getElementById("loginForm")
-    .style.display="block";
+  $("loginForm").classList.remove("hidden");
+  $("registerForm").classList.add("hidden");
 
-  document
-    .getElementById("registerForm")
-    .style.display="none";
+  $("loginTab").classList.add("active");
+  $("registerTab").classList.remove("active");
 
-
-  document
-    .getElementById("loginTab")
-    .classList.add("active");
-
-  document
-    .getElementById("registerTab")
-    .classList.remove("active");
-
-
-  clearMessage();
-
+  hideMessage("authMessage");
 }
 
 
 function showRegister(){
 
-  document
-    .getElementById("loginForm")
-    .style.display="none";
+  $("loginForm").classList.add("hidden");
+  $("registerForm").classList.remove("hidden");
 
-  document
-    .getElementById("registerForm")
-    .style.display="block";
+  $("loginTab").classList.remove("active");
+  $("registerTab").classList.add("active");
 
-
-  document
-    .getElementById("registerTab")
-    .classList.add("active");
-
-  document
-    .getElementById("loginTab")
-    .classList.remove("active");
-
-
-  clearMessage();
-
+  hideMessage("authMessage");
 }
 
 
-function showMessage(message){
-
-  document
-    .getElementById("authMessage")
-    .textContent =
-      message;
-
-}
-
-
-function clearMessage(){
-
-  document
-    .getElementById("authMessage")
-    .textContent =
-      "";
-
-}
-
-
-/* =================================
+/* =========================================
    REGISTER
-================================= */
+========================================= */
 
 async function register(){
 
-  const name =
-    document
-      .getElementById(
-        "registerName"
-      )
-      .value
-      .trim();
+  hideMessage("authMessage");
 
+  const name =
+    $("registerName").value.trim();
 
   const phone =
-    document
-      .getElementById(
-        "registerPhone"
-      )
-      .value
-      .trim();
-
+    $("registerPhone").value.trim();
 
   const location =
-    document
-      .getElementById(
-        "registerLocation"
-      )
-      .value
-      .trim();
-
+    $("registerLocation").value.trim();
 
   const pin =
-    document
-      .getElementById(
-        "registerPin"
-      )
-      .value
-      .trim();
+    $("registerPin").value.trim();
 
 
-  if(
-    !name ||
-    !phone ||
-    !location ||
-    !pin
-  ){
-
+  if(!name || !phone || !location || !pin){
     showMessage(
-      "সব তথ্য পূরণ করুন।"
+      "authMessage",
+      "সব তথ্য পূরণ করুন"
     );
-
     return;
-
   }
 
 
-  showMessage(
-    "অ্যাকাউন্ট তৈরি হচ্ছে..."
-  );
+  if(pin.length < 4){
+    showMessage(
+      "authMessage",
+      "PIN কমপক্ষে ৪ সংখ্যার হতে হবে"
+    );
+    return;
+  }
 
 
   try{
 
     const response =
       await fetch(
-        API +
-        "/api/register",
+        API + "/api/register",
         {
-
           method:"POST",
-
           headers:{
-            "Content-Type":
-              "application/json"
+            "Content-Type":"application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              name,
-
-              phone,
-
-              location,
-
-              pin
-
-            })
-
+          body:JSON.stringify({
+            name,
+            phone,
+            location,
+            pin
+          })
         }
       );
 
@@ -1981,108 +1479,85 @@ async function register(){
       await response.json();
 
 
-    if(!response.ok){
+    if(!response.ok || !data.success){
 
       showMessage(
+        "authMessage",
         data.message ||
-        "রেজিস্টার করা যায়নি।"
+        "রেজিস্টার করা যায়নি"
       );
 
       return;
-
     }
 
 
-    currentUser =
-      data.user;
-
-
-    localStorage.setItem(
-      "kajKhujiUser",
-      JSON.stringify(
-        currentUser
-      )
+    showMessage(
+      "authMessage",
+      "অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।"
     );
 
 
-    openApp();
+    $("loginPhone").value = phone;
 
+    $("registerName").value = "";
+    $("registerPhone").value = "";
+    $("registerLocation").value = "";
+    $("registerPin").value = "";
+
+    showLogin();
+
+    $("loginPhone").value = phone;
 
   }catch(error){
 
     showMessage(
-      "সার্ভারের সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+      "authMessage",
+      "সার্ভারের সাথে সংযোগ পাওয়া যায়নি"
     );
-
   }
-
 }
 
 
-/* =================================
+/* =========================================
    LOGIN
-================================= */
+========================================= */
 
 async function login(){
 
-  const phone =
-    document
-      .getElementById(
-        "loginPhone"
-      )
-      .value
-      .trim();
+  hideMessage("authMessage");
 
+  const phone =
+    $("loginPhone").value.trim();
 
   const pin =
-    document
-      .getElementById(
-        "loginPin"
-      )
-      .value
-      .trim();
+    $("loginPin").value.trim();
 
 
   if(!phone || !pin){
 
     showMessage(
-      "ফোন নম্বর ও PIN দিন।"
+      "authMessage",
+      "মোবাইল নম্বর ও PIN দিন"
     );
 
     return;
-
   }
-
-
-  showMessage(
-    "লগইন হচ্ছে..."
-  );
 
 
   try{
 
     const response =
       await fetch(
-        API +
-        "/api/login",
+        API + "/api/login",
         {
-
           method:"POST",
-
           headers:{
-            "Content-Type":
-              "application/json"
+            "Content-Type":"application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              phone,
-
-              pin
-
-            })
-
+          body:JSON.stringify({
+            phone,
+            pin
+          })
         }
       );
 
@@ -2091,87 +1566,83 @@ async function login(){
       await response.json();
 
 
-    if(!response.ok){
+    if(!response.ok || !data.success){
 
       showMessage(
+        "authMessage",
         data.message ||
-        "লগইন করা যায়নি।"
+        "লগইন ব্যর্থ"
       );
 
       return;
-
     }
 
 
-    currentUser =
-      data.user;
-
+    currentUser = data.user;
 
     localStorage.setItem(
       "kajKhujiUser",
-      JSON.stringify(
-        currentUser
-      )
+      JSON.stringify(currentUser)
     );
 
 
     openApp();
 
-
   }catch(error){
 
     showMessage(
-      "সার্ভারের সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+      "authMessage",
+      "সার্ভারের সাথে সংযোগ পাওয়া যায়নি"
     );
-
   }
-
 }
 
 
-/* =================================
+/* =========================================
    OPEN APP
-================================= */
+========================================= */
 
 function openApp(){
 
-  document
-    .getElementById("auth")
-    .style.display="none";
+  $("authPage").classList.add("hidden");
+  $("appPage").classList.remove("hidden");
 
-
-  document
-    .getElementById("app")
-    .style.display="block";
-
+  showSection("home");
 
   loadJobs();
 
+  updateProfile();
+
+  loadNotifications();
+
+  startNotificationPolling();
 }
 
 
-/* =================================
+/* =========================================
    LOGOUT
-================================= */
+========================================= */
 
 function logout(){
+
+  stopNotificationPolling();
 
   localStorage.removeItem(
     "kajKhujiUser"
   );
 
-  currentUser =
-    null;
+  currentUser = null;
 
+  $("appPage").classList.add("hidden");
+  $("authPage").classList.remove("hidden");
 
-  location.reload();
-
+  showLogin();
 }
 
 
-/* =================================
-   LOAD USER
-================================= */
+/* =========================================
+   SAVED USER
+========================================= */
 
 function loadSavedUser(){
 
@@ -2182,14 +1653,20 @@ function loadSavedUser(){
         "kajKhujiUser"
       );
 
+    if(!saved) return;
 
-    if(saved){
+    const user =
+      JSON.parse(saved);
 
-      currentUser =
-        JSON.parse(saved);
+    if(
+      user &&
+      user.phone &&
+      user.name
+    ){
+
+      currentUser = user;
 
       openApp();
-
     }
 
   }catch(error){
@@ -2197,15 +1674,73 @@ function loadSavedUser(){
     localStorage.removeItem(
       "kajKhujiUser"
     );
-
   }
-
 }
 
 
-/* =================================
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function showSection(section){
+
+  $("homeSection").classList.add("hidden");
+  $("jobsSection").classList.add("hidden");
+  $("postSection").classList.add("hidden");
+  $("profileSection").classList.add("hidden");
+
+  $("navHome").classList.remove("active");
+  $("navJobs").classList.remove("active");
+  $("navPost").classList.remove("active");
+  $("navProfile").classList.remove("active");
+
+
+  if(section === "home"){
+
+    $("homeSection").classList.remove("hidden");
+    $("navHome").classList.add("active");
+
+    loadJobs();
+
+  }
+
+
+  if(section === "jobs"){
+
+    $("jobsSection").classList.remove("hidden");
+    $("navJobs").classList.add("active");
+
+    renderJobs(
+      allJobs,
+      "allJobs"
+    );
+
+  }
+
+
+  if(section === "post"){
+
+    $("postSection").classList.remove("hidden");
+    $("navPost").classList.add("active");
+
+  }
+
+
+  if(section === "profile"){
+
+    $("profileSection").classList.remove("hidden");
+    $("navProfile").classList.add("active");
+
+    updateProfile();
+    loadMyJobs();
+
+  }
+}
+
+
+/* =========================================
    LOAD JOBS
-================================= */
+========================================= */
 
 async function loadJobs(){
 
@@ -2213,420 +1748,272 @@ async function loadJobs(){
 
     const response =
       await fetch(
-        API +
-        "/api/jobs"
+        API + "/api/jobs"
       );
-
 
     const data =
       await response.json();
 
 
-    if(!response.ok){
+    if(data.success){
 
-      throw new Error();
+      allJobs = data.jobs || [];
+
+      renderJobs(
+        allJobs.slice(0,20),
+        "homeJobs"
+      );
+
+      renderJobs(
+        allJobs,
+        "allJobs"
+      );
 
     }
 
-
-    allJobs =
-      data.jobs || [];
-
-
-    renderJobs(
-      allJobs,
-      "homeJobs"
-    );
-
-
-    renderJobs(
-      allJobs,
-      "allJobs"
-    );
-
-
   }catch(error){
 
-    document
-      .getElementById(
-        "homeJobs"
-      )
-      .innerHTML =
-        `<div class="empty">
-          কাজ লোড করা যাচ্ছে না।
-        </div>`;
+    $("homeJobs").innerHTML =
+      `<div class="empty">
+        কাজ লোড করা যায়নি
+      </div>`;
 
   }
-
 }
 
 
-/* =================================
+/* =========================================
    RENDER JOBS
-================================= */
+========================================= */
 
-function renderJobs(
-  jobs,
-  elementId
-){
+function renderJobs(jobsList, elementId){
 
-  const box =
-    document
-      .getElementById(
-        elementId
-      );
+  const container = $(elementId);
+
+  if(!container) return;
 
 
-  if(!box)
-    return;
+  if(!jobsList.length){
 
-
-  if(!jobs.length){
-
-    box.innerHTML =
+    container.innerHTML =
       `<div class="empty">
-        😔 কোনো কাজ পাওয়া যায়নি।
+        কোনো কাজ পাওয়া যায়নি
       </div>`;
 
     return;
-
   }
 
 
-  box.innerHTML =
-    jobs
-      .map(
-        jobCard
-      )
-      .join("");
-
+  container.innerHTML =
+    jobsList.map(job => jobCard(job)).join("");
 }
 
 
-/* =================================
+/* =========================================
    JOB CARD
-================================= */
+========================================= */
 
 function jobCard(job){
 
-  const mine =
+  const isMine =
     currentUser &&
-    job.phone ===
-      currentUser.phone;
+    job.phone === currentUser.phone;
+
+
+  const safePhone =
+    escapeAttr(job.phone);
+
+  const safeName =
+    escapeAttr(job.ownerName);
 
 
   return `
+    <article class="jobCard">
 
-    <div class="job">
-
-      <div class="job-top">
+      <div class="jobTop">
 
         <div>
-
-          <div class="job-title">
-
-            ${escapeHtml(
-              job.title
-            )}
-
+          <div class="jobTitle">
+            ${escapeHtml(job.title)}
           </div>
 
-          <div class="job-category">
-
-            ${escapeHtml(
-              job.category
-            )}
-
+          <div class="jobCategory">
+            ${escapeHtml(job.category)}
           </div>
-
         </div>
 
       </div>
 
 
-      <div class="job-info">
+      <div class="jobInfo">
 
-        📍 ${escapeHtml(
-          job.location
-        )}
+        <span>
+          📍 ${escapeHtml(job.location)}
+        </span>
 
-        <br>
-
-        💰 ${
-          escapeHtml(
-            job.salary ||
-            "আলোচনা সাপেক্ষে"
-          )
-        }
-
-        <br>
-
-        👤 ${
-          escapeHtml(
-            job.ownerName ||
-            "কাজদাতা"
-          )
-        }
+        <span>
+          💰 ${escapeHtml(job.salary)}
+        </span>
 
       </div>
 
 
-      <div class="job-description">
-
-        ${escapeHtml(
-          job.description
-        )}
-
+      <div class="jobDescription">
+        ${escapeHtml(job.description)}
       </div>
 
 
-      <div class="job-actions">
+      <div class="jobOwner">
+        👤 ${escapeHtml(job.ownerName)}
+        · ${formatDate(job.createdAt)}
+      </div>
+
+
+      <div class="jobActions">
 
         ${
-          mine
-
-          ?
-
+          isMine
+          ? `
+            <button
+              class="actionBtn deleteBtn"
+              onclick="deleteJob('${escapeAttr(job.id)}')"
+            >
+              🗑️ মুছুন
+            </button>
           `
-          <button
-            class="btn delete-btn"
-            onclick="
-              deleteJob(
-                '${job.id}'
-              )
-            "
-          >
-            🗑️ মুছুন
-          </button>
+          : `
+            <button
+              class="actionBtn chatBtn"
+              onclick="openChat('${safePhone}','${safeName}')"
+            >
+              💬 Chat
+            </button>
+
+            <button
+              class="actionBtn callBtn"
+              onclick="callJob('${safePhone}')"
+            >
+              📞 Call
+            </button>
           `
-
-          :
-
-          `
-
-          <button
-            class="btn chat-btn"
-            onclick="
-              openChat(
-                '${escapeAttr(
-                  job.phone
-                )}',
-                '${escapeAttr(
-                  job.ownerName ||
-                  "কাজদাতা"
-                )}'
-              )
-            "
-          >
-            💬 Chat
-          </button>
-
-
-          <button
-            class="btn call-btn"
-            onclick="
-              callJob(
-                '${escapeAttr(
-                  job.phone
-                )}'
-              )
-            "
-          >
-            📞 কল
-          </button>
-
-          `
-
         }
 
       </div>
 
-    </div>
-
+    </article>
   `;
-
 }
 
 
-/* =================================
+/* =========================================
    SEARCH
-================================= */
+========================================= */
 
 function searchJobs(){
 
   const query =
-    document
-      .getElementById(
-        "searchInput"
-      )
+    $("searchInput")
       .value
       .trim()
       .toLowerCase();
 
 
-  if(!query){
+  let filtered =
+    allJobs.filter(job => {
 
-    renderJobs(
-      allJobs,
-      "homeJobs"
-    );
+      const text = `
+        ${job.title}
+        ${job.location}
+        ${job.category}
+        ${job.description}
+        ${job.ownerName}
+      `.toLowerCase();
 
-    renderJobs(
-      allJobs,
-      "allJobs"
-    );
+      return text.includes(query);
+    });
 
-    return;
+
+  if(currentCategory !== "সব"){
+
+    filtered =
+      filtered.filter(
+        job =>
+          job.category === currentCategory
+      );
 
   }
 
 
-  const result =
-    allJobs.filter(
-      job =>
-
-        String(
-          job.title
-        )
-        .toLowerCase()
-        .includes(query)
-
-        ||
-
-        String(
-          job.location
-        )
-        .toLowerCase()
-        .includes(query)
-
-        ||
-
-        String(
-          job.category
-        )
-        .toLowerCase()
-        .includes(query)
-
-        ||
-
-        String(
-          job.description
-        )
-        .toLowerCase()
-        .includes(query)
-
-    );
-
-
   renderJobs(
-    result,
+    filtered,
     "homeJobs"
   );
-
-
-  renderJobs(
-    result,
-    "allJobs"
-  );
-
 }
 
 
-/* =================================
+/* =========================================
    CATEGORY FILTER
-================================= */
+========================================= */
 
-function filterCategory(
-  category
-){
+function filterCategory(category, button){
 
-  const result =
-    allJobs.filter(
-      job =>
-        job.category ===
-        category
+  currentCategory = category;
+
+
+  document
+    .querySelectorAll(".category")
+    .forEach(btn =>
+      btn.classList.remove("active")
     );
 
 
-  showJobs();
+  if(button){
+    button.classList.add("active");
+  }
 
 
-  renderJobs(
-    result,
-    "allJobs"
-  );
-
+  searchJobs();
 }
 
 
-/* =================================
+/* =========================================
    CREATE JOB
-================================= */
+========================================= */
 
 async function createJob(){
 
-  if(!currentUser)
-    return;
-
+  hideMessage("jobMessage");
 
   const title =
-    document
-      .getElementById(
-        "jobTitle"
-      )
-      .value
-      .trim();
-
+    $("jobTitle").value.trim();
 
   const location =
-    document
-      .getElementById(
-        "jobLocation"
-      )
-      .value
-      .trim();
-
+    $("jobLocation").value.trim();
 
   const salary =
-    document
-      .getElementById(
-        "jobSalary"
-      )
-      .value
-      .trim();
-
+    $("jobSalary").value.trim();
 
   const category =
-    document
-      .getElementById(
-        "jobCategory"
-      )
-      .value
-      .trim();
-
+    $("jobCategory").value.trim();
 
   const description =
-    document
-      .getElementById(
-        "jobDescription"
-      )
-      .value
-      .trim();
+    $("jobDescription").value.trim();
 
 
   if(
     !title ||
     !location ||
+    !salary ||
     !category ||
     !description
   ){
 
-    alert(
-      "প্রয়োজনীয় তথ্য পূরণ করুন।"
+    showMessage(
+      "jobMessage",
+      "সব তথ্য পূরণ করুন"
     );
 
     return;
-
   }
 
 
@@ -2634,38 +2021,21 @@ async function createJob(){
 
     const response =
       await fetch(
-        API +
-        "/api/jobs",
+        API + "/api/jobs",
         {
-
           method:"POST",
-
           headers:{
-            "Content-Type":
-              "application/json"
+            "Content-Type":"application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              title,
-
-              location,
-
-              salary,
-
-              category,
-
-              description,
-
-              phone:
-                currentUser.phone,
-
-              ownerName:
-                currentUser.name
-
-            })
-
+          body:JSON.stringify({
+            phone:currentUser.phone,
+            pin:prompt("আপনার PIN দিন"),
+            title,
+            location,
+            salary,
+            category,
+            description
+          })
         }
       );
 
@@ -2674,82 +2044,123 @@ async function createJob(){
       await response.json();
 
 
-    if(!response.ok){
+    if(!response.ok || !data.success){
 
-      alert(
+      showMessage(
+        "jobMessage",
         data.message ||
-        "কাজ পোস্ট করা যায়নি।"
+        "কাজ পোস্ট করা যায়নি"
       );
 
       return;
-
     }
 
 
-    closePostModal();
+    $("jobTitle").value = "";
+    $("jobLocation").value = "";
+    $("jobSalary").value = "";
+    $("jobCategory").value = "";
+    $("jobDescription").value = "";
+
+
+    showMessage(
+      "jobMessage",
+      "কাজ সফলভাবে পোস্ট হয়েছে ✅"
+    );
 
 
     await loadJobs();
 
-
-    alert(
-      "✅ কাজ সফলভাবে পোস্ট হয়েছে।"
-    );
-
-
   }catch(error){
 
-    alert(
-      "সার্ভারের সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+    showMessage(
+      "jobMessage",
+      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
-
   }
-
 }
 
 
-/* =================================
-   DELETE JOB
-================================= */
+/* =========================================
+   MODAL POST
+========================================= */
 
-async function deleteJob(id){
+function openPost(){
+
+  $("postModal").classList.remove("hidden");
+}
+
+
+function closePost(){
+
+  $("postModal").classList.add("hidden");
+}
+
+
+async function createJobFromModal(){
+
+  hideMessage("modalJobMessage");
+
+
+  const title =
+    $("modalJobTitle").value.trim();
+
+  const location =
+    $("modalJobLocation").value.trim();
+
+  const salary =
+    $("modalJobSalary").value.trim();
+
+  const category =
+    $("modalJobCategory").value.trim();
+
+  const description =
+    $("modalJobDescription").value.trim();
+
 
   if(
-    !confirm(
-      "এই কাজটি মুছে ফেলতে চান?"
-    )
+    !title ||
+    !location ||
+    !salary ||
+    !category ||
+    !description
   ){
 
-    return;
+    showMessage(
+      "modalJobMessage",
+      "সব তথ্য পূরণ করুন"
+    );
 
+    return;
   }
+
+
+  const pin =
+    prompt("আপনার PIN দিন");
+
+
+  if(pin === null) return;
 
 
   try{
 
     const response =
       await fetch(
-        API +
-        "/api/jobs/delete",
+        API + "/api/jobs",
         {
-
           method:"POST",
-
           headers:{
-            "Content-Type":
-              "application/json"
+            "Content-Type":"application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              id,
-
-              phone:
-                currentUser.phone
-
-            })
-
+          body:JSON.stringify({
+            phone:currentUser.phone,
+            pin:pin,
+            title,
+            location,
+            salary,
+            category,
+            description
+          })
         }
       );
 
@@ -2758,138 +2169,170 @@ async function deleteJob(id){
       await response.json();
 
 
-    if(!response.ok){
+    if(!response.ok || !data.success){
 
-      alert(
+      showMessage(
+        "modalJobMessage",
         data.message ||
-        "মুছে ফেলা যায়নি।"
+        "কাজ পোস্ট করা যায়নি"
       );
 
       return;
+    }
 
+
+    $("modalJobTitle").value = "";
+    $("modalJobLocation").value = "";
+    $("modalJobSalary").value = "";
+    $("modalJobCategory").value = "";
+    $("modalJobDescription").value = "";
+
+
+    closePost();
+
+    await loadJobs();
+
+    showSection("jobs");
+
+  }catch(error){
+
+    showMessage(
+      "modalJobMessage",
+      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
+    );
+  }
+}
+
+
+/* =========================================
+   DELETE JOB
+========================================= */
+
+async function deleteJob(jobId){
+
+  const ok =
+    confirm("এই কাজটি মুছে ফেলবেন?");
+
+
+  if(!ok) return;
+
+
+  const pin =
+    prompt("আপনার PIN দিন");
+
+
+  if(pin === null) return;
+
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/jobs/delete",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            phone:currentUser.phone,
+            pin:pin,
+            jobId:jobId
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!response.ok || !data.success){
+
+      alert(
+        data.message ||
+        "কাজ মুছতে সমস্যা হয়েছে"
+      );
+
+      return;
     }
 
 
     await loadJobs();
-
-    showProfile();
-
+    loadMyJobs();
 
   }catch(error){
 
-    alert(
-      "সার্ভারের সঙ্গে যোগাযোগ করা যাচ্ছে না।"
-    );
-
+    alert("সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না");
   }
-
 }
 
 
-/* =================================
+/* =========================================
    CALL
-================================= */
+========================================= */
 
 function callJob(phone){
 
-  if(!phone)
-    return;
-
+  if(!phone) return;
 
   window.location.href =
     "tel:" + phone;
-
 }
 
 
-/* =================================
+/* =========================================
    PROFILE
-================================= */
+========================================= */
 
-async function showProfile(){
+function updateProfile(){
 
-  hidePages();
-
-
-  document
-    .getElementById(
-      "profilePage"
-    )
-    .style.display="block";
+  if(!currentUser) return;
 
 
-  setNav(
-    "navProfile"
-  );
+  const first =
+    (currentUser.name || "?")
+      .trim()
+      .charAt(0)
+      .toUpperCase();
 
 
-  document
-    .getElementById(
-      "profileContent"
-    )
-    .innerHTML = `
+  $("profileContent").innerHTML = `
 
-      <div class="profile-card">
+    <div class="profileAvatar">
+      ${escapeHtml(first)}
+    </div>
 
-        <div class="avatar">
-          👤
-        </div>
+    <div class="profileName">
+      ${escapeHtml(currentUser.name)}
+    </div>
 
-        <div class="profile-name">
+    <div class="profileInfo">
+      📱 ${escapeHtml(currentUser.phone)}
+    </div>
 
-          ${escapeHtml(
-            currentUser.name
-          )}
+    <div class="profileInfo">
+      📍 ${escapeHtml(currentUser.location || "লোকেশন নেই")}
+    </div>
 
-        </div>
-
-        <div class="profile-phone">
-
-          📱 ${
-            escapeHtml(
-              currentUser.phone
-            )
-          }
-
-        </div>
-
-        <div class="profile-location">
-
-          📍 ${
-            escapeHtml(
-              currentUser.location
-            )
-          }
-
-        </div>
-
-      </div>
+    <button
+      class="logoutBtn"
+      onclick="logout()"
+    >
+      🚪 লগআউট
+    </button>
 
   `;
-
-
-  loadMyJobs();
-
 }
 
 
-/* =================================
+/* =========================================
    MY JOBS
-================================= */
+========================================= */
 
 async function loadMyJobs(){
 
-  const box =
-    document
-      .getElementById(
-        "myJobs"
-      );
-
-
-  box.innerHTML =
-    `<div class="loading">
-      পোস্ট লোড হচ্ছে...
-    </div>`;
+  if(!currentUser) return;
 
 
   try{
@@ -2908,235 +2351,60 @@ async function loadMyJobs(){
       await response.json();
 
 
-    if(
-      !data.jobs ||
-      !data.jobs.length
-    ){
+    if(data.success){
 
-      box.innerHTML =
-        `<div class="empty">
-          আপনি এখনো কোনো কাজ পোস্ট করেননি।
-        </div>`;
-
-      return;
+      renderJobs(
+        data.jobs || [],
+        "myJobs"
+      );
 
     }
 
-
-    renderJobs(
-      data.jobs,
-      "myJobs"
-    );
-
-
   }catch(error){
 
-    box.innerHTML =
+    $("myJobs").innerHTML =
       `<div class="empty">
-        পোস্ট লোড করা যায়নি।
+        কাজ লোড করা যায়নি
       </div>`;
-
   }
-
 }
 
 
-/* =================================
-   NAVIGATION
-================================= */
-
-function hidePages(){
-
-  document
-    .getElementById(
-      "homePage"
-    )
-    .style.display="none";
-
-
-  document
-    .getElementById(
-      "jobsPage"
-    )
-    .style.display="none";
-
-
-  document
-    .getElementById(
-      "profilePage"
-    )
-    .style.display="none";
-
-}
-
-
-function showHome(){
-
-  hidePages();
-
-
-  document
-    .getElementById(
-      "homePage"
-    )
-    .style.display="block";
-
-
-  setNav(
-    "navHome"
-  );
-
-
-  loadJobs();
-
-}
-
-
-function showJobs(){
-
-  hidePages();
-
-
-  document
-    .getElementById(
-      "jobsPage"
-    )
-    .style.display="block";
-
-
-  setNav(
-    "navJobs"
-  );
-
-
-  renderJobs(
-    allJobs,
-    "allJobs"
-  );
-
-}
-
-
-function setNav(id){
-
-  document
-    .querySelectorAll(
-      ".nav-btn"
-    )
-    .forEach(
-      button =>
-        button.classList.remove(
-          "active"
-        )
-    );
-
-
-  const item =
-    document.getElementById(id);
-
-
-  if(item){
-
-    item.classList.add(
-      "active"
-    );
-
-  }
-
-}
-
-
-/* =================================
-   POST MODAL
-================================= */
-
-function openPostModal(){
-
-  document
-    .getElementById(
-      "postModal"
-    )
-    .style.display="block";
-
-}
-
-
-function closePostModal(){
-
-  document
-    .getElementById(
-      "postModal"
-    )
-    .style.display="none";
-
-}
-
-
-/* =================================
+/* =========================================
    CHAT
-================================= */
+========================================= */
 
-function openChat(
-  phone,
-  name
-){
+function openChat(phone,name){
 
-  if(!currentUser){
+  if(!currentUser) return;
 
-    alert(
-      "আগে লগইন করুন।"
-    );
 
+  if(phone === currentUser.phone){
+
+    alert("নিজের সাথে Chat করা যাবে না");
     return;
-
   }
 
 
-  if(
-    !phone ||
-    phone ===
-      currentUser.phone
-  ){
-
-    return;
-
-  }
+  chatUser = {
+    phone:phone,
+    name:name
+  };
 
 
-  chatUser =
-    phone;
+  $("chatTitle").textContent =
+    "💬 " + name;
 
 
-  document
-    .getElementById(
-      "chatTitle"
-    )
-    .textContent =
-      "💬 " +
-      (
-        name ||
-        "Chat"
-      );
-
-
-  document
-    .getElementById(
-      "chatModal"
-    )
-    .style.display="block";
+  $("chatModal")
+    .classList
+    .remove("hidden");
 
 
   loadChat();
 
 
-  if(chatTimer){
-
-    clearInterval(
-      chatTimer
-    );
-
-  }
-
+  clearInterval(chatTimer);
 
   chatTimer =
     setInterval(
@@ -3144,220 +2412,165 @@ function openChat(
       3000
     );
 
+
+  setTimeout(() => {
+    $("chatInput").focus();
+  },100);
+
 }
 
 
 function closeChat(){
 
-  document
-    .getElementById(
-      "chatModal"
-    )
-    .style.display="none";
+  $("chatModal")
+    .classList
+    .add("hidden");
 
 
-  chatUser =
-    null;
+  clearInterval(chatTimer);
 
+  chatTimer = null;
 
-  if(chatTimer){
-
-    clearInterval(
-      chatTimer
-    );
-
-    chatTimer =
-      null;
-
-  }
-
+  chatUser = null;
 }
 
 
-/* =================================
+function chatKey(event){
+
+  if(event.key === "Enter"){
+
+    event.preventDefault();
+
+    sendMessage();
+  }
+}
+
+
+/* =========================================
    LOAD CHAT
-================================= */
+========================================= */
 
 async function loadChat(){
 
   if(
-    !chatUser ||
-    !currentUser
-  ){
-
-    return;
-
-  }
+    !currentUser ||
+    !chatUser
+  ) return;
 
 
   try{
 
-    const response =
-      await fetch(
-        API +
-        "/api/messages?me=" +
-        encodeURIComponent(
-          currentUser.phone
-        ) +
-        "&other=" +
-        encodeURIComponent(
-          chatUser
-        )
+    const url =
+      API +
+      "/api/messages?me=" +
+      encodeURIComponent(
+        currentUser.phone
+      ) +
+      "&other=" +
+      encodeURIComponent(
+        chatUser.phone
       );
+
+
+    const response =
+      await fetch(url);
 
 
     const data =
       await response.json();
 
 
-    if(!response.ok)
-      return;
+    if(!data.success) return;
 
 
-    const box =
-      document
-        .getElementById(
-          "chatMessages"
-        );
+    const container =
+      $("chatMessages");
 
 
-    if(
-      !data.messages ||
-      !data.messages.length
-    ){
-
-      box.innerHTML =
-        `<div class="chat-empty">
-          💬 এখনো কোনো বার্তা নেই।<br>
-          প্রথম বার্তাটি পাঠান।
-        </div>`;
-
-      return;
-
-    }
-
-
-    box.innerHTML =
+    container.innerHTML =
       data.messages
-        .map(
-          message => {
+        .map(message => {
 
-            const mine =
-              message.from ===
-              currentUser.phone;
+          const mine =
+            message.from ===
+            currentUser.phone;
 
 
-            return `
+          return `
+            <div class="chatBubbleWrap ${mine ? "mine" : ""}">
 
-              <div class="
-                chat-row
-                ${mine ? "mine" : ""}
-              ">
+              <div class="chatBubble">
 
-                <div class="chat-bubble">
+                ${escapeHtml(message.text)}
 
-                  ${escapeHtml(
-                    message.text
-                  )}
-
-                  <div class="chat-time">
-
-                    ${formatDate(
-                      message.createdAt
-                    )}
-
-                  </div>
-
-                </div>
+                <span class="chatTime">
+                  ${formatDate(message.createdAt)}
+                </span>
 
               </div>
 
-            `;
+            </div>
+          `;
 
-          }
-        )
+        })
         .join("");
 
 
-    box.scrollTop =
-      box.scrollHeight;
+    container.scrollTop =
+      container.scrollHeight;
 
 
   }catch(error){
 
     console.log(
-      "Chat error:",
+      "Chat load error:",
       error
     );
-
   }
-
 }
 
 
-/* =================================
+/* =========================================
    SEND MESSAGE
-================================= */
+========================================= */
 
 async function sendMessage(){
 
   if(
-    !chatUser ||
-    !currentUser
-  ){
-
-    return;
-
-  }
+    !currentUser ||
+    !chatUser
+  ) return;
 
 
   const input =
-    document
-      .getElementById(
-        "chatInput"
-      );
+    $("chatInput");
 
 
   const text =
     input.value.trim();
 
 
-  if(!text)
-    return;
+  if(!text) return;
 
 
-  input.disabled =
-    true;
+  input.value = "";
 
 
   try{
 
     const response =
       await fetch(
-        API +
-        "/api/messages/send",
+        API + "/api/messages/send",
         {
-
           method:"POST",
-
           headers:{
-            "Content-Type":
-              "application/json"
+            "Content-Type":"application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              from:
-                currentUser.phone,
-
-              to:
-                chatUser,
-
-              text
-
-            })
-
+          body:JSON.stringify({
+            from:currentUser.phone,
+            to:chatUser.phone,
+            text:text
+          })
         }
       );
 
@@ -3366,154 +2579,304 @@ async function sendMessage(){
       await response.json();
 
 
-    if(!response.ok){
+    if(!response.ok || !data.success){
 
       alert(
         data.message ||
-        "বার্তা পাঠানো যায়নি।"
+        "মেসেজ পাঠানো যায়নি"
       );
 
+      input.value = text;
+
       return;
-
     }
-
-
-    input.value =
-      "";
 
 
     await loadChat();
 
+    loadNotifications();
 
   }catch(error){
 
     alert(
-      "সার্ভারের সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+      "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না"
     );
 
-  }finally{
-
-    input.disabled =
-      false;
-
-    input.focus();
-
+    input.value = text;
   }
-
 }
 
 
-/* =================================
-   HELPERS
-================================= */
+/* =========================================
+   NOTIFICATIONS
+========================================= */
 
-function escapeHtml(value){
+async function loadNotifications(){
 
-  return String(
-    value || ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
+  if(!currentUser) return;
 
-}
-
-
-function escapeAttr(value){
-
-  return escapeHtml(
-    value
-  );
-
-}
-
-
-function formatDate(date){
 
   try{
 
-    return new Date(
-      date
-    ).toLocaleString(
-      "bn-BD",
+    const response =
+      await fetch(
+        API +
+        "/api/notifications?phone=" +
+        encodeURIComponent(
+          currentUser.phone
+        )
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!data.success) return;
+
+
+    updateNotificationBadge(
+      data.unreadCount || 0
+    );
+
+
+    renderNotifications(
+      data.notifications || []
+    );
+
+
+  }catch(error){
+
+    console.log(
+      "Notification error:",
+      error
+    );
+  }
+}
+
+
+/* =========================================
+   NOTIFICATION BADGE
+========================================= */
+
+function updateNotificationBadge(count){
+
+  const badge =
+    $("notificationBadge");
+
+
+  if(!count || count <= 0){
+
+    badge.classList.add("hidden");
+    badge.textContent = "";
+
+    return;
+  }
+
+
+  badge.classList.remove("hidden");
+
+
+  badge.textContent =
+    count > 99
+      ? "99+"
+      : count;
+}
+
+
+/* =========================================
+   RENDER NOTIFICATIONS
+========================================= */
+
+function renderNotifications(list){
+
+  const container =
+    $("notificationList");
+
+
+  if(!list.length){
+
+    container.innerHTML =
+      `
+        <div class="empty">
+          🔔 এখনো কোনো notification নেই
+        </div>
+      `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    list.map(item => {
+
+      let icon = "🔔";
+
+
+      if(item.type === "message"){
+        icon = "💬";
+      }
+
+
+      if(item.type === "job"){
+        icon = "💼";
+      }
+
+
+      return `
+        <div
+          class="notificationItem ${item.read ? "" : "unread"}"
+        >
+
+          <div class="notificationIcon">
+            ${icon}
+          </div>
+
+          <div class="notificationText">
+
+            <div class="notificationTitle">
+              ${escapeHtml(item.title)}
+            </div>
+
+            <div class="notificationBody">
+              ${escapeHtml(item.text)}
+            </div>
+
+            <div class="notificationTime">
+              ${formatDate(item.createdAt)}
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   OPEN NOTIFICATIONS
+========================================= */
+
+async function openNotifications(){
+
+  $("notificationModal")
+    .classList
+    .remove("hidden");
+
+
+  await loadNotifications();
+
+
+  await markNotificationsRead();
+
+
+  updateNotificationBadge(0);
+
+
+  await loadNotifications();
+}
+
+
+/* =========================================
+   CLOSE NOTIFICATIONS
+========================================= */
+
+function closeNotifications(){
+
+  $("notificationModal")
+    .classList
+    .add("hidden");
+}
+
+
+/* =========================================
+   MARK NOTIFICATIONS READ
+========================================= */
+
+async function markNotificationsRead(){
+
+  if(!currentUser) return;
+
+
+  try{
+
+    await fetch(
+      API + "/api/notifications/read",
       {
-        day:"numeric",
-        month:"short",
-        hour:"numeric",
-        minute:"2-digit"
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          phone:currentUser.phone
+        })
       }
     );
 
   }catch(error){
 
-    return "";
-
+    console.log(
+      "Notification read error:",
+      error
+    );
   }
-
 }
 
 
-/* =================================
-   CLOSE MODAL OUTSIDE
-================================= */
+/* =========================================
+   NOTIFICATION POLLING
+========================================= */
 
-window.addEventListener(
-  "click",
-  function(event){
+function startNotificationPolling(){
 
-    const post =
-      document.getElementById(
-        "postModal"
-      );
-
-    const chat =
-      document.getElementById(
-        "chatModal"
-      );
+  stopNotificationPolling();
 
 
-    if(event.target === post){
+  notificationTimer =
+    setInterval(
+      loadNotifications,
+      5000
+    );
+}
 
-      closePostModal();
 
-    }
+function stopNotificationPolling(){
 
+  if(notificationTimer){
 
-    if(event.target === chat){
+    clearInterval(
+      notificationTimer
+    );
 
-      closeChat();
-
-    }
-
+    notificationTimer = null;
   }
-);
+}
 
 
-/* =================================
+/* =========================================
+   MODAL OUTSIDE CLICK
+========================================= */
+
+function closeModalOutside(event,id){
+
+  if(event.target.id === id){
+
+    $(id)
+      .classList
+      .add("hidden");
+  }
+}
+
+
+/* =========================================
    START
-================================= */
+========================================= */
 
 loadSavedUser();
 
 </script>
 
 </body>
-
 </html>
